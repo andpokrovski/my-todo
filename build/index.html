@@ -34,20 +34,24 @@
         + Добавить задачу
       </button>
 
+      <button class="todo__input delete">
+        - Удалить
+      </button>
+
 
 
       <ul class="todo__list">
-        <li class="todo__item task">Таска 1</li>
+        <!-- <li class="todo__item task">Таска 1</li>
         <li class="todo__item task">Таска 2</li>
-        <li class="todo__item task">Таска 3</li>
+        <li class="todo__item task">Таска 3</li> -->
 
-        <li class="todo__item task">
+        <li class="todo__item task task-1">
           <p class="todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0" spellcheck="true">
           </p>
-          <button class="todo__button" type="button">
+          <button class="todo__done" type="button">
             Выполнено
           </button>
-          <button class="todo__button" type="button">
+          <button class="todo__delete" type="button">
             Удалить
           </button>
         </li>
@@ -63,7 +67,25 @@
   <footer></footer>
 
 
-  <script src="./js/script.js"></script>
+  <template id="template">
+
+    <!-- <li class="todo__item task">Таска для маска</li> -->
+
+    <li class="todo__item task">
+      <p class="todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0" spellcheck="true">
+        Таска для Маска
+      </p>
+      <button class="todo__done" type="button">
+        Выполнено
+      </button>
+      <button class="todo__delete" type="button">
+        Удалить
+      </button>
+    </li>
+  </template>
+
+
+  <script src="js/script.js"></script>
 </body>
 
 </html>
