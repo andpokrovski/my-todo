@@ -1,0 +1,111 @@
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+body {
+  min-width: 320px;
+
+  font-size: 16px;
+  font-size: 20px;
+  color: #e8eaed;
+
+  background-color: #202124;
+}
+
+body {
+  font-weight: 400;
+  line-height: 1.25rem;
+  font-family: Arial, sans-serif;
+  letter-spacing: 0.01428571em;
+}
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "montserrat-regular";
+
+  font-display: swap;
+  src: url("../fonts/montserrat-regular.woff2") format("woff2"), url("../fonts/montserrat-regular.woff") format("woff");
+}
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "montserrat-bold";
+
+  font-display: swap;
+  src: url("../fonts/montserrat-bold.woff2") format("woff2"), url("../fonts/montserrat-bold.woff") format("woff");
+}
+
+.todo {
+  min-width: 320px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+@media (min-width: 416px) {
+  .todo {
+    width: 400px;
+  }
+}
+
+.todo__input {
+  margin-bottom: 10px;
+}
+
+.todo__list {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.todo__item {
+  margin-bottom: 10px;
+}
+
+.todo__input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  overflow: hidden;
+
+  font: inherit;
+  text-align: left;
+  color: inherit;
+
+  background-color: transparent;
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+}
+
+.input__field {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  max-width: 322px;
+  margin: 0;
+
+  resize: none;
+}
+
+.task {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+}

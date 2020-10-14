@@ -1,0 +1,33 @@
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "montserrat-regular";
+
+  font-display: swap;
+  src: url("../fonts/montserrat-regular.woff2") format("woff2"),
+    url("../fonts/montserrat-regular.woff") format("woff");
+}
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "montserrat-bold";
+
+  font-display: swap;
+  src: url("../fonts/montserrat-bold.woff2") format("woff2"),
+    url("../fonts/montserrat-bold.woff") format("woff");
+}
+
+@mixin regular($font-size, $line-height, $color) {
+  font-size: $font-size;
+  line-height: $line-height;
+  font-family: "montserrat-regular", "Arial", sans-serif;
+  color: $color;
+}
+
+@mixin bold($font-size, $line-height, $color) {
+  font-size: $font-size;
+  line-height: $line-height;
+  font-family: "montserrat-bold", "Arial", sans-serif;
+  color: $color;
+}
