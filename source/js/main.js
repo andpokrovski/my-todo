@@ -1,7 +1,7 @@
 var template = document.querySelector('#template');
 var taskTemplate = template.content.querySelector('.task');
-// var taskList = document.querySelector('.todo__list');
-var addButton = document.querySelector('.todo__input');
+// var taskList = document.querySelector('.mytodo__list');
+var addButton = document.querySelector('.mytodo__add-button');
 // var deleteButton = document.querySelector('.delete');
 
 
@@ -24,31 +24,32 @@ var log = function (el) {
 
 var createTask = function () {
   var newTask = taskTemplate.cloneNode('true');
-  var doneButton = newTask.querySelector('.todo__done');
-  var deleteButton = newTask.querySelector('.todo__delete');
+  var doneButton = newTask.querySelector('.mytodo__done');
+  var deleteButton = newTask.querySelector('.mytodo__delete');
+  var taskList = document.querySelector('.mytodo__list');
 
-  deleteButton.addEventListener('click', function () {
-    // console.log(taskList);
-    // console.log(newTask);
-    var taskList = document.querySelector('.todo__list');
-    log(newTask)
+  deleteButton.addEventListener('click', function (evt) {
 
-    taskList.removeСhild(newTask);
+    evt.preventDefault();
 
+    taskList.removeChild(newTask);
   });
 
   return newTask;
 };
 
 
+
 var addTask = function () {
 
-  var taskList = document.querySelector('.todo__list');
+  var taskList = document.querySelector('.mytodo__list');
   var newTask = createTask();
 
   taskList.appendChild(newTask);
 }
 
+
+console.log(addButton);
 
 
 addButton.addEventListener('click', function () {

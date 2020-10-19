@@ -1,85 +1,133 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html class="my-todo" lang="ru">
 
 <head class="page__head">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ToDo List</title>
-  <meta name="description" content="ToDo List" />
+  <meta name="description" content="Todo List" />
 
   <link rel="stylesheet" href="./css/style.min.css" />
 
 </head>
 
-<body>
-  <div contenteditable="true" aria-multiline="true" role="textbox" tabindex="0" spellcheck="true"></div>
+<body class="my-todo__body">
+  <div class="my-todo__container">
 
-  <header></header>
-
-
-
-
-  <main>
-    <section class="todo">
-      <h1>Мой Todo</h1>
-      <!-- <div class="todo__input input">
-        <p class="input__field todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0"
-          spellcheck="true">
-          Привет, Андрей!
-        </p>
-        <button class="input__button" type="button">Добавить</button>
-      </div> -->
-
-      <button class="todo__input">
-        + Добавить задачу
-      </button>
-
-      <button class="todo__input delete">
-        - Удалить
-      </button>
-
-
-
-      <ul class="todo__list">
-        <!-- <li class="todo__item task">Таска 1</li>
-        <li class="todo__item task">Таска 2</li>
-        <li class="todo__item task">Таска 3</li> -->
-
-        <li class="todo__item task task-1">
-          <p class="todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0"
-            spellcheck="true" class="input__field">
-          </p>
-          <button class="todo__done" type="button">
-            Выполнено
-          </button>
-          <button class="todo__delete" type="button">
-            Удалить
-          </button>
-        </li>
-      </ul>
-
-    </section>
-  </main>
+    <header>
+      <h1 class="my-todo__title">my-todo</h1>
+    </header>
 
 
 
 
+    <main class="my-todo__main">
+      <section class="my-todo">
 
-  <footer></footer>
+        <button class="my-todo__add-button" type="button">
+          <span class="visually-hidden">
+            Добавить событие
+          </span>
+        </button>
+
+        <div class="my-todo__popup popup">
+
+
+          <form class="popup__form popup__form--multi-day">
+
+            <button class="popup__close" type="reset">
+              <span class="visually-hidden">
+                Закрыть окно
+              </span>
+            </button>
+
+            <input class="popup__title" type="text" placeholder="Добавьте название">
+
+            <ul class="popup__type-list">
+              <li class="popup__type-item">
+                <input class="popup__type-input visually-hidden" type="radio" id="popup-event" name="type" checked>
+                <label class="popup__type-label" for="popup-event">Мероприятие</label>
+              </li>
+              <li class="popup__type-item">
+                <input class="popup__type-input visually-hidden" type="radio" id="popup-task" name="type">
+                <label class="popup__type-label" for="popup-task">Задача</label>
+              </li>
+            </ul>
+
+
+
+            <fieldset class="popup__date-time">
+              <title class="visually-hidden">Время и дата</title>
+
+
+              <div class="popup__date-time-wrapper">
+                <ul class="popup__date-list">
+                  <li class="popup__date-item popup__date-item--start">
+                    <input class="popup__date" type="date">
+                  </li>
+                  <li class="popup__date-item popup__date-item--end">
+                    <input class="popup__date" type="date">
+                  </li>
+                </ul>
+
+                <ul class="popup__time-list">
+                  <li class="popup__time-item popup__time-item--start">
+                    <input class="popup__time" type="time">
+                  </li>
+                  <li class="popup__time-item popup__time-item--end">
+                    <input class="popup__time" type="time">
+                  </li>
+                </ul>
+              </div>
+
+
+              <label class="popup__all-day">
+                <input class="popup__all-day-input" type="checkbox">
+                Весь день
+              </label>
+
+            </fieldset>
+
+
+            <fieldset class="popup__info">
+              <title class="visually-hidden">Дополнительная информация</title>
+
+              <input class="popup__place" type="text" placeholder="Место">
+              <textarea class="popup__description" placeholder="Описание"></textarea>
+            </fieldset>
+
+
+
+            <button class="popup__save" type="submit"> Сохранить</button>
+          </form>
+        </div>
+
+
+        <ul class="my-todo__list"></ul>
+
+      </section>
+
+    </main>
+
+    <footer></footer>
+
+  </div>
+
 
 
   <template id="template">
 
-    <!-- <li class="todo__item task">Таска для маска</li> -->
+    <!-- <li class="my-todo__item task">Таска для маска</li> -->
 
-    <li class="todo__item task">
-      <p class="todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0" spellcheck="true">
+    <li class="my-todo__item task">
+      <p class="my-todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0"
+        spellcheck="true">
         Таска для Маска
       </p>
-      <button class="todo__done" type="button">
+      <button class="my-todo__done" type="button">
         Выполнено
       </button>
-      <button class="todo__delete" type="button">
+      <button class="my-todo__delete" type="button">
         Удалить
       </button>
     </li>
@@ -88,5 +136,7 @@
 
   <script src="js/script.js"></script>
 </body>
+
+<div class="overlay"></div>
 
 </html>
