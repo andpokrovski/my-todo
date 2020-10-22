@@ -19,6 +19,7 @@ var cheerio = require("gulp-cheerio");
 var csscomb = require("gulp-csscomb");
 var stylelint = require("gulp-stylelint");
 var concat = require("gulp-concat");
+var gulpinclude = require("gulp-include");
 
 gulp.task("buildClean", function () {
   return del(["./build/**", "!./build/img"]);
@@ -86,12 +87,16 @@ gulp.task("copy", function () {
 
 gulp.task("scripts", function () {
   return gulp.src([
-      "./source/js/**/*.js",
-      "./source/libs/**/*.js",
+      "./source/js/script.js",
+      // "./source/js/**/*.js",
+      // "./source/libs/**/*.js",
     ])
     .pipe(plumber())
     .pipe(sourcemap.init())
-    .pipe(concat("script.js"))
+    .pipe(gulpinclude({
+      includePaths: 'source',
+    }))
+    // .pipe(concat("script.js"))
     .pipe(gulp.dest("./build/js"))
     .pipe(uglify())
     .pipe(rename({
@@ -215,7 +220,7 @@ gulp.task("build",
       // "outline",
       "css",
       "copy",
-      // "scripts",
+      "scripts",
       "images"
     ),
   )
