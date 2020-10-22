@@ -16,10 +16,9 @@
   <pre id="content" style="white-space: pre-wrap;"></pre>
 
   <script type="text/javascript">
-    // we8dev@gmail.com
+    // Client ID and API key from the Developer Console
     var CLIENT_ID = '275521875892-icq30gfodvskd45gmn0gkaebeuqko36d.apps.googleusercontent.com';
     var API_KEY = 'AIzaSyAMYDRrik_DUzxORRSm5BJFUuzjiJkZlO8';
-
 
     // Array of API discovery doc URLs for APIs used by the quickstart
     var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -69,7 +68,7 @@
       if (isSignedIn) {
         authorizeButton.style.display = 'none';
         signoutButton.style.display = 'block';
-        listUpcomingEvents();
+        // listUpcomingEvents();
         createEvent();
       } else {
         authorizeButton.style.display = 'block';
@@ -103,7 +102,6 @@
       pre.appendChild(textContent);
     }
 
-
     /**
      * Print the summary and start datetime/date of the next ten events in
      * the authorized user's calendar. If no events are found an
@@ -134,11 +132,14 @@
           appendPre('No upcoming events found.');
         }
       });
-
-
     }
 
     function createEvent() {
+      // Refer to the JavaScript quickstart on how to setup the environment:
+      // https://developers.google.com/calendar/quickstart/js
+      // Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
+      // stored credentials.
+
       var event = {
         'summary': 'Новое событие',
         'location': 'Москва',
@@ -164,14 +165,16 @@
         }
       };
 
+
       var request = gapi.client.calendar.events.insert({
-        'calendarId': 'vjq258dtd3p8mmmjs9cep4pt7g@group.calendar.google.com',
+        'calendarId': 'primary',
         'resource': event
       });
 
       request.execute(function (event) {
         appendPre('Event created: ' + event.htmlLink);
       });
+
     }
 
   </script>

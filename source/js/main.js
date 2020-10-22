@@ -49,7 +49,7 @@ var addTask = function () {
 }
 
 
-console.log(addButton);
+// console.log(addButton);
 
 
 // addButton.addEventListener('click', function () {

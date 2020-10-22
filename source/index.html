@@ -4,7 +4,7 @@
 <head class="page__head">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ToDo List</title>
+  <title>my todo</title>
   <meta name="description" content="Todo List" />
 
   <link rel="stylesheet" href="./css/style.min.css" />
@@ -15,91 +15,102 @@
   <div class="my-todo__container">
 
     <header>
-      <h1 class="my-todo__title">my-todo</h1>
+      <h1 class="my-todo__title">my todo</h1>
+      <button id="signout_button" style="display: none;">Sign Out</button>
     </header>
 
 
 
 
+
     <main class="my-todo__main">
-      <section class="my-todo">
 
-        <button class="my-todo__add-button" type="button">
-          <span class="visually-hidden">
-            Добавить событие
-          </span>
-        </button>
+      <div class="my-todo__authorization">
+        <div class="modal__window">
+          <h2>Авторизация</h2>
 
-        <div class="my-todo__popup popup d-none">
-          <div class="popup__window">
-            <form class="popup__form popup__form--multi-day" method="post" enctype="multipart/form-data"
-              action="https://echo.htmlacademy.ru" autocomplete="off">
-              <button class="popup__close" type="reset">
-                <span class="visually-hidden">
-                  Закрыть окно
-                </span>
-              </button>
+          <button id="authorize_button" style="display: none;">Authorize</button>
 
-              <input class="popup__title" type="text" placeholder="Добавьте название" name="summary">
-
-              <ul class="popup__type-list">
-                <li class="popup__type-item">
-                  <input class="popup__type-input visually-hidden" type="radio" id="popup-event" name="type" checked>
-                  <label class="popup__type-label" for="popup-event">Мероприятие</label>
-                </li>
-                <li class="popup__type-item">
-                  <input class="popup__type-input visually-hidden" type="radio" id="popup-task" name="type">
-                  <label class="popup__type-label" for="popup-task">Задача</label>
-                </li>
-              </ul>
-
-              <fieldset class="popup__date-time">
-                <title class="visually-hidden">Время и дата</title>
-
-
-                <div class="popup__date-time-wrapper">
-                  <ul class="popup__date-list">
-                    <li class="popup__date-item popup__date-item--start">
-                      <input class="popup__date" type="date" name="startDate">
-                    </li>
-                    <li class="popup__date-item popup__date-item--end" name="startTime">
-                      <input class="popup__date" type="date">
-                    </li>
-                  </ul>
-
-                  <ul class="popup__time-list">
-                    <li class="popup__time-item popup__time-item--start">
-                      <input class="popup__time" type="time" name="endDate">
-                    </li>
-                    <li class="popup__time-item popup__time-item--end">
-                      <input class="popup__time" type="time" name="endTime">
-                    </li>
-                  </ul>
-                </div>
-
-                <label class="popup__all-day">
-                  <input class="popup__all-day-input" type="checkbox" name="allDay">
-                  Весь день
-                </label>
-
-              </fieldset>
-
-              <fieldset class="popup__info">
-                <title class="visually-hidden">Дополнительная информация</title>
-
-                <input class="popup__place" type="text" placeholder="Место" name="location">
-                <textarea class="popup__description" placeholder="Описание" name="description"></textarea>
-              </fieldset>
-
-              <button class="popup__save" type="submit">Сохранить</button>
-            </form>
-          </div>
+          <pre id="content" style="white-space: pre-wrap;"></pre>
         </div>
+      </div>
 
 
-        <ul class="my-todo__list"></ul>
+      <button class="my-todo__add-button" type="button">
+        <span class="visually-hidden">
+          Добавить событие
+        </span>
+      </button>
 
-      </section>
+      <div class="my-todo__modal modal create d-none">
+        <div class="modal__window">
+          <form class="modal__form modal__form--multi-day" method="post" enctype="multipart/form-data"
+            action="https://echo.htmlacademy.ru" autocomplete="off">
+            <button class="modal__close create__close" type="reset">
+              <span class="visually-hidden">
+                Закрыть окно
+              </span>
+            </button>
+
+            <input class="modal__title" type="text" placeholder="Добавьте название" name="summary">
+
+            <ul class="modal__type-list">
+              <li class="modal__type-item">
+                <input class="modal__type-input visually-hidden" type="radio" id="modal-event" name="type" checked>
+                <label class="modal__type-label" for="modal-event">Мероприятие</label>
+              </li>
+              <li class="modal__type-item">
+                <input class="modal__type-input visually-hidden" type="radio" id="modal-task" name="type">
+                <label class="modal__type-label" for="modal-task">Задача</label>
+              </li>
+            </ul>
+
+            <fieldset class="modal__date-time">
+              <title class="visually-hidden">Время и дата</title>
+
+
+              <div class="modal__date-time-wrapper">
+                <ul class="modal__date-list">
+                  <li class="modal__date-item modal__date-item--start">
+                    <input class="modal__date" type="date" name="start-date">
+                  </li>
+                  <li class="modal__date-item modal__date-item--end" name="start-time">
+                    <input class="modal__date" type="date">
+                  </li>
+                </ul>
+
+                <ul class="modal__time-list">
+                  <li class="modal__time-item modal__time-item--start">
+                    <input class="modal__time" type="time" name="end-date">
+                  </li>
+                  <li class="modal__time-item modal__time-item--end">
+                    <input class="modal__time" type="time" name="end-time">
+                  </li>
+                </ul>
+              </div>
+
+              <label class="modal__all-day">
+                <input class="modal__all-day-input" type="checkbox" name="allDay">
+                Весь день
+              </label>
+
+            </fieldset>
+
+            <fieldset class="modal__info">
+              <title class="visually-hidden">Дополнительная информация</title>
+
+              <input class="modal__place" type="text" placeholder="Место" name="location">
+              <textarea class="modal__description" placeholder="Описание" name="description"></textarea>
+            </fieldset>
+
+            <button class="modal__save" type="submit">Сохранить</button>
+          </form>
+        </div>
+      </div>
+
+
+      <ul class="my-todo__list"></ul>
+
 
     </main>
 
@@ -127,8 +138,8 @@
     </li>
   </template>
 
-
   <script src="js/script.js"></script>
+
 </body>
 
 

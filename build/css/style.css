@@ -187,7 +187,7 @@ img {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.popup {
+.modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -198,7 +198,7 @@ img {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.popup__window {
+.modal__window {
   position: absolute;
   top: 50%;
 
@@ -212,7 +212,7 @@ img {
 }
 
 @media (min-width: 480px) {
-  .popup__window {
+  .modal__window {
     left: 50%;
 
     width: 440px;
@@ -223,7 +223,7 @@ img {
   }
 }
 
-.popup__close {
+.modal__close {
   position: fixed;
   top: 10px;
   right: 10px;
@@ -248,15 +248,15 @@ img {
   transition: 0.2s ease;
 }
 
-.popup__close:hover {
+.modal__close:hover {
   background-color: rgba(0, 0, 0, 0.15);
 }
 
-.popup__close:active {
+.modal__close:active {
   opacity: 0.5;
 }
 
-.popup__title {
+.modal__title {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -270,7 +270,7 @@ img {
   border-bottom: 1px solid #000000;
 }
 
-.popup__type-list {
+.modal__type-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -281,19 +281,19 @@ img {
   list-style: none;
 }
 
-.popup__type-item {
+.modal__type-item {
   margin-right: 10px;
 }
 
-.popup__type-input:checked + .popup__type-label {
+.modal__type-input:checked + .modal__type-label {
   background-color: rgba(0, 0, 0, 0.15);
 }
 
-.popup__type-input:checked + .popup__type-label:active {
+.modal__type-input:checked + .modal__type-label:active {
   opacity: 0.5;
 }
 
-.popup__type-label {
+.modal__type-label {
   display: block;
   padding: 6px 4px;
 
@@ -305,11 +305,11 @@ img {
   transition: 0.2s ease;
 }
 
-.popup__type-label:hover {
+.modal__type-label:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.popup__date-time {
+.modal__date-time {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -327,7 +327,7 @@ img {
   border: none;
 }
 
-.popup__date-time-wrapper {
+.modal__date-time-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -337,7 +337,7 @@ img {
           flex-direction: column;
 }
 
-.popup__date-list {
+.modal__date-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -348,22 +348,22 @@ img {
   list-style: none;
 }
 
-.popup__date-item--start {
+.modal__date-item--start {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
-.popup__date-item--end {
+.modal__date-item--end {
   display: none;
 }
 
-.popup__date {
+.modal__date {
   display: block;
   width: 100%;
 }
 
-.popup__time-list {
+.modal__time-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -374,48 +374,48 @@ img {
   list-style: none;
 }
 
-.popup__time-item--end {
+.modal__time-item--end {
   margin-left: 10px;
 }
 
-.popup__time {
+.modal__time {
   display: block;
 }
 
-.popup__form--multi-day .popup__date-item--end {
+.modal__form--multi-day .modal__date-item--end {
   display: block;
   margin-left: 10px;
 }
 
-.popup__form--multi-day .popup__time-item {
+.modal__form--multi-day .modal__time-item {
   width: 50%;
 }
 
-.popup__form--multi-day .popup__time-item--end {
+.modal__form--multi-day .modal__time-item--end {
   display: block;
   margin-left: 10px;
 }
 
-.popup__form--task .popup__info {
+.modal__form--task .modal__info {
   display: none;
 }
 
-.popup__form--task .popup__date-time-wrapper {
+.modal__form--task .modal__date-time-wrapper {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
 }
 
-.popup__form--task .popup__date-list {
+.modal__form--task .modal__date-list {
   margin-right: 10px;
 }
 
-.popup__form--task .popup__time-item--end {
+.modal__form--task .modal__time-item--end {
   display: none;
 }
 
-.popup__info {
+.modal__info {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -433,7 +433,7 @@ img {
   border: none;
 }
 
-.popup__title {
+.modal__title {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -447,7 +447,7 @@ img {
   border-bottom: 1px solid #000000;
 }
 
-.popup__place {
+.modal__place {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -460,7 +460,7 @@ img {
   border-bottom: 1px solid #000000;
 }
 
-.popup__description {
+.modal__description {
   padding: 0;
   padding-bottom: 5px;
 
@@ -474,7 +474,7 @@ img {
   resize: none;
 }
 
-.popup__save {
+.modal__save {
   display: block;
   padding: 0;
   padding: 10px;
