@@ -55,7 +55,7 @@ img {
   src: url("../fonts/montserrat-bold.woff2") format("woff2"), url("../fonts/montserrat-bold.woff") format("woff");
 }
 
-.mytodo__body {
+.my-todo__body {
   margin: 0;
 
   font-weight: 400;
@@ -68,7 +68,7 @@ img {
   background-color: #e8eaed;
 }
 
-.mytodo__container {
+.my-todo__container {
   position: relative;
 
   min-width: 320px;
@@ -77,7 +77,7 @@ img {
   padding: 20px;
 }
 
-.mytodo__add-button {
+.my-todo__add-button {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -105,13 +105,13 @@ img {
   transition: 0.2s ease;
 }
 
-.mytodo__add-button:hover {
+.my-todo__add-button:hover {
   -webkit-box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
           box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 480px) {
-  .mytodo__add-button {
+  .my-todo__add-button {
     right: 50%;
 
     -webkit-transform: translateX(314%);
@@ -120,21 +120,14 @@ img {
   }
 }
 
-.mytodo__popup {
-  position: fixed;
-  top: 50%;
+.my-todo__popup__window {
   right: 20px;
   left: 20px;
-  z-index: 9999;
-
-  -webkit-transform: translateY(-50%);
-
-          transform: translateY(-50%);
 }
 
 @media (min-width: 480px) {
-  .mytodo__popup {
-    top: 50%;
+  .my-todo__popup__window {
+    right: auto;
     left: 50%;
 
     width: 440px;
@@ -145,18 +138,18 @@ img {
   }
 }
 
-.mytodo__list {
+.my-todo__list {
   margin: 0;
   padding: 0;
 
   list-style: none;
 }
 
-.mytodo__item {
+.my-todo__item {
   margin-bottom: 10px;
 }
 
-.mytodo__input {
+.my-todo__input {
   display: block;
   width: 100%;
   min-height: 44px;
@@ -195,11 +188,39 @@ img {
 }
 
 .popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup__window {
+  position: absolute;
+  top: 50%;
+
   min-height: 200px;
   padding: 20px;
 
   background-color: lightgrey;
   border-radius: 8px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+@media (min-width: 480px) {
+  .popup__window {
+    left: 50%;
+
+    width: 440px;
+
+    -webkit-transform: translate(-50%, -50%);
+
+            transform: translate(-50%, -50%);
+  }
 }
 
 .popup__close {

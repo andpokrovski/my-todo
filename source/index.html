@@ -30,76 +30,70 @@
           </span>
         </button>
 
-        <div class="my-todo__popup popup">
+        <div class="my-todo__popup popup d-none">
+          <div class="popup__window">
+            <form class="popup__form popup__form--multi-day" method="post" enctype="multipart/form-data"
+              action="https://echo.htmlacademy.ru" autocomplete="off">
+              <button class="popup__close" type="reset">
+                <span class="visually-hidden">
+                  Закрыть окно
+                </span>
+              </button>
+
+              <input class="popup__title" type="text" placeholder="Добавьте название" name="summary">
+
+              <ul class="popup__type-list">
+                <li class="popup__type-item">
+                  <input class="popup__type-input visually-hidden" type="radio" id="popup-event" name="type" checked>
+                  <label class="popup__type-label" for="popup-event">Мероприятие</label>
+                </li>
+                <li class="popup__type-item">
+                  <input class="popup__type-input visually-hidden" type="radio" id="popup-task" name="type">
+                  <label class="popup__type-label" for="popup-task">Задача</label>
+                </li>
+              </ul>
+
+              <fieldset class="popup__date-time">
+                <title class="visually-hidden">Время и дата</title>
 
 
-          <form class="popup__form popup__form--multi-day">
+                <div class="popup__date-time-wrapper">
+                  <ul class="popup__date-list">
+                    <li class="popup__date-item popup__date-item--start">
+                      <input class="popup__date" type="date" name="startDate">
+                    </li>
+                    <li class="popup__date-item popup__date-item--end" name="startTime">
+                      <input class="popup__date" type="date">
+                    </li>
+                  </ul>
 
-            <button class="popup__close" type="reset">
-              <span class="visually-hidden">
-                Закрыть окно
-              </span>
-            </button>
+                  <ul class="popup__time-list">
+                    <li class="popup__time-item popup__time-item--start">
+                      <input class="popup__time" type="time" name="endDate">
+                    </li>
+                    <li class="popup__time-item popup__time-item--end">
+                      <input class="popup__time" type="time" name="endTime">
+                    </li>
+                  </ul>
+                </div>
 
-            <input class="popup__title" type="text" placeholder="Добавьте название">
+                <label class="popup__all-day">
+                  <input class="popup__all-day-input" type="checkbox" name="allDay">
+                  Весь день
+                </label>
 
-            <ul class="popup__type-list">
-              <li class="popup__type-item">
-                <input class="popup__type-input visually-hidden" type="radio" id="popup-event" name="type" checked>
-                <label class="popup__type-label" for="popup-event">Мероприятие</label>
-              </li>
-              <li class="popup__type-item">
-                <input class="popup__type-input visually-hidden" type="radio" id="popup-task" name="type">
-                <label class="popup__type-label" for="popup-task">Задача</label>
-              </li>
-            </ul>
+              </fieldset>
 
+              <fieldset class="popup__info">
+                <title class="visually-hidden">Дополнительная информация</title>
 
+                <input class="popup__place" type="text" placeholder="Место" name="location">
+                <textarea class="popup__description" placeholder="Описание" name="description"></textarea>
+              </fieldset>
 
-            <fieldset class="popup__date-time">
-              <title class="visually-hidden">Время и дата</title>
-
-
-              <div class="popup__date-time-wrapper">
-                <ul class="popup__date-list">
-                  <li class="popup__date-item popup__date-item--start">
-                    <input class="popup__date" type="date">
-                  </li>
-                  <li class="popup__date-item popup__date-item--end">
-                    <input class="popup__date" type="date">
-                  </li>
-                </ul>
-
-                <ul class="popup__time-list">
-                  <li class="popup__time-item popup__time-item--start">
-                    <input class="popup__time" type="time">
-                  </li>
-                  <li class="popup__time-item popup__time-item--end">
-                    <input class="popup__time" type="time">
-                  </li>
-                </ul>
-              </div>
-
-
-              <label class="popup__all-day">
-                <input class="popup__all-day-input" type="checkbox">
-                Весь день
-              </label>
-
-            </fieldset>
-
-
-            <fieldset class="popup__info">
-              <title class="visually-hidden">Дополнительная информация</title>
-
-              <input class="popup__place" type="text" placeholder="Место">
-              <textarea class="popup__description" placeholder="Описание"></textarea>
-            </fieldset>
-
-
-
-            <button class="popup__save" type="submit"> Сохранить</button>
-          </form>
+              <button class="popup__save" type="submit">Сохранить</button>
+            </form>
+          </div>
         </div>
 
 
@@ -137,6 +131,5 @@
   <script src="js/script.js"></script>
 </body>
 
-<div class="overlay"></div>
 
 </html>

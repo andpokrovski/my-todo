@@ -1,7 +1,7 @@
 var template = document.querySelector('#template');
 var taskTemplate = template.content.querySelector('.task');
 // var taskList = document.querySelector('.mytodo__list');
-var addButton = document.querySelector('.mytodo__add-button');
+var addButton = document.querySelector('.my-todo__add-button');
 // var deleteButton = document.querySelector('.delete');
 
 
@@ -52,6 +52,6 @@ var addTask = function () {
 console.log(addButton);
 
 
-addButton.addEventListener('click', function () {
-  addTask();
-});
+// addButton.addEventListener('click', function () {
+//   addTask();
+// });

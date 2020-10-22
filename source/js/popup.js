@@ -1,7 +1,8 @@
-var addButton = document.querySelector('.mytodo__add-button');
+var addButton = document.querySelector('.my-todo__add-button');
 var popup = document.querySelector('.popup');
-var popupClose = popup.querySelector('.popup__close');
-var popupSave = popup.querySelector('.popup__save');
+var form = document.querySelector('.popup__form');
+var closeButton = popup.querySelector('.popup__close');
+var saveButton = popup.querySelector('.popup__save');
 
 
 var onPopupEscPress = function (evt) {
@@ -12,10 +13,56 @@ var onPopupEscPress = function (evt) {
 
 addButton.addEventListener('click', function () {
   popup.classList.toggle('d-none', false);
-  overlay.show();
 });
 
-popupClose.addEventListener('click', function () {
+closeButton.addEventListener('click', function () {
   popup.classList.toggle('d-none', true);
-  overlay.hide();
 });
+
+
+var onSaveButtonClick = function () {
+  // var formData = new From
+
+  //   var formData = new FormData(form);
+  //   console.log(formData);
+  // }
+}
+
+
+saveButton.addEventListener('click', function (evt) {
+  // evt.preventDefault();
+
+  onSaveButtonClick();
+});
+
+form.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  var formData = new FormData(form);
+  console.log(formData);
+});
+
+
+var createEvent = function () {
+  var event = {
+    'summary': 'Новое событие',
+    'location': 'Москва',
+    'start': {
+      'dateTime': '2020-10-12T09:00:00+03:00',
+      'timeZone': 'Europe/Moscow'
+    },
+    'end': {
+      'dateTime': '2020-10-12T17:00:00+03:00',
+      'timeZone': 'Europe/Moscow'
+    },
+  };
+
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'vjq258dtd3p8mmmjs9cep4pt7g@group.calendar.google.com',
+    'resource': event
+  });
+
+
+  request.execute(function (event) {
+    appendPre('Event created: ' + event.htmlLink);
+  });
+}
