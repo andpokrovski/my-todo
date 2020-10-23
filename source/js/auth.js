@@ -52,7 +52,7 @@ function initClient() {
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function (error) {
-    utils.appendPre(JSON.stringify(error, null, 2));
+    alert.show(JSON.stringify(error, null, 2));
   });
 }
 
@@ -64,7 +64,7 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
-
+    myTodo.list();
     authClose();
   } else {
     authorizeButton.style.display = 'block';

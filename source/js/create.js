@@ -1,60 +1,31 @@
-var formatDateTime = function () {
-  // Форматировние даты и времени
+var UTC = '+03:00';
+var TIMEZONE = 'Europe/Moscow';
+
+
+var formatDateTime = function (date, time) {
+  return date + 'T' + time + ':00' + UTC;
 }
 
-var event = function (formData) {
+
+var createEvent = function (formData) {
   return {
     'summary': formData.get('summary'),
     'location': formData.get('location'),
     'start': {
-      'dateTime': '2020-10-23T09:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
+      'dateTime': formatDateTime(formData.get('start-date'), formData.get('start-time')),
+      'timeZone': TIMEZONE
     },
     'end': {
-      'dateTime': '2020-10-23T17:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
+      'dateTime': formatDateTime(formData.get('end-date'), formData.get('end-time')),
+      'timeZone': TIMEZONE
     },
-    'reminders': {
-      'useDefault': false,
-      'overrides': [{
-          'method': 'email',
-          'minutes': 24 * 60
-        },
-        {
-          'method': 'popup',
-          'minutes': 10
-        }
-      ]
-    }
   }
 }
 
-function createEvent() {
-  var event = {
-    'summary': 'Новое событие',
-    'location': 'Москва',
-    'start': {
-      'dateTime': '2020-10-23T09:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
-    },
-    'end': {
-      'dateTime': '2020-10-23T17:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
-    },
-    'reminders': {
-      'useDefault': false,
-      'overrides': [{
-          'method': 'email',
-          'minutes': 24 * 60
-        },
-        {
-          'method': 'popup',
-          'minutes': 10
-        }
-      ]
-    }
-  };
 
+var sendEvent = function (formData) {
+  var event = createEvent(formData);
+  console.log(event);
 
   var request = gapi.client.calendar.events.insert({
     'calendarId': 'primary',
@@ -62,83 +33,66 @@ function createEvent() {
   });
 
   request.execute(function (event) {
-    utils.appendPre('Event created: ' + event.htmlLink);
+    console.log(event.id);
+    alert.show('Event created: ' + event.htmlLink);
   });
 }
 
 
 
-// var closeButton = modal.querySelector('.create__close');
+// popup
 
 
+// var addButton = document.querySelector('.my-todo__add-button');
+// var modal = document.querySelector('.create');
+// var closeButton = document.querySelector('.create__close');
 
-// Для чего нам нужны переменные?
-// Чтобы задать обработчики событий
-
-// var Modal = function (className) {
-//   var modal = document.querySelectorAll(className);
-//   var closeButtons = modal.querySelectorAll('.modal__close');
-//   var closeButtons = modal.querySelectorAll('.modal__close');
-
-//   openButtons.forEach(function (el) {
-//     el.addEventListener('click', this.open());
-//   });
-
-//   closeButtons.forEach(function (el) {
-//     el.addEventListener('click', this.close());
-//   });
-// };
-
-// Modal.prototype = {
-//   open: this.classList.toggle('d-none', false),
-//   close: this.classList.toggle('d-none', true),
+// var onModalEscPress = function (evt) {
+//   if (evt.key === 'Escape') {
+//     closeModal();
+//   }
 // }
+
+// var openModal = function () {
+//   modal.classList.toggle('d-none', false);
+//   // modal.classList.remove('d-none');
+//   document.addEventListener('keydown', onModalEscPress);
+// }
+
+
+// var closeModal = function () {
+//   modal.classList.toggle('d-none', true);
+//   document.removeEventListener('keydown', onModalEscPress);
+// }
+
+
+
+// addButton.addEventListener('click', function () {
+//   // console.log('open')
+//   openModal();
+// });
+
+// closeButton.addEventListener('click', function () {
+//   closeModal();
+// });
+
 
 var addButton = document.querySelector('.my-todo__add-button');
 var modal = document.querySelector('.create');
 var closeButton = document.querySelector('.create__close');
 
-var onModalEscPress = function (evt) {
-  if (evt.key === 'Escape') {
-    closeModal();
-  }
-}
 
-var openModal = function () {
-  modal.classList.toggle('d-none', false);
-  // modal.classList.remove('d-none');
-  document.addEventListener('keydown', onModalEscPress);
-}
-
-
-var closeModal = function () {
-  modal.classList.toggle('d-none', true);
-  document.removeEventListener('keydown', onModalEscPress);
-}
-
-
-
-addButton.addEventListener('click', function () {
-  console.log('open')
-  openModal();
-});
-
-closeButton.addEventListener('click', function () {
-  closeModal();
+var popup = new Modal({
+  modal: '.create',
+  openButton: 
 });
 
 
 
-// window.modal = {
-//   open: openModal,
-//   close: closeModal,
-// }
 
 
-// window.event = {
-//   create: createEvent,
-// }
 
 window.create = {
   close: closeModal,
+  send: sendEvent,
 }

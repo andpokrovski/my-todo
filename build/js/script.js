@@ -658,21 +658,262 @@ var checkElements = function () {
 }
 
 
-/**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-function appendPre(message) {
-  var pre = document.getElementById('content');
-  var textContent = document.createTextNode(message + '\n');
-  pre.appendChild(textContent);
+
+window.myTodo = {};
+
+// popup
+
+
+// var addButton = document.querySelector('.my-todo__add-button');
+// var modal = document.querySelector('.create');
+// var closeButton = document.querySelector('.create__close');
+
+
+
+
+
+// addButton.addEventListener('click', function () {
+//   // console.log('open')
+//   openModal();
+// });
+
+// closeButton.addEventListener('click', function () {
+//   closeModal();
+// });
+
+
+
+
+
+
+// var Modal = function (settings) {
+//   this.element = document.querySelector(settings.modalClass);
+
+//   var closeButtons = this.element.querySelectorAll('.modal__close');
+//   var openButtons = document.querySelectorAll(settings.openButtonsClass);
+
+
+//   openButtons.forEach(function (openButton) {
+//     openButton.addEvenlistener('click', function () {
+//       openModal(this.element);
+//     });
+//   });
+
+//   closeButtons.forEach(function (closeButton) {
+//     closeButton.addEvenlistener('click', function () {
+//       closeModal(this.element);
+//     });
+//   });
+// }
+
+
+// Modal.prototype = {
+//   open: function () {
+//     openModal(this);
+//   },
+//   close: function () {
+//     closeModal(this);
+//   },
+// }
+
+// // Все это объединить в модальное окно
+
+
+
+
+// var modalInit = function (modalClass, openButtonClass) {
+//   var openButtons = document.querySelectorAll(openButtonClass);
+//   // var modal = document.querySelector(modalClass);
+
+//   var modal = new Modal(modalClass);
+
+
+
+//   openButtons.forEach(function (openButton) {
+//     openButton.addEvenlistener('click', function () {
+//       modal.show();
+//       // открыть модальное окно
+//     });
+//   });
+
+// }
+
+
+
+// var Modal = function (modalClass) {
+//   this.element = document.querySelector(modalClass);
+// }
+
+
+// Modal.prototype = {
+//   open: function () {
+//     openModal(this.element);
+//   },
+//   close: function () {
+//     closeModal(this.element);
+//   },
+// }
+
+// Переопределить метод EventHandler внутри прототипа
+
+
+
+// var modalInit = function (settings) {
+//   var modal = new Modal;
+//   var openButtons = document.querySelectorAll(settings.openButtonClass);
+//   var closeButtons = modal.element.querySelectorAll('.modal__close');
+
+//   openButtons.forEach(function (openButton) {
+//     openButton.addEvenlistener('click', function () {
+//       modal.show();
+//       // открыть модальное окно
+//     });
+//   });
+
+
+
+//   var openButtons = document.querySelectorAll(settings.openButtonsClass);
+
+
+//   openButtons.forEach(function (openButton) {
+//     openButton.addEvenlistener('click', function () {
+//       openModal(this.element);
+//     });
+//   });
+
+//   closeButtons.forEach(function (closeButton) {
+//     closeButton.addEvenlistener('click', function () {
+//       closeModal(this.element);
+//     });
+//   });
+
+
+//   return modal;
+
+// }
+
+
+var onModalEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    closeModal();
+  }
 }
 
-window.utils = {
-  checkElements: checkElements,
-  appendPre: appendPre,
+
+var openModal = function () {
+  this.element.classList.toggle('d-none', false);
+  // document.addEventListener('keydown', onModalEscPress);
+  document.addEventListener('keydown', onModalEscPress.bind(this));
+}
+
+
+var closeModal = function () {
+  this.element.classList.toggle('d-none', true);
+  // document.removeEventListener('keydown', onModalEscPress);
+  document.removeEventListener('keydown', onModalEscPress.bind(this));
+}
+
+
+
+var Modal = function (settings) {
+  this.element = document.querySelector(settings.modal);
+  var openButtons = document.querySelectorAll(settings.openButton);
+  var closeButtons = this.element.querySelectorAll('.modal__close');
+
+
+  openButtons.forEach(function (openButton) {
+    openButton.addEvenlistener('click', openModal.bind(this));
+  });
+
+  closeButtons.forEach(function (closeButton) {
+    closeButton.addEvenlistener('click', closeModal.bind(this));
+  });
+}
+
+
+Modal.prototype = {
+  open: openModal,
+  close: closeModal,
+}
+
+window.Modal;
+
+
+
+
+
+
+
+// Тесты с кроликом
+
+
+// Фиксировать контекст
+
+var deleteRabbit = function () {
+  this.classList.toggle('d-none', true);
+}
+
+// var callDeleteRabbit = function () {
+//   return deleteRabbit.call()
+// }
+
+
+var Rabbit = function () {
+  this.element = document.querySelector('.rabbit');
+  var button = this.element.querySelector('.rabbit-button');
+
+  // button.addEventListener('click', function () {
+  //   deleteRabbit(this);
+  // });
+
+  button.addEventListener('click', deleteRabbit.bind(this.element));
+}
+
+// Rabbit.prototype = {
+//   delete: function () {
+//     this.element.style.display = 'none';
+//   }
+// }
+
+var template = document.querySelector('#template');
+var itemTemplate = template.content.querySelector('.my-todo__item');
+var itemsList = document.querySelector('.my-todo__list');
+
+var createItem = function (event) {
+  var newItem = itemTemplate.cloneNode('true');
+  // var doneButton = newItem.querySelector('.my-todo__done');
+  var deleteButton = newItem.querySelector('.my-todo__delete');
+  var summary = newItem.querySelector('.my-todo__summary');
+
+
+  summary.textContent = event.summary;
+
+  deleteButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    itemsList.removeChild(newItem);
+  });
+
+  return newItem;
+};
+
+
+var renderItems = function (events) {
+  var fragment = document.createDocumentFragment();
+
+  for (i = 0; i < events.length; i++) {
+    var event = events[i];
+
+    fragment.appendChild(createItem(event));
+  }
+
+  itemsList.appendChild(fragment);
+}
+
+
+
+window.items = {
+  render: renderItems
 }
 
 var popup = document.querySelector('.my-todo__authorization');
@@ -729,7 +970,7 @@ function initClient() {
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function (error) {
-    utils.appendPre(JSON.stringify(error, null, 2));
+    alert.show(JSON.stringify(error, null, 2));
   });
 }
 
@@ -741,7 +982,7 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
-
+    myTodo.list();
     authClose();
   } else {
     authorizeButton.style.display = 'block';
@@ -778,63 +1019,34 @@ document.addEventListener("DOMContentLoaded", function () {
   handleClientLoad();
 });
 
-var formatDateTime = function () {
-  // Форматировние даты и времени
+var UTC = '+03:00';
+var TIMEZONE = 'Europe/Moscow';
+
+
+var formatDateTime = function (date, time) {
+  return date + 'T' + time + ':00' + UTC;
 }
 
-var event = function (formData) {
+
+var createEvent = function (formData) {
   return {
     'summary': formData.get('summary'),
     'location': formData.get('location'),
     'start': {
-      'dateTime': '2020-10-23T09:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
+      'dateTime': formatDateTime(formData.get('start-date'), formData.get('start-time')),
+      'timeZone': TIMEZONE
     },
     'end': {
-      'dateTime': '2020-10-23T17:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
+      'dateTime': formatDateTime(formData.get('end-date'), formData.get('end-time')),
+      'timeZone': TIMEZONE
     },
-    'reminders': {
-      'useDefault': false,
-      'overrides': [{
-          'method': 'email',
-          'minutes': 24 * 60
-        },
-        {
-          'method': 'popup',
-          'minutes': 10
-        }
-      ]
-    }
   }
 }
 
-function createEvent() {
-  var event = {
-    'summary': 'Новое событие',
-    'location': 'Москва',
-    'start': {
-      'dateTime': '2020-10-23T09:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
-    },
-    'end': {
-      'dateTime': '2020-10-23T17:00:00+03:00',
-      'timeZone': 'Europe/Moscow'
-    },
-    'reminders': {
-      'useDefault': false,
-      'overrides': [{
-          'method': 'email',
-          'minutes': 24 * 60
-        },
-        {
-          'method': 'popup',
-          'minutes': 10
-        }
-      ]
-    }
-  };
 
+var sendEvent = function (formData) {
+  var event = createEvent(formData);
+  console.log(event);
 
   var request = gapi.client.calendar.events.insert({
     'calendarId': 'primary',
@@ -842,89 +1054,74 @@ function createEvent() {
   });
 
   request.execute(function (event) {
-    utils.appendPre('Event created: ' + event.htmlLink);
+    console.log(event.id);
+    alert.show('Event created: ' + event.htmlLink);
   });
 }
 
 
 
-// var closeButton = modal.querySelector('.create__close');
+// popup
 
 
+// var addButton = document.querySelector('.my-todo__add-button');
+// var modal = document.querySelector('.create');
+// var closeButton = document.querySelector('.create__close');
 
-// Для чего нам нужны переменные?
-// Чтобы задать обработчики событий
-
-// var Modal = function (className) {
-//   var modal = document.querySelectorAll(className);
-//   var closeButtons = modal.querySelectorAll('.modal__close');
-//   var closeButtons = modal.querySelectorAll('.modal__close');
-
-//   openButtons.forEach(function (el) {
-//     el.addEventListener('click', this.open());
-//   });
-
-//   closeButtons.forEach(function (el) {
-//     el.addEventListener('click', this.close());
-//   });
-// };
-
-// Modal.prototype = {
-//   open: this.classList.toggle('d-none', false),
-//   close: this.classList.toggle('d-none', true),
+// var onModalEscPress = function (evt) {
+//   if (evt.key === 'Escape') {
+//     closeModal();
+//   }
 // }
+
+// var openModal = function () {
+//   modal.classList.toggle('d-none', false);
+//   // modal.classList.remove('d-none');
+//   document.addEventListener('keydown', onModalEscPress);
+// }
+
+
+// var closeModal = function () {
+//   modal.classList.toggle('d-none', true);
+//   document.removeEventListener('keydown', onModalEscPress);
+// }
+
+
+
+// addButton.addEventListener('click', function () {
+//   // console.log('open')
+//   openModal();
+// });
+
+// closeButton.addEventListener('click', function () {
+//   closeModal();
+// });
+
 
 var addButton = document.querySelector('.my-todo__add-button');
 var modal = document.querySelector('.create');
 var closeButton = document.querySelector('.create__close');
 
-var onModalEscPress = function (evt) {
-  if (evt.key === 'Escape') {
-    closeModal();
-  }
-}
 
-var openModal = function () {
-  modal.classList.toggle('d-none', false);
-  // modal.classList.remove('d-none');
-  document.addEventListener('keydown', onModalEscPress);
-}
-
-
-var closeModal = function () {
-  modal.classList.toggle('d-none', true);
-  document.removeEventListener('keydown', onModalEscPress);
-}
-
-
-
-addButton.addEventListener('click', function () {
-  console.log('open')
-  openModal();
-});
-
-closeButton.addEventListener('click', function () {
-  closeModal();
+var popup = new Modal({
+  modal: '.create',
+  openButton: 
 });
 
 
 
-// window.modal = {
-//   open: openModal,
-//   close: closeModal,
-// }
 
 
-// window.event = {
-//   create: createEvent,
-// }
 
 window.create = {
   close: closeModal,
+  send: sendEvent,
 }
 
 var form = document.querySelector('.modal__form');
 var saveButton = form.querySelector('.modal__save');
+
+
 
 var onSaveButtonClick = function () {
   create.close();
@@ -933,8 +1130,7 @@ var onSaveButtonClick = function () {
 var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(form);
-  console.log(formData);
-  // createEvent();
+  create.send(formData);
 }
 
 
@@ -947,88 +1143,72 @@ form.addEventListener('submit', onFormSubmit);
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-function listUpcomingEvents() {
-  gapi.client.calendar.events.list({
-    'calendarId': 'primary',
-    'timeMin': (new Date()).toISOString(),
-    'showDeleted': false,
-    'singleEvents': true,
-    'maxResults': 10,
-    'orderBy': 'startTime'
-  }).then(function (response) {
-    var events = response.result.items;
-    utils.appendPre('Upcoming events:');
 
-    if (events.length > 0) {
-      for (i = 0; i < events.length; i++) {
-        var event = events[i];
-        var when = event.start.dateTime;
-        if (!when) {
-          when = event.start.date;
-        }
-        utils.appendPre(event.summary + ' (' + when + ')')
+var listSettings = {
+  'calendarId': 'primary',
+  'timeMin': (new Date()).toISOString(),
+  'showDeleted': false,
+  'singleEvents': true,
+  'maxResults': 10,
+  'orderBy': 'startTime'
+}
+
+var listUpcomingEvents = function () {
+  gapi.client.calendar.events.list(listSettings)
+    .then(function (response) {
+      var events = response.result.items;
+      alert.show('Upcoming events:');
+
+      if (events.length > 0) {
+        // for (i = 0; i < events.length; i++) {
+        //   var event = events[i];
+        //   var when = event.start.dateTime;
+        //   if (!when) {
+        //     when = event.start.date;
+        //   }
+        //   alert.show(event.summary + ' (' + when + ')')
+        // }
+
+        items.render(events);
+      } else {
+        alert.show('No upcoming events found.');
       }
-    } else {
-      utils.appendPre('No upcoming events found.');
-    }
-  });
-}
-
-var template = document.querySelector('#template');
-var taskTemplate = template.content.querySelector('.task');
-// var taskList = document.querySelector('.mytodo__list');
-var addButton = document.querySelector('.my-todo__add-button');
-// var deleteButton = document.querySelector('.delete');
-
-
-var task = document.querySelector('.task-1');
-
-// console.log(taskList, deleteButton, task);
-
-// taskList.removeChild(task);
-
-
-// deleteButton.addEventListener('click', function () {
-//   if (task) {
-//     taskList.removeChild(task);
-//   }
-
-// })
-var log = function (el) {
-  console.log(el);
-}
-
-var createTask = function () {
-  var newTask = taskTemplate.cloneNode('true');
-  var doneButton = newTask.querySelector('.mytodo__done');
-  var deleteButton = newTask.querySelector('.mytodo__delete');
-  var taskList = document.querySelector('.mytodo__list');
-
-  deleteButton.addEventListener('click', function (evt) {
-
-    evt.preventDefault();
-
-    taskList.removeChild(newTask);
-  });
-
-  return newTask;
-};
-
-
-
-var addTask = function () {
-
-  var taskList = document.querySelector('.mytodo__list');
-  var newTask = createTask();
-
-  taskList.appendChild(newTask);
+    });
 }
 
 
-// console.log(addButton);
+window.myTodo.list = listUpcomingEvents;
+
+/**
+ * Append a pre element to the body containing the given message
+ * as its text node. Used to display the results of the API call.
+ *
+ * @param {string} message Text to be placed in pre element.
+ */
+function appendPre(message) {
+  var pre = document.getElementById('content');
+  var textContent = document.createTextNode(message + '\n');
+  pre.appendChild(textContent);
+}
+
+window.alert = {
+  show: appendPre,
+}
+
+var deleteSettings = {
+  'calendarId': 'primary',
+  'eventId': 'k731e93gqrhn7183dsd7mm0jtc',
+}
 
 
-// addButton.addEventListener('click', function () {
-//   addTask();
-// });
+var deleteEvent = function () {
+  return gapi.client.calendar.events.delete(deleteSettings)
+    .then(function (response) {
+        // Handle the results here (response.result has the parsed body).
+        console.log("Response", response);
+      },
+      function (err) {
+        console.error("Execute error", err);
+      });
+}
 

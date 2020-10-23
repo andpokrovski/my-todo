@@ -31,7 +31,7 @@
 
           <button id="authorize_button" style="display: none;">Authorize</button>
 
-          <pre id="content" style="white-space: pre-wrap;"></pre>
+
         </div>
       </div>
 
@@ -74,14 +74,14 @@
                   <li class="modal__date-item modal__date-item--start">
                     <input class="modal__date" type="date" name="start-date">
                   </li>
-                  <li class="modal__date-item modal__date-item--end" name="start-time">
-                    <input class="modal__date" type="date">
+                  <li class="modal__date-item modal__date-item--end">
+                    <input class="modal__date" type="date" name="end-date">
                   </li>
                 </ul>
 
                 <ul class="modal__time-list">
                   <li class="modal__time-item modal__time-item--start">
-                    <input class="modal__time" type="time" name="end-date">
+                    <input class="modal__time" type="time" name="start-time">
                   </li>
                   <li class="modal__time-item modal__time-item--end">
                     <input class="modal__time" type="time" name="end-time">
@@ -108,8 +108,15 @@
         </div>
       </div>
 
+      <!-- <pre class="my-todo__list" id="content" style="white-space: pre-wrap;"></pre> -->
 
       <ul class="my-todo__list"></ul>
+      <pre class="my-todo__list" id="content" style="white-space: pre-wrap;"></pre>
+
+      <div class="rabbit">
+        Я кролик
+        <button class="rabbit-button" type="button">Удали меня</button>
+      </div>
 
 
     </main>
@@ -122,10 +129,8 @@
 
   <template id="template">
 
-    <!-- <li class="my-todo__item task">Таска для маска</li> -->
-
     <li class="my-todo__item task">
-      <p class="my-todo__text" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0"
+      <p class="my-todo__text my-todo__summary" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0"
         spellcheck="true">
         Таска для Маска
       </p>
