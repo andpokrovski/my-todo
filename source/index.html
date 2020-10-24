@@ -17,13 +17,22 @@
 
     <header class="header">
       <h1 class="my-todo__title">my todo</h1>
-      <button class="button" id="signout-button">Выйти</button>
-      <select class="fonts" name="" id="">
-        <option value="" disabled selected>Выберите шрифт</option>
-        <option class="fonts__option fonts__option--roboto" value="Roboto">Roboto</option>
-        <option class="fonts__option fonts__option--ptserif" value="PT Serif">PT Serif</option>
-        <option class="fonts__option fonts__option--badscript" value="Bad Script">Bad Script</option>
-      </select>
+
+      <div class="options">
+        <select class="fonts" name="" id="">
+          <option value="" disabled selected>Выберите шрифт</option>
+          <option class="fonts__option fonts__option--roboto" value="Roboto">Roboto</option>
+          <option class="fonts__option fonts__option--ptserif" value="PT Serif">PT Serif</option>
+          <option class="fonts__option fonts__option--badscript" value="Bad Script">Bad Script</option>
+        </select>
+        <button class="button" id="signout-button" type="button">Выйти</button>
+        <button class="button" type="button">Выбрать дату</button>
+      </div>
+
+      <p class="notice">
+        Это уведомление... Скоро я спрячусь.
+      </p>
+
     </header>
 
 
@@ -35,10 +44,7 @@
       <div class="auth modal">
         <div class="modal__window">
           <h2>Авторизация</h2>
-
           <button class="auth__button button" id="auth-button">Войти c аккаунтом Google</button>
-
-
         </div>
       </div>
 
@@ -52,8 +58,8 @@
               Закрыть окно
             </span>
           </button>
-          <form class="form form--event" method="post" enctype="multipart/form-data"
-            action="https://echo.htmlacademy.ru" autocomplete="off">
+          <form class="form" method="post" enctype="multipart/form-data" action="https://echo.htmlacademy.ru"
+            autocomplete="off">
 
             <input class="form__title" type="text" placeholder="Название" name="summary" required>
 
@@ -75,8 +81,8 @@
 
             <fieldset class="form__date-time">
               <legend class="visually-hidden">Время и дата</legend>
-              <table class="form__table">
-                <tr class="form__table-row">
+              <!-- <table class="form__date-time-table">
+                <tr class="form__dates">
                   <td class="form__table-data">
                     <input class="form__date" type="date" name="start-date">
                   </td>
@@ -84,7 +90,7 @@
                     <input class="form__date" type="date" name="end-date">
                   </td>
                 </tr>
-                <tr class="form__table-row form__table-row--time">
+                <tr class="form__times">
                   <td class="form__table-data">
                     <input class="form__time" type="time" name="start-time">
                   </td>
@@ -92,7 +98,18 @@
                     <input class="form__time" type="time" name="end-time">
                   </td>
                 </tr>
-              </table>
+              </table> -->
+
+              <ul class="form__date-time-list">
+                <li class="form__date-time-item form__date-time-item--start">
+                  <input class="form__date" type="date" name="start-date">
+                  <input class="form__time" type="time" name="start-time">
+                </li>
+                <li class="form__date-time-item form__date-time-item--end">
+                  <input class="form__date" type="date" name="end-date">
+                  <input class="form__time" type="time" name="end-time">
+                </li>
+              </ul>
 
               <!-- <div class="form__date-time-wrapper">
                 <ul class="form__date-list">
@@ -115,7 +132,7 @@
               </div> -->
 
               <label class="form__all-day">
-                <input class="form__all-day-input" type="checkbox" name="allDay">
+                <input class="form__all-day-input" type="checkbox" name="all-day">
                 Весь день
               </label>
 

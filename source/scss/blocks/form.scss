@@ -14,16 +14,15 @@
 
 .form__type {
   margin: 0;
-  padding: 0;
-  border: none;
-
   margin-bottom: 20px;
+  padding: 0;
+
+  border: none;
 }
 
 .form__type-list {
   display: flex;
   margin: 0;
-
   padding: 0;
 
   list-style: none;
@@ -34,7 +33,7 @@
   margin-right: 10px;
 }
 
-.form__type-input:checked+.form__type-label {
+.form__type-input:checked + .form__type-label {
   background-color: rgba(0, 0, 0, 0.15);
 
   &:active {
@@ -56,65 +55,65 @@
   }
 }
 
-.form__date-time {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 0;
-  margin-bottom: 20px;
-  padding: 0;
+// .form__date-time {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   margin: 0;
+//   margin-bottom: 20px;
+//   padding: 0;
 
-  border: none;
-}
+//   border: none;
+// }
 
-.form__date-time-wrapper {
-  display: flex;
-  flex-direction: column;
-}
+// .form__date-time-wrapper {
+//   display: flex;
+//   flex-direction: column;
+// }
 
-.form__date-list {
-  display: flex;
-  margin: 0;
-  margin-bottom: 10px;
-  padding: 0;
+// .form__date-list {
+//   display: flex;
+//   margin: 0;
+//   margin-bottom: 10px;
+//   padding: 0;
 
-  list-style: none;
-}
+//   list-style: none;
+// }
 
 
-.form__date-item {
-  &--start {
-    flex-grow: 1;
-  }
+// .form__date-item {
+//   &--start {
+//     flex-grow: 1;
+//   }
 
-  &--end {
-    display: none;
-  }
-}
+//   &--end {
+//     display: none;
+//   }
+// }
 
-.form__date {
-  display: block;
-  width: 100%;
-}
+// .form__date {
+//   display: block;
+//   width: 100%;
+// }
 
-.form__time-list {
-  display: flex;
-  margin: 0;
-  margin-bottom: 20px;
-  padding: 0;
+// .form__time-list {
+//   display: flex;
+//   margin: 0;
+//   margin-bottom: 20px;
+//   padding: 0;
 
-  list-style: none;
-}
+//   list-style: none;
+// }
 
-.form__time-item {
-  &--end {
-    margin-left: 10px;
-  }
-}
+// .form__time-item {
+//   &--end {
+//     margin-left: 10px;
+//   }
+// }
 
-.form__time {
-  display: block;
-}
+// .form__time {
+//   display: block;
+// }
 
 
 // .form--all-day {
@@ -133,21 +132,47 @@
 //   }
 // }
 
+.form__date-time {
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
 
-.form--all-day {
-  .form__date-item--end {
-    display: block;
-    margin-left: 10px;
+  border: none;
+}
+
+// .form__date-time-table {
+//   margin-bottom: 20px;
+// }
+
+
+.form__date-time-list {
+  display: flex;
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
+
+  list-style: none;
+
+
+  @media (max-width: 380px) {
+    flex-direction: column;
   }
+}
 
-  .form__time-item {
-    width: 50%;
 
-    &--end {
-      display: block;
-      margin-left: 10px;
-    }
-  }
+.form__date {
+  // width: 100%;
+  display: block;
+  max-width: 100%;
+}
+
+
+.form--all-day .form__time {
+  display: none;
+}
+
+.form--task .form__date-time-item--end {
+  display: none;
 }
 
 
@@ -156,20 +181,21 @@
     display: none;
   }
 
-  .form__date-time-wrapper {
-    flex-direction: row;
-  }
+  // .form__date-time-wrapper {
+  //   flex-direction: row;
+  // }
 
-  .form__date-list {
-    margin-right: 10px;
-  }
+  // .form__date-list {
+  //   margin-right: 10px;
+  // }
 
-  .form__time-item {
-    &--end {
-      display: none;
-    }
-  }
+  // .form__time-item {
+  //   &--end {
+  //     display: none;
+  //   }
+  // }
 }
+
 
 .form__info {
   display: flex;

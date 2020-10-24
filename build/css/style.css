@@ -236,16 +236,6 @@ img {
 }
 
 .form__date-time {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
   margin: 0;
   margin-bottom: 20px;
   padding: 0;
@@ -253,43 +243,7 @@ img {
   border: none;
 }
 
-.form__date-time-wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-
-.form__date-list {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin: 0;
-  margin-bottom: 10px;
-  padding: 0;
-
-  list-style: none;
-}
-
-.form__date-item--start {
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-}
-
-.form__date-item--end {
-  display: none;
-}
-
-.form__date {
-  display: block;
-  width: 100%;
-}
-
-.form__time-list {
+.form__date-time-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -300,44 +254,29 @@ img {
   list-style: none;
 }
 
-.form__time-item--end {
-  margin-left: 10px;
+@media (max-width: 380px) {
+  .form__date-time-list {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
 }
 
-.form__time {
+.form__date {
   display: block;
+  max-width: 100%;
 }
 
-.form--all-day .form__date-item--end {
-  display: block;
-  margin-left: 10px;
-}
-
-.form--all-day .form__time-item {
-  width: 50%;
-}
-
-.form--all-day .form__time-item--end {
-  display: block;
-  margin-left: 10px;
-}
-
-.form--task .form__info {
+.form--all-day .form__time {
   display: none;
 }
 
-.form--task .form__date-time-wrapper {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+.form--task .form__date-time-item--end {
+  display: none;
 }
 
-.form--task .form__date-list {
-  margin-right: 10px;
-}
-
-.form--task .form__time-item--end {
+.form--task .form__info {
   display: none;
 }
 
@@ -427,7 +366,6 @@ img {
 }
 
 .modal__window {
-  position: absolute;
   position: fixed;
   top: 50%;
   right: 20px;
@@ -499,6 +437,38 @@ img {
 
 .modal__close-button:active {
   opacity: 0.5;
+}
+
+.notice {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  z-index: 9999;
+
+  display: none;
+  padding: 20px;
+
+  background-color: #ffffff;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 480px) {
+  .notice {
+    left: 50%;
+
+    width: 440px;
+
+    -webkit-transform: translateX(-50%);
+
+            transform: translateX(-50%);
+  }
+}
+
+.notice--active {
+  display: block;
 }
 
 .task {

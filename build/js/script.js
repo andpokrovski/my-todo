@@ -47,6 +47,20 @@
   select.addEventListener('change', onSelectChange);
 })();
 
+var notice = document.querySelector('.notice');
+
+var showNotice = function (message) {
+  notice.textContent = message;
+  notice.classList.toggle('notice--active', true);
+
+  setTimeout(function () {
+    notice.classList.toggle('notice--active', false);
+  }, 3000);
+
+}
+
+window.notice.show = showNotice;
+
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
 (function () {
@@ -731,7 +745,7 @@ window.myTodo = {};
     this.element = document.querySelector(settings.modal);
     var openButtons = document.querySelectorAll(settings.openButtons);
     var closeButtons = this.element.querySelectorAll('.modal__close');
-
+    this.openButtons = openButtons;
 
     if (openButtons.length > 0) {
       openButtons.forEach(function (openButton) {
@@ -764,54 +778,7 @@ window.myTodo = {};
 
 var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
-
-
-var formatDateTime = function (date, time) {
-  return date + 'T' + time + ':00' + UTC;
-}
-
-// var listSettings = {
-//   'calendarId': 'primary',
-//   // Может пригодиться
-//   'timeMin': (new Date()).toISOString(),
-//   'showDeleted': false,
-//   'singleEvents': true,
-//   'maxResults': 10,
-//   'orderBy': 'startTime'
-// }
-
-
-
-var createEvent = function (formData) {
-  return {
-    'summary': formData.get('summary'),
-    'location': formData.get('location'),
-    'start': {
-      'dateTime': formatDateTime(formData.get('start-date'), formData.get('start-time')),
-      'timeZone': TIMEZONE
-    },
-    'end': {
-      'dateTime': formatDateTime(formData.get('end-date'), formData.get('end-time')),
-      'timeZone': TIMEZONE
-    },
-  }
-}
-
-
-var sendEvent = function (formData) {
-  var event = createEvent(formData);
-  console.log(event);
-
-  var request = gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': event
-  });
-
-  request.execute(function (event) {
-    console.log(event.id);
-    alert.show('Event created: ' + event.htmlLink);
-  });
-}
+// var createOk = true;
 
 
 var createPopup = new Modal({
@@ -820,14 +787,65 @@ var createPopup = new Modal({
 });
 
 
+var formatDateTime = function (date, time) {
+  return date + 'T' + time + ':00' + UTC;
+}
+
+
+var CalendarEvent = function (formData) {
+  this.summary = formData.get('summary');
+
+  this.start = {};
+  this.end = {};
+
+  if (!(formData.get('start-time') && formData.get('start-time'))) {
+    this.start.date = formData.get('start-date');
+    this.end.date = formData.get('end-date');
+  } else {
+    this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
+    this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+  }
+
+  this.start.timeZone = TIMEZONE;
+  this.end.timeZone = TIMEZONE;
+
+  this.location = formData.get('location') || '';
+  this.description = formData.get('description') || '';
+}
+
+
+var sendEvent = function (formData) {
+  var event = new CalendarEvent(formData);
+
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
+
+  request.execute(function (event) {
+    if (!event.id) {
+      // createOk = false;
+      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
+    } else {
+      // createOk = true;
+      createPopup.close();
+      form.reset();
+      console.log('Event ID: ' + event.id);
+      console.log('Event link: ' + event.htmlLink);
+      notice.show('Успешно сохранено');
+    }
+  });
+}
 
 
 
 
-// window.create = {
-//   close: closeModal,
-//   send: sendEvent,
-// }
+window.create = {
+  open: createPopup.open,
+  close: createPopup.close,
+  send: sendEvent,
+  // ok: createOk,
+}
 
 var template = document.querySelector('#template');
 var itemTemplate = template.content.querySelector('.my-todo__item');
@@ -928,7 +946,7 @@ function initClient() {
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function (error) {
-    alert.show(JSON.stringify(error, null, 2));
+    console.log(JSON.stringify(error, null, 2));
   });
 }
 
@@ -982,7 +1000,9 @@ var saveButton = form.querySelector('.form__save');
 var typeButtons = form.elements.type;
 var currentType = '';
 var allDay = form.querySelector('.form__all-day');
-
+var dates = form.querySelectorAll('.form__date');
+var times = form.querySelectorAll('.form__time');
+var formValid = true;
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
@@ -998,21 +1018,89 @@ allDay.addEventListener('change', function () {
   form.classList.toggle('form--all-day');
 });
 
+var formatDate = function (dateObj) {
+  var day = dateObj.getDate();
+  var month = dateObj.getMonth() + 1;
+  var year = dateObj.getFullYear();
 
-var onSaveButtonClick = function () {
-  create.close();
+  return year + '-' + month + '-' + day;
 }
+
+
+var setDefaultDate = function () {
+  var currentDate = formatDate(new Date);
+
+  dates.forEach(function (input) {
+    input.value = currentDate;
+  });
+}
+
+
+// document.addEventListener("DOMContentLoaded", setDefaultDate);
+createPopup.openButtons.forEach(function (button) {
+  button.addEventListener('click', function () {
+    setDefaultDate();
+  });
+});
+
+
+var TIME_ROUNDING_STEP = 30;
+
+
+// stringify
+// 1. Произвести все необходимые значения.
+// 2. Привести к строке
+
+// var formatTime = function (dateObj) {
+//   var hours = dateObj.getDate();
+//   var minutes = dateObj.getMinutes();
+
+//   if (minutes <= TIME_ROUNDING_STEP) {
+//     minutes = TIME_ROUNDING_STEP;
+//   } else {
+//     minutes = '00';
+//     hours += 1;
+//   }
+
+//   return {
+//     start: hours + ':' + minutes,
+//     end: hours + ':' + (minutes + TIME_ROUNDING_STEP),
+//   }
+// }
+
+// var setDefaultTime = function () {
+//   var time = formatTime(new Date);
+
+//   times[0].value = time.start;
+//   console.log(time.start);
+//   times[1].value = time.end;
+// }
+
+
+// document.addEventListener("DOMContentLoaded", setDefaultTime);
+
+
+
+// var onSaveButtonClick = function () {
+//   if (formValid) {
+//     createPopup.close();
+//   }
+// }
 
 var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(form);
+
   create.send(formData);
 }
 
 
-saveButton.addEventListener('click', onSaveButtonClick);
+// saveButton.addEventListener('click', onSaveButtonClick);
 
 form.addEventListener('submit', onFormSubmit);
+
+
+// window.form;
 
 /**
  * Print the summary and start datetime/date of the next ten events in
@@ -1033,7 +1121,6 @@ var listUpcomingEvents = function () {
   gapi.client.calendar.events.list(listSettings)
     .then(function (response) {
       var events = response.result.items;
-      alert.show('Upcoming events:');
 
       if (events.length > 0) {
         // for (i = 0; i < events.length; i++) {
@@ -1047,7 +1134,7 @@ var listUpcomingEvents = function () {
 
         items.render(events);
       } else {
-        alert.show('No upcoming events found.');
+        notice.show('Запланированных на сегодня событий не найдено');
       }
     });
 }

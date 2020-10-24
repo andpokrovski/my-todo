@@ -42,7 +42,7 @@
     this.element = document.querySelector(settings.modal);
     var openButtons = document.querySelectorAll(settings.openButtons);
     var closeButtons = this.element.querySelectorAll('.modal__close');
-
+    this.openButtons = openButtons;
 
     if (openButtons.length > 0) {
       openButtons.forEach(function (openButton) {

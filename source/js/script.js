@@ -1,5 +1,6 @@
 //=require js/utils.js
 //=require js/fonts.js
+//=require js/notice.js
 //=require libs/gapi.js
 //=require js/common.js
 //=require js/modal.js

@@ -17,7 +17,6 @@ var listUpcomingEvents = function () {
   gapi.client.calendar.events.list(listSettings)
     .then(function (response) {
       var events = response.result.items;
-      alert.show('Upcoming events:');
 
       if (events.length > 0) {
         // for (i = 0; i < events.length; i++) {
@@ -31,7 +30,7 @@ var listUpcomingEvents = function () {
 
         items.render(events);
       } else {
-        alert.show('No upcoming events found.');
+        notice.show('Запланированных на сегодня событий не найдено');
       }
     });
 }
