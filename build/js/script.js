@@ -1,27 +1,27 @@
-var checkElements = function () {
-  var args = Array.prototype.slice.call(arguments);
-  var errors = [];
+;(function () {
+  var checkElements = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var errors = [];
 
-  var check = args.reduce(function (flag, el, i, arr) {
-    var elExist = Boolean(el);
+    var check = args.reduce(function (flag, el, i, arr) {
+      var elExist = Boolean(el);
 
-    if (!elExist) {
-      errors.push(i + 1);
-    }
+      if (!elExist) {
+        errors.push(i + 1);
+      }
 
-    return flag && elExist;
-  }, true);
+      return flag && elExist;
+    }, true);
 
-  // if (!check) {
-  //   console.log('На странице нет элементов ' + errors.join(', '));
-  // }
+    // if (!check) {
+    //   console.log('На странице нет элементов ' + errors.join(', '));
+    // }
 
-  return check;
-}
+    return check;
+  }
+})();
 
-
-
-(function () {
+;(function () {
   var body = document.querySelector('.body');
   var select = document.querySelector('.fonts');
 
@@ -32,15 +32,14 @@ var checkElements = function () {
     if (storageValue) {
       body.style.fontFamily = storageValue;
       select.value = storageValue;
-      console.log(select[storageValue]);
     }
-  }
+  };
 
 
   var onSelectChange = function () {
     body.style.fontFamily = select.value;
     localStorage.setItem('fontFamily', select.value)
-  }
+  };
 
 
   document.addEventListener("DOMContentLoaded", onPageLoad);
@@ -815,7 +814,7 @@ var sendEvent = function (formData) {
 }
 
 
-var popup = new Modal({
+var createPopup = new Modal({
   modal: '.create',
   openButtons: '.add-button',
 });
@@ -899,8 +898,8 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 // included, separated by spaces.
 var SCOPES = "https://www.googleapis.com/auth/calendar";
 
-var authorizeButton = document.getElementById('authorize_button');
-var signoutButton = document.getElementById('signout_button');
+var authorizeButton = document.getElementById('auth-button');
+var signoutButton = document.getElementById('signout-button');
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -939,14 +938,13 @@ function initClient() {
  */
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
-    authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'block';
+    // authorizeButton.style.display = 'none';
+    // signoutButton.style.display = 'block';
     myTodo.list();
-    // authClose();
     authPopup.close();
   } else {
-    authorizeButton.style.display = 'block';
-    signoutButton.style.display = 'none';
+    // authorizeButton.style.display = 'block';
+    // signoutButton.style.display = 'none';
   }
 }
 
@@ -962,7 +960,6 @@ function handleAuthClick(event) {
  */
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
-  authOpen();
   authPopup.open();
 }
 
@@ -980,9 +977,26 @@ document.addEventListener("DOMContentLoaded", function () {
   handleClientLoad();
 });
 
-var form = document.querySelector('.create__form');
-var saveButton = form.querySelector('.create__save');
+var form = document.querySelector('.form');
+var saveButton = form.querySelector('.form__save');
+var typeButtons = form.elements.type;
+var currentType = '';
+var allDay = form.querySelector('.form__all-day');
 
+
+typeButtons.forEach(function (button) {
+  button.addEventListener('change', function () {
+    if (button.checked) {
+      form.classList.remove('form--' + currentType);
+      currentType = button.value;
+      form.classList.add('form--' + currentType);
+    }
+  });
+});
+
+allDay.addEventListener('change', function () {
+  form.classList.toggle('form--all-day');
+});
 
 
 var onSaveButtonClick = function () {

@@ -17,7 +17,7 @@
 
     <header class="header">
       <h1 class="my-todo__title">my todo</h1>
-      <button id="signout_button" style="display: none;">Sign Out</button>
+      <button class="button" id="signout-button">Выйти</button>
       <select class="fonts" name="" id="">
         <option value="" disabled="" selected="">Выберите шрифт</option>
         <option class="fonts__option fonts__option--roboto" value="Roboto">Roboto</option>
@@ -36,7 +36,7 @@
         <div class="modal__window">
           <h2>Авторизация</h2>
 
-          <button id="authorize_button" style="display: none;">Authorize</button>
+          <button class="auth__button button" id="auth-button">Войти c аккаунтом Google</button>
 
 
         </div>
@@ -52,60 +52,81 @@
               Закрыть окно
             </span>
           </button>
-          <form class="create__form create__form--multi-day" method="post" enctype="multipart/form-data" action="https://echo.htmlacademy.ru" autocomplete="off">
+          <form class="form form--event" method="post" enctype="multipart/form-data" action="https://echo.htmlacademy.ru" autocomplete="off">
 
-            <input class="create__title" type="text" placeholder="Добавьте название" name="summary">
+            <input class="form__title" type="text" placeholder="Название" name="summary" required="">
 
-            <ul class="create__type-list">
-              <li class="create__type-item">
-                <input class="create__type-input visually-hidden" type="radio" id="create-event" name="type" checked="">
-                <label class="create__type-label" for="create-event">Мероприятие</label>
-              </li>
-              <li class="create__type-item">
-                <input class="create__type-input visually-hidden" type="radio" id="create-task" name="type">
-                <label class="create__type-label" for="create-task">Задача</label>
-              </li>
-            </ul>
+            <fieldset class="form__type">
+              <legend class=" visually-hidden">Время и дата</legend>
+              <ul class="form__type-list">
+                <li class="form__type-item">
+                  <input class="form__type-input visually-hidden" type="radio" id="form-event" name="type" value="event" checked="">
+                  <label class="form__type-label" for="form-event">Мероприятие</label>
+                </li>
+                <li class="form__type-item">
+                  <input class="form__type-input visually-hidden" type="radio" id="form-task" name="type" value="task">
+                  <label class="form__type-label" for="form-task">Задача</label>
+                </li>
+              </ul>
+            </fieldset>
 
-            <fieldset class="create__date-time">
-              <title class="visually-hidden">Время и дата</title>
 
+            <fieldset class="form__date-time">
+              <legend class="visually-hidden">Время и дата</legend>
+              <table class="form__table">
+                <tr class="form__table-row">
+                  <td class="form__table-data">
+                    <input class="form__date" type="date" name="start-date">
+                  </td>
+                  <td class="form__table-data">
+                    <input class="form__date" type="date" name="end-date">
+                  </td>
+                </tr>
+                <tr class="form__table-row form__table-row--time">
+                  <td class="form__table-data">
+                    <input class="form__time" type="time" name="start-time">
+                  </td>
+                  <td class="form__table-data">
+                    <input class="form__time" type="time" name="end-time">
+                  </td>
+                </tr>
+              </table>
 
-              <div class="create__date-time-wrapper">
-                <ul class="create__date-list">
-                  <li class="create__date-item create__date-item--start">
-                    <input class="create__date" type="date" name="start-date">
+              <!-- <div class="form__date-time-wrapper">
+                <ul class="form__date-list">
+                  <li class="form__date-item form__date-item--start">
+                    <input class="form__date" type="date" name="start-date">
                   </li>
-                  <li class="create__date-item create__date-item--end">
-                    <input class="create__date" type="date" name="end-date">
+                  <li class="form__date-item form__date-item--end">
+                    <input class="form__date" type="date" name="end-date">
                   </li>
                 </ul>
 
-                <ul class="create__time-list">
-                  <li class="create__time-item create__time-item--start">
-                    <input class="create__time" type="time" name="start-time">
+                <ul class="form__time-list">
+                  <li class="form__time-item form__time-item--start">
+                    <input class="form__time" type="time" name="start-time">
                   </li>
-                  <li class="create__time-item create__time-item--end">
-                    <input class="create__time" type="time" name="end-time">
+                  <li class="form__time-item form__time-item--end">
+                    <input class="form__time" type="time" name="end-time">
                   </li>
                 </ul>
-              </div>
+              </div> -->
 
-              <label class="create__all-day">
-                <input class="create__all-day-input" type="checkbox" name="allDay">
+              <label class="form__all-day">
+                <input class="form__all-day-input" type="checkbox" name="allDay">
                 Весь день
               </label>
 
             </fieldset>
 
-            <fieldset class="create__info">
+            <fieldset class="form__info">
               <title class="visually-hidden">Дополнительная информация</title>
 
-              <input class="create__place" type="text" placeholder="Место" name="location">
-              <textarea class="create__description" placeholder="Описание" name="description"></textarea>
+              <input class="form__place" type="text" placeholder="Место" name="location">
+              <textarea class="form__description" placeholder="Описание" name="description"></textarea>
             </fieldset>
 
-            <button class="create__save" type="submit">Сохранить</button>
+            <button class="form__save" type="submit">Сохранить</button>
           </form>
         </div>
       </div>

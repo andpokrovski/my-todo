@@ -17,3 +17,16 @@ img {
 .d-none {
   display: none !important;
 }
+
+.button {
+
+
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+}

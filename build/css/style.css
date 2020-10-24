@@ -19,6 +19,18 @@ img {
   display: none !important;
 }
 
+.button {
+  padding: 10px;
+
+  font: inherit;
+  color: inherit;
+
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .visually-hidden {
   position: absolute;
 
@@ -125,6 +137,10 @@ img {
   }
 }
 
+.auth__button {
+  margin-bottom: 20px;
+}
+
 .body {
   margin: 0;
 
@@ -147,7 +163,19 @@ img {
   padding: 20px;
 }
 
-.create__title {
+.fonts__option--roboto {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
+.fonts__option--ptserif {
+  font-family: "PT Serif", Georgia, "Times New Roman", Times, serif;
+}
+
+.fonts__option--badscript {
+  font-family: "Bad Script", Arial, Helvetica, sans-serif;
+}
+
+.form__title {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -161,30 +189,37 @@ img {
   border-bottom: 1px solid #000000;
 }
 
-.create__type-list {
+.form__type {
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
+
+  border: none;
+}
+
+.form__type-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   margin: 0;
-  margin-bottom: 20px;
   padding: 0;
 
   list-style: none;
 }
 
-.create__type-item {
+.form__type-item {
   margin-right: 10px;
 }
 
-.create__type-input:checked + .create__type-label {
+.form__type-input:checked + .form__type-label {
   background-color: rgba(0, 0, 0, 0.15);
 }
 
-.create__type-input:checked + .create__type-label:active {
+.form__type-input:checked + .form__type-label:active {
   opacity: 0.5;
 }
 
-.create__type-label {
+.form__type-label {
   display: block;
   padding: 6px 4px;
 
@@ -196,11 +231,11 @@ img {
   transition: 0.2s ease;
 }
 
-.create__type-label:hover {
+.form__type-label:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.create__date-time {
+.form__date-time {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -218,7 +253,7 @@ img {
   border: none;
 }
 
-.create__date-time-wrapper {
+.form__date-time-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -228,7 +263,7 @@ img {
           flex-direction: column;
 }
 
-.create__date-list {
+.form__date-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -239,22 +274,22 @@ img {
   list-style: none;
 }
 
-.create__date-item--start {
+.form__date-item--start {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
-.create__date-item--end {
+.form__date-item--end {
   display: none;
 }
 
-.create__date {
+.form__date {
   display: block;
   width: 100%;
 }
 
-.create__time-list {
+.form__time-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -265,48 +300,48 @@ img {
   list-style: none;
 }
 
-.create__time-item--end {
+.form__time-item--end {
   margin-left: 10px;
 }
 
-.create__time {
+.form__time {
   display: block;
 }
 
-.create__form--multi-day .create__date-item--end {
+.form--all-day .form__date-item--end {
   display: block;
   margin-left: 10px;
 }
 
-.create__form--multi-day .create__time-item {
+.form--all-day .form__time-item {
   width: 50%;
 }
 
-.create__form--multi-day .create__time-item--end {
+.form--all-day .form__time-item--end {
   display: block;
   margin-left: 10px;
 }
 
-.create__form--task .create__info {
+.form--task .form__info {
   display: none;
 }
 
-.create__form--task .create__date-time-wrapper {
+.form--task .form__date-time-wrapper {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
 }
 
-.create__form--task .create__date-list {
+.form--task .form__date-list {
   margin-right: 10px;
 }
 
-.create__form--task .create__time-item--end {
+.form--task .form__time-item--end {
   display: none;
 }
 
-.create__info {
+.form__info {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -324,7 +359,7 @@ img {
   border: none;
 }
 
-.create__title {
+.form__title {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -338,7 +373,7 @@ img {
   border-bottom: 1px solid #000000;
 }
 
-.create__place {
+.form__place {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -351,7 +386,7 @@ img {
   border-bottom: 1px solid #000000;
 }
 
-.create__description {
+.form__description {
   padding: 0;
   padding-bottom: 5px;
 
@@ -363,18 +398,6 @@ img {
   border-bottom: 1px solid #000000;
 
   resize: none;
-}
-
-.fonts__option--roboto {
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
-}
-
-.fonts__option--ptserif {
-  font-family: "PT Serif", Georgia, "Times New Roman", Times, serif;
-}
-
-.fonts__option--badscript {
-  font-family: "Bad Script", Arial, Helvetica, sans-serif;
 }
 
 .header {

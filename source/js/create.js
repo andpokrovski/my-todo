@@ -50,7 +50,7 @@ var sendEvent = function (formData) {
 }
 
 
-var popup = new Modal({
+var createPopup = new Modal({
   modal: '.create',
   openButtons: '.add-button',
 });
