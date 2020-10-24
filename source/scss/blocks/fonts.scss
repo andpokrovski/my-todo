@@ -1,0 +1,20 @@
+.fonts__option {
+  &--roboto {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+  }
+
+  &--ptserif {
+    font-family: "PT Serif",
+      Georgia,
+      'Times New Roman',
+      Times,
+      serif;
+  }
+
+  &--badscript {
+    font-family: "Bad Script",
+      Arial,
+      Helvetica,
+      sans-serif;
+  }
+}

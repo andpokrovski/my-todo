@@ -1,68 +1,4 @@
-.modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal__window {
-  position: absolute;
-  top: 50%;
-
-  min-height: 200px;
-  padding: 20px;
-
-  background-color: lightgrey;
-  border-radius: 8px;
-  transform: translateY(-50%);
-
-
-  @media (min-width: 480px) {
-    left: 50%;
-
-    width: 440px;
-
-    transform: translate(-50%, -50%);
-  }
-}
-
-
-.modal__close {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-
-  width: 50px;
-  height: 50px;
-  padding: 0;
-
-  font: inherit;
-  color: inherit;
-
-  background-color: transparent;
-  background-image: url("../img/icon-close.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-
-  transition: 0.2s ease;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.15);
-  }
-
-  &:active {
-    opacity: 0.5;
-  }
-}
-
-.modal__title {
+.create__title {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -76,7 +12,7 @@
   border-bottom: 1px solid #000000;
 }
 
-.modal__type-list {
+.create__type-list {
   display: flex;
   margin: 0;
   margin-bottom: 20px;
@@ -86,11 +22,11 @@
 }
 
 
-.modal__type-item {
+.create__type-item {
   margin-right: 10px;
 }
 
-.modal__type-input:checked + .modal__type-label {
+.create__type-input:checked + .create__type-label {
   background-color: rgba(0, 0, 0, 0.15);
 
   &:active {
@@ -98,7 +34,7 @@
   }
 }
 
-.modal__type-label {
+.create__type-label {
   display: block;
   padding: 6px 4px;
 
@@ -112,7 +48,7 @@
   }
 }
 
-.modal__date-time {
+.create__date-time {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -123,12 +59,12 @@
   border: none;
 }
 
-.modal__date-time-wrapper {
+.create__date-time-wrapper {
   display: flex;
   flex-direction: column;
 }
 
-.modal__date-list {
+.create__date-list {
   display: flex;
   margin: 0;
   margin-bottom: 10px;
@@ -138,7 +74,7 @@
 }
 
 
-.modal__date-item {
+.create__date-item {
   &--start {
     flex-grow: 1;
   }
@@ -148,12 +84,12 @@
   }
 }
 
-.modal__date {
+.create__date {
   display: block;
   width: 100%;
 }
 
-.modal__time-list {
+.create__time-list {
   display: flex;
   margin: 0;
   margin-bottom: 20px;
@@ -162,24 +98,24 @@
   list-style: none;
 }
 
-.modal__time-item {
+.create__time-item {
   &--end {
     margin-left: 10px;
   }
 }
 
-.modal__time {
+.create__time {
   display: block;
 }
 
 
-.modal__form--multi-day {
-  .modal__date-item--end {
+.create__form--multi-day {
+  .create__date-item--end {
     display: block;
     margin-left: 10px;
   }
 
-  .modal__time-item {
+  .create__time-item {
     width: 50%;
 
     &--end {
@@ -189,27 +125,27 @@
   }
 }
 
-.modal__form--task {
-  .modal__info {
+.create__form--task {
+  .create__info {
     display: none;
   }
 
-  .modal__date-time-wrapper {
+  .create__date-time-wrapper {
     flex-direction: row;
   }
 
-  .modal__date-list {
+  .create__date-list {
     margin-right: 10px;
   }
 
-  .modal__time-item {
+  .create__time-item {
     &--end {
       display: none;
     }
   }
 }
 
-.modal__info {
+.create__info {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -221,7 +157,7 @@
 }
 
 
-.modal__title {
+.create__title {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -236,7 +172,7 @@
 }
 
 
-.modal__place {
+.create__place {
   margin-bottom: 20px;
   padding: 0;
   padding-bottom: 5px;
@@ -249,7 +185,7 @@
   border-bottom: 1px solid #000000;
 }
 
-.modal__description {
+.create__description {
   padding: 0;
   padding-bottom: 5px;
 
@@ -261,19 +197,4 @@
   border-bottom: 1px solid #000000;
 
   resize: none;
-}
-
-.modal__save {
-  display: block;
-  padding: 0;
-  padding: 10px;
-
-  font: inherit;
-  color: inherit;
-  color: $mtc;
-
-  background-color: $ac;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
 }

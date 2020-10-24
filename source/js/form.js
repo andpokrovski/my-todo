@@ -1,5 +1,5 @@
-var form = document.querySelector('.modal__form');
-var saveButton = form.querySelector('.modal__save');
+var form = document.querySelector('.create__form');
+var saveButton = form.querySelector('.create__save');
 
 
 

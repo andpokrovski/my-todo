@@ -1,3 +1,53 @@
+var checkElements = function () {
+  var args = Array.prototype.slice.call(arguments);
+  var errors = [];
+
+  var check = args.reduce(function (flag, el, i, arr) {
+    var elExist = Boolean(el);
+
+    if (!elExist) {
+      errors.push(i + 1);
+    }
+
+    return flag && elExist;
+  }, true);
+
+  // if (!check) {
+  //   console.log('На странице нет элементов ' + errors.join(', '));
+  // }
+
+  return check;
+}
+
+
+
+(function () {
+  var body = document.querySelector('.body');
+  var select = document.querySelector('.fonts');
+
+
+  var onPageLoad = function () {
+    var storageValue = localStorage.getItem('fontFamily')
+
+    if (storageValue) {
+      body.style.fontFamily = storageValue;
+      select.value = storageValue;
+      console.log(select[storageValue]);
+    }
+  }
+
+
+  var onSelectChange = function () {
+    body.style.fontFamily = select.value;
+    localStorage.setItem('fontFamily', select.value)
+  }
+
+
+  document.addEventListener("DOMContentLoaded", onPageLoad);
+
+  select.addEventListener('change', onSelectChange);
+})();
+
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
 (function () {
@@ -636,243 +686,148 @@ gapi.load("", {
   }
 });
 
-var checkElements = function () {
-  var args = Array.prototype.slice.call(arguments);
-  var errors = [];
-
-  var check = args.reduce(function (flag, el, i, arr) {
-    var elExist = Boolean(el);
-
-    if (!elExist) {
-      errors.push(i + 1);
-    }
-
-    return flag && elExist;
-  }, true);
-
-  // if (!check) {
-  //   console.log('На странице нет элементов ' + errors.join(', '));
-  // }
-
-  return check;
-}
-
-
-
 window.myTodo = {};
 
-// popup
+(function () {
+  var onModalEscPress = function (evt) {
+    if (evt.key === 'Escape') {
+      closeModal.bind(this)();
+    }
+  }
 
-
-// var addButton = document.querySelector('.my-todo__add-button');
-// var modal = document.querySelector('.create');
-// var closeButton = document.querySelector('.create__close');
-
-
-
-
-
-// addButton.addEventListener('click', function () {
-//   // console.log('open')
-//   openModal();
-// });
-
-// closeButton.addEventListener('click', function () {
-//   closeModal();
-// });
+  var modalEscPressHandler;
 
 
 
+  var openModal = function () {
+    this.element.classList.toggle('d-none', false);
+
+    var openEvent = new CustomEvent("modalOpened", {
+      cancelable: true,
+      bubbles: true,
+    });
+
+    this.element.dispatchEvent(openEvent);
+    modalEscPressHandler = onModalEscPress.bind(this);
+    document.addEventListener('keydown', modalEscPressHandler);
+  }
+
+
+  var closeModal = function () {
+    this.element.classList.toggle('d-none', true);
+
+    var closeEvent = new CustomEvent("modalClosed", {
+      cancelable: true,
+      bubbles: true,
+    });
+
+    this.element.dispatchEvent(closeEvent);
+    document.removeEventListener('keydown', modalEscPressHandler);
+  }
 
 
 
-// var Modal = function (settings) {
-//   this.element = document.querySelector(settings.modalClass);
+  var Modal = function (settings) {
+    var modal = this;
+    this.element = document.querySelector(settings.modal);
+    var openButtons = document.querySelectorAll(settings.openButtons);
+    var closeButtons = this.element.querySelectorAll('.modal__close');
 
-//   var closeButtons = this.element.querySelectorAll('.modal__close');
-//   var openButtons = document.querySelectorAll(settings.openButtonsClass);
+
+    if (openButtons.length > 0) {
+      openButtons.forEach(function (openButton) {
+        openButton.addEventListener('click', function (evt) {
+          evt.preventDefault();
+          openModal.bind(modal)();
+        });
+      });
+    }
+
+    if (closeButtons.length > 0) {
+      closeButtons.forEach(function (closeButton) {
+        closeButton.addEventListener('click', function (evt) {
+          evt.preventDefault();
+          closeModal.bind(modal)();
+        });
+      });
+    }
+  }
 
 
-//   openButtons.forEach(function (openButton) {
-//     openButton.addEvenlistener('click', function () {
-//       openModal(this.element);
-//     });
-//   });
+  Modal.prototype = {
+    open: openModal,
+    close: closeModal,
+  }
 
-//   closeButtons.forEach(function (closeButton) {
-//     closeButton.addEvenlistener('click', function () {
-//       closeModal(this.element);
-//     });
-//   });
+
+  window.Modal = Modal;
+})();
+
+var UTC = '+03:00';
+var TIMEZONE = 'Europe/Moscow';
+
+
+var formatDateTime = function (date, time) {
+  return date + 'T' + time + ':00' + UTC;
+}
+
+// var listSettings = {
+//   'calendarId': 'primary',
+//   // Может пригодиться
+//   'timeMin': (new Date()).toISOString(),
+//   'showDeleted': false,
+//   'singleEvents': true,
+//   'maxResults': 10,
+//   'orderBy': 'startTime'
 // }
 
 
-// Modal.prototype = {
-//   open: function () {
-//     openModal(this);
-//   },
-//   close: function () {
-//     closeModal(this);
-//   },
-// }
 
-// // Все это объединить в модальное окно
-
-
-
-
-// var modalInit = function (modalClass, openButtonClass) {
-//   var openButtons = document.querySelectorAll(openButtonClass);
-//   // var modal = document.querySelector(modalClass);
-
-//   var modal = new Modal(modalClass);
-
-
-
-//   openButtons.forEach(function (openButton) {
-//     openButton.addEvenlistener('click', function () {
-//       modal.show();
-//       // открыть модальное окно
-//     });
-//   });
-
-// }
-
-
-
-// var Modal = function (modalClass) {
-//   this.element = document.querySelector(modalClass);
-// }
-
-
-// Modal.prototype = {
-//   open: function () {
-//     openModal(this.element);
-//   },
-//   close: function () {
-//     closeModal(this.element);
-//   },
-// }
-
-// Переопределить метод EventHandler внутри прототипа
-
-
-
-// var modalInit = function (settings) {
-//   var modal = new Modal;
-//   var openButtons = document.querySelectorAll(settings.openButtonClass);
-//   var closeButtons = modal.element.querySelectorAll('.modal__close');
-
-//   openButtons.forEach(function (openButton) {
-//     openButton.addEvenlistener('click', function () {
-//       modal.show();
-//       // открыть модальное окно
-//     });
-//   });
-
-
-
-//   var openButtons = document.querySelectorAll(settings.openButtonsClass);
-
-
-//   openButtons.forEach(function (openButton) {
-//     openButton.addEvenlistener('click', function () {
-//       openModal(this.element);
-//     });
-//   });
-
-//   closeButtons.forEach(function (closeButton) {
-//     closeButton.addEvenlistener('click', function () {
-//       closeModal(this.element);
-//     });
-//   });
-
-
-//   return modal;
-
-// }
-
-
-var onModalEscPress = function (evt) {
-  if (evt.key === 'Escape') {
-    closeModal();
+var createEvent = function (formData) {
+  return {
+    'summary': formData.get('summary'),
+    'location': formData.get('location'),
+    'start': {
+      'dateTime': formatDateTime(formData.get('start-date'), formData.get('start-time')),
+      'timeZone': TIMEZONE
+    },
+    'end': {
+      'dateTime': formatDateTime(formData.get('end-date'), formData.get('end-time')),
+      'timeZone': TIMEZONE
+    },
   }
 }
 
 
-var openModal = function () {
-  this.element.classList.toggle('d-none', false);
-  // document.addEventListener('keydown', onModalEscPress);
-  document.addEventListener('keydown', onModalEscPress.bind(this));
-}
+var sendEvent = function (formData) {
+  var event = createEvent(formData);
+  console.log(event);
 
-
-var closeModal = function () {
-  this.element.classList.toggle('d-none', true);
-  // document.removeEventListener('keydown', onModalEscPress);
-  document.removeEventListener('keydown', onModalEscPress.bind(this));
-}
-
-
-
-var Modal = function (settings) {
-  this.element = document.querySelector(settings.modal);
-  var openButtons = document.querySelectorAll(settings.openButton);
-  var closeButtons = this.element.querySelectorAll('.modal__close');
-
-
-  openButtons.forEach(function (openButton) {
-    openButton.addEvenlistener('click', openModal.bind(this));
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
   });
 
-  closeButtons.forEach(function (closeButton) {
-    closeButton.addEvenlistener('click', closeModal.bind(this));
+  request.execute(function (event) {
+    console.log(event.id);
+    alert.show('Event created: ' + event.htmlLink);
   });
 }
 
 
-Modal.prototype = {
-  open: openModal,
-  close: closeModal,
-}
-
-window.Modal;
+var popup = new Modal({
+  modal: '.create',
+  openButtons: '.add-button',
+});
 
 
 
 
 
 
-
-// Тесты с кроликом
-
-
-// Фиксировать контекст
-
-var deleteRabbit = function () {
-  this.classList.toggle('d-none', true);
-}
-
-// var callDeleteRabbit = function () {
-//   return deleteRabbit.call()
-// }
-
-
-var Rabbit = function () {
-  this.element = document.querySelector('.rabbit');
-  var button = this.element.querySelector('.rabbit-button');
-
-  // button.addEventListener('click', function () {
-  //   deleteRabbit(this);
-  // });
-
-  button.addEventListener('click', deleteRabbit.bind(this.element));
-}
-
-// Rabbit.prototype = {
-//   delete: function () {
-//     this.element.style.display = 'none';
-//   }
+// window.create = {
+//   close: closeModal,
+//   send: sendEvent,
 // }
 
 var template = document.querySelector('#template');
@@ -916,16 +871,20 @@ window.items = {
   render: renderItems
 }
 
-var popup = document.querySelector('.my-todo__authorization');
+var authPopup = new Modal({
+  modal: '.auth',
+});
 
-var authOpen = function () {
-  popup.classList.toggle('d-none', false);
-}
+// var popup = document.querySelector('.my-todo__authorization');
 
-var authClose = function () {
-  popup.classList.toggle('d-none', true);
-  // popup.classList.add('d-none');
-}
+// var authOpen = function () {
+//   popup.classList.toggle('d-none', false);
+// }
+
+// var authClose = function () {
+//   popup.classList.toggle('d-none', true);
+//   // popup.classList.add('d-none');
+// }
 
 
 
@@ -983,7 +942,8 @@ function updateSigninStatus(isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
     myTodo.list();
-    authClose();
+    // authClose();
+    authPopup.close();
   } else {
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
@@ -1003,14 +963,15 @@ function handleAuthClick(event) {
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
   authOpen();
+  authPopup.open();
 }
 
 
 
 
 window.auth = {
-  open: authOpen,
-  close: authClose,
+  // open: authOpen,
+  // close: authClose,
   handleClientLoad: handleClientLoad,
 }
 
@@ -1019,107 +980,8 @@ document.addEventListener("DOMContentLoaded", function () {
   handleClientLoad();
 });
 
-var UTC = '+03:00';
-var TIMEZONE = 'Europe/Moscow';
-
-
-var formatDateTime = function (date, time) {
-  return date + 'T' + time + ':00' + UTC;
-}
-
-
-var createEvent = function (formData) {
-  return {
-    'summary': formData.get('summary'),
-    'location': formData.get('location'),
-    'start': {
-      'dateTime': formatDateTime(formData.get('start-date'), formData.get('start-time')),
-      'timeZone': TIMEZONE
-    },
-    'end': {
-      'dateTime': formatDateTime(formData.get('end-date'), formData.get('end-time')),
-      'timeZone': TIMEZONE
-    },
-  }
-}
-
-
-var sendEvent = function (formData) {
-  var event = createEvent(formData);
-  console.log(event);
-
-  var request = gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': event
-  });
-
-  request.execute(function (event) {
-    console.log(event.id);
-    alert.show('Event created: ' + event.htmlLink);
-  });
-}
-
-
-
-// popup
-
-
-// var addButton = document.querySelector('.my-todo__add-button');
-// var modal = document.querySelector('.create');
-// var closeButton = document.querySelector('.create__close');
-
-// var onModalEscPress = function (evt) {
-//   if (evt.key === 'Escape') {
-//     closeModal();
-//   }
-// }
-
-// var openModal = function () {
-//   modal.classList.toggle('d-none', false);
-//   // modal.classList.remove('d-none');
-//   document.addEventListener('keydown', onModalEscPress);
-// }
-
-
-// var closeModal = function () {
-//   modal.classList.toggle('d-none', true);
-//   document.removeEventListener('keydown', onModalEscPress);
-// }
-
-
-
-// addButton.addEventListener('click', function () {
-//   // console.log('open')
-//   openModal();
-// });
-
-// closeButton.addEventListener('click', function () {
-//   closeModal();
-// });
-
-
-var addButton = document.querySelector('.my-todo__add-button');
-var modal = document.querySelector('.create');
-var closeButton = document.querySelector('.create__close');
-
-
-var popup = new Modal({
-  modal: '.create',
-  openButton: 
-});
-
-
-
-
-
-
-window.create = {
-  close: closeModal,
-  send: sendEvent,
-}
-
-var form = document.querySelector('.modal__form');
-var saveButton = form.querySelector('.modal__save');
+var form = document.querySelector('.create__form');
+var saveButton = form.querySelector('.create__save');
 
 
 

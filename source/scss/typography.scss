@@ -1,33 +1,51 @@
 @font-face {
   font-style: normal;
   font-weight: normal;
-  font-family: "montserrat-regular";
+  font-family: "Roboto";
 
   font-display: swap;
-  src: url("../fonts/montserrat-regular.woff2") format("woff2"),
-    url("../fonts/montserrat-regular.woff") format("woff");
+  src: url("../fonts/roboto-regular-webfont.woff2") format("woff2"),
+    url("../fonts/roboto-regular-webfont.woff") format("woff");
 }
 
 @font-face {
   font-style: normal;
-  font-weight: normal;
-  font-family: "montserrat-bold";
+  font-weight: bold;
+  font-family: "Roboto";
 
   font-display: swap;
-  src: url("../fonts/montserrat-bold.woff2") format("woff2"),
-    url("../fonts/montserrat-bold.woff") format("woff");
+  src: url("../fonts/roboto-bold-webfont.woff2") format("woff2"),
+    url("../fonts/roboto-bold-webfont.woff") format("woff");
 }
 
-@mixin regular($font-size, $line-height, $color) {
-  font-size: $font-size;
-  line-height: $line-height;
-  font-family: "montserrat-regular", "Arial", sans-serif;
-  color: $color;
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "PT Serif";
+
+  font-display: swap;
+  src: url("../fonts/ptserif-regular-webfont.woff2") format("woff2"),
+    url("../fonts/ptserif-regular-webfont.woff") format("woff");
 }
 
-@mixin bold($font-size, $line-height, $color) {
-  font-size: $font-size;
-  line-height: $line-height;
-  font-family: "montserrat-bold", "Arial", sans-serif;
-  color: $color;
+@font-face {
+  font-style: normal;
+  font-weight: bold;
+  font-family: "PT Serif";
+
+  font-display: swap;
+  src: url("../fonts/ptserif-bold-webfont.woff2") format("woff2"),
+    url("../fonts/ptserif-bold-webfont.woff") format("woff");
+}
+
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "Bad Script";
+
+  font-display: swap;
+  src: url("../fonts/badscript-regular-webfont.woff2") format("woff2"),
+    url("../fonts/badscript-regular-webfont.woff") format("woff");
 }

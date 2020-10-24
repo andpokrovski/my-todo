@@ -1,13 +1,17 @@
-var popup = document.querySelector('.my-todo__authorization');
+var authPopup = new Modal({
+  modal: '.auth',
+});
 
-var authOpen = function () {
-  popup.classList.toggle('d-none', false);
-}
+// var popup = document.querySelector('.my-todo__authorization');
 
-var authClose = function () {
-  popup.classList.toggle('d-none', true);
-  // popup.classList.add('d-none');
-}
+// var authOpen = function () {
+//   popup.classList.toggle('d-none', false);
+// }
+
+// var authClose = function () {
+//   popup.classList.toggle('d-none', true);
+//   // popup.classList.add('d-none');
+// }
 
 
 
@@ -65,7 +69,8 @@ function updateSigninStatus(isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
     myTodo.list();
-    authClose();
+    // authClose();
+    authPopup.close();
   } else {
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
@@ -85,14 +90,15 @@ function handleAuthClick(event) {
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
   authOpen();
+  authPopup.open();
 }
 
 
 
 
 window.auth = {
-  open: authOpen,
-  close: authClose,
+  // open: authOpen,
+  // close: authClose,
   handleClientLoad: handleClientLoad,
 }
 

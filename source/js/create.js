@@ -6,6 +6,17 @@ var formatDateTime = function (date, time) {
   return date + 'T' + time + ':00' + UTC;
 }
 
+// var listSettings = {
+//   'calendarId': 'primary',
+//   // Может пригодиться
+//   'timeMin': (new Date()).toISOString(),
+//   'showDeleted': false,
+//   'singleEvents': true,
+//   'maxResults': 10,
+//   'orderBy': 'startTime'
+// }
+
+
 
 var createEvent = function (formData) {
   return {
@@ -39,52 +50,9 @@ var sendEvent = function (formData) {
 }
 
 
-
-// popup
-
-
-// var addButton = document.querySelector('.my-todo__add-button');
-// var modal = document.querySelector('.create');
-// var closeButton = document.querySelector('.create__close');
-
-// var onModalEscPress = function (evt) {
-//   if (evt.key === 'Escape') {
-//     closeModal();
-//   }
-// }
-
-// var openModal = function () {
-//   modal.classList.toggle('d-none', false);
-//   // modal.classList.remove('d-none');
-//   document.addEventListener('keydown', onModalEscPress);
-// }
-
-
-// var closeModal = function () {
-//   modal.classList.toggle('d-none', true);
-//   document.removeEventListener('keydown', onModalEscPress);
-// }
-
-
-
-// addButton.addEventListener('click', function () {
-//   // console.log('open')
-//   openModal();
-// });
-
-// closeButton.addEventListener('click', function () {
-//   closeModal();
-// });
-
-
-var addButton = document.querySelector('.my-todo__add-button');
-var modal = document.querySelector('.create');
-var closeButton = document.querySelector('.create__close');
-
-
 var popup = new Modal({
   modal: '.create',
-  openButton: 
+  openButtons: '.add-button',
 });
 
 
@@ -92,7 +60,7 @@ var popup = new Modal({
 
 
 
-window.create = {
-  close: closeModal,
-  send: sendEvent,
-}
+// window.create = {
+//   close: closeModal,
+//   send: sendEvent,
+// }

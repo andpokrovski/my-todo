@@ -1,0 +1,35 @@
+.add-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+
+  width: 70px;
+  height: 70px;
+  padding: 0;
+
+  font: inherit;
+  color: inherit;
+
+  background-color: $bgc;
+  background-image: url("../img/icon-plus.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30px 30px;
+  border: none;
+  // box-shadow: 0 0 0 1px white;
+  border-radius: 50%;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  @media (min-width: 480px) {
+    right: 50%;
+
+    transform: translateX(314%);
+  }
+}

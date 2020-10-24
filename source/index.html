@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="my-todo" lang="ru">
+<html lang="ru">
 
 <head class="page__head">
   <meta charset="UTF-8" />
@@ -9,23 +9,30 @@
 
   <link rel="stylesheet" href="./css/style.min.css" />
 
+
 </head>
 
-<body class="my-todo__body">
-  <div class="my-todo__container">
+<body class="body">
+  <div class="container">
 
-    <header>
+    <header class="header">
       <h1 class="my-todo__title">my todo</h1>
       <button id="signout_button" style="display: none;">Sign Out</button>
+      <select class="fonts" name="" id="">
+        <option value="" disabled selected>Выберите шрифт</option>
+        <option class="fonts__option fonts__option--roboto" value="Roboto">Roboto</option>
+        <option class="fonts__option fonts__option--ptserif" value="PT Serif">PT Serif</option>
+        <option class="fonts__option fonts__option--badscript" value="Bad Script">Bad Script</option>
+      </select>
     </header>
 
 
 
 
 
-    <main class="my-todo__main">
+    <main class="main">
 
-      <div class="my-todo__authorization">
+      <div class="auth modal">
         <div class="modal__window">
           <h2>Авторизация</h2>
 
@@ -36,74 +43,70 @@
       </div>
 
 
-      <button class="my-todo__add-button" type="button">
-        <span class="visually-hidden">
-          Добавить событие
-        </span>
-      </button>
 
-      <div class="my-todo__modal modal create d-none">
+
+      <div class="create modal d-none">
         <div class="modal__window">
-          <form class="modal__form modal__form--multi-day" method="post" enctype="multipart/form-data"
+          <button class="modal__close-button modal__close" type="reset">
+            <span class="visually-hidden">
+              Закрыть окно
+            </span>
+          </button>
+          <form class="create__form create__form--multi-day" method="post" enctype="multipart/form-data"
             action="https://echo.htmlacademy.ru" autocomplete="off">
-            <button class="modal__close create__close" type="reset">
-              <span class="visually-hidden">
-                Закрыть окно
-              </span>
-            </button>
 
-            <input class="modal__title" type="text" placeholder="Добавьте название" name="summary">
+            <input class="create__title" type="text" placeholder="Добавьте название" name="summary">
 
-            <ul class="modal__type-list">
-              <li class="modal__type-item">
-                <input class="modal__type-input visually-hidden" type="radio" id="modal-event" name="type" checked>
-                <label class="modal__type-label" for="modal-event">Мероприятие</label>
+            <ul class="create__type-list">
+              <li class="create__type-item">
+                <input class="create__type-input visually-hidden" type="radio" id="create-event" name="type" checked>
+                <label class="create__type-label" for="create-event">Мероприятие</label>
               </li>
-              <li class="modal__type-item">
-                <input class="modal__type-input visually-hidden" type="radio" id="modal-task" name="type">
-                <label class="modal__type-label" for="modal-task">Задача</label>
+              <li class="create__type-item">
+                <input class="create__type-input visually-hidden" type="radio" id="create-task" name="type">
+                <label class="create__type-label" for="create-task">Задача</label>
               </li>
             </ul>
 
-            <fieldset class="modal__date-time">
+            <fieldset class="create__date-time">
               <title class="visually-hidden">Время и дата</title>
 
 
-              <div class="modal__date-time-wrapper">
-                <ul class="modal__date-list">
-                  <li class="modal__date-item modal__date-item--start">
-                    <input class="modal__date" type="date" name="start-date">
+              <div class="create__date-time-wrapper">
+                <ul class="create__date-list">
+                  <li class="create__date-item create__date-item--start">
+                    <input class="create__date" type="date" name="start-date">
                   </li>
-                  <li class="modal__date-item modal__date-item--end">
-                    <input class="modal__date" type="date" name="end-date">
+                  <li class="create__date-item create__date-item--end">
+                    <input class="create__date" type="date" name="end-date">
                   </li>
                 </ul>
 
-                <ul class="modal__time-list">
-                  <li class="modal__time-item modal__time-item--start">
-                    <input class="modal__time" type="time" name="start-time">
+                <ul class="create__time-list">
+                  <li class="create__time-item create__time-item--start">
+                    <input class="create__time" type="time" name="start-time">
                   </li>
-                  <li class="modal__time-item modal__time-item--end">
-                    <input class="modal__time" type="time" name="end-time">
+                  <li class="create__time-item create__time-item--end">
+                    <input class="create__time" type="time" name="end-time">
                   </li>
                 </ul>
               </div>
 
-              <label class="modal__all-day">
-                <input class="modal__all-day-input" type="checkbox" name="allDay">
+              <label class="create__all-day">
+                <input class="create__all-day-input" type="checkbox" name="allDay">
                 Весь день
               </label>
 
             </fieldset>
 
-            <fieldset class="modal__info">
+            <fieldset class="create__info">
               <title class="visually-hidden">Дополнительная информация</title>
 
-              <input class="modal__place" type="text" placeholder="Место" name="location">
-              <textarea class="modal__description" placeholder="Описание" name="description"></textarea>
+              <input class="create__place" type="text" placeholder="Место" name="location">
+              <textarea class="create__description" placeholder="Описание" name="description"></textarea>
             </fieldset>
 
-            <button class="modal__save" type="submit">Сохранить</button>
+            <button class="create__save" type="submit">Сохранить</button>
           </form>
         </div>
       </div>
@@ -121,7 +124,15 @@
 
     </main>
 
-    <footer></footer>
+    <footer>
+
+      <a class="add-button">
+        <span class="visually-hidden">
+          Добавить событие
+        </span>
+      </a>
+
+    </footer>
 
   </div>
 

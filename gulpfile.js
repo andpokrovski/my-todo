@@ -78,7 +78,8 @@ gulp.task("copy", function () {
   return gulp.src([
       // "./source/site.webmanifest",
       "./source/fonts/**/*.{woff,woff2}",
-      // "./source/js/**/*.js"
+      // "./source/js/**/*.js",
+
     ], {
       base: "source"
     })
@@ -88,9 +89,12 @@ gulp.task("copy", function () {
 gulp.task("scripts", function () {
   return gulp.src([
       "./source/js/script.js",
+      // "./source/js/fonts.js"
       // "./source/js/**/*.js",
       // "./source/libs/**/*.js",
-    ])
+    ], {
+      allowEmpty: true
+    })
     .pipe(plumber())
     .pipe(sourcemap.init())
     .pipe(gulpinclude({

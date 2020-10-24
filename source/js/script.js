@@ -1,10 +1,11 @@
-//=require libs/gapi.js
 //=require js/utils.js
+//=require js/fonts.js
+//=require libs/gapi.js
 //=require js/common.js
 //=require js/modal.js
+//=require js/create.js
 //=require js/items.js
 //=require js/auth.js
-//=require js/create.js
 //=require js/form.js
 //=require js/list.js
 //=require js/alert.js
