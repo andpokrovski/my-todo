@@ -21,12 +21,9 @@ allDay.addEventListener('change', function () {
   form.classList.toggle('form--all-day');
 });
 
-var formatDate = function (dateObj) {
-  var day = dateObj.getDate();
-  var month = dateObj.getMonth() + 1;
-  var year = dateObj.getFullYear();
 
-  return year + '-' + month + '-' + day;
+var formatDate = function (dateObj) {
+  return dateObj.toISOString().substr(0, 10);
 }
 
 

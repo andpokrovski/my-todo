@@ -1,4 +1,5 @@
-;(function () {
+;
+(function () {
   var checkElements = function () {
     var args = Array.prototype.slice.call(arguments);
     var errors = [];
@@ -19,4 +20,6 @@
 
     return check;
   }
+
+
 })();

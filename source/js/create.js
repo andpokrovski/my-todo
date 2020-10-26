@@ -1,6 +1,5 @@
 var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
-// var createOk = true;
 
 
 var createPopup = new Modal({
@@ -45,19 +44,21 @@ var sendEvent = function (formData) {
   });
 
   request.execute(function (event) {
-    if (!event.id) {
-      // createOk = false;
-      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
-    } else {
-      // createOk = true;
+    if (event.id) {
+      storage.set(event);
       createPopup.close();
       form.reset();
       console.log('Event ID: ' + event.id);
       console.log('Event link: ' + event.htmlLink);
       notice.show('Успешно сохранено');
+    } else {
+      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
     }
   });
 }
+
+
+// Сохранить объект Event d localStorage и вызвать функцию отрисовки
 
 
 

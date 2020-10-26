@@ -68,7 +68,8 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
-    myTodo.list();
+    // myTodo.list();
+    list.update();
     authPopup.close();
   } else {
     // authorizeButton.style.display = 'block';

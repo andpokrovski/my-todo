@@ -1,4 +1,5 @@
-;(function () {
+;
+(function () {
   var checkElements = function () {
     var args = Array.prototype.slice.call(arguments);
     var errors = [];
@@ -19,6 +20,8 @@
 
     return check;
   }
+
+
 })();
 
 ;(function () {
@@ -60,6 +63,34 @@ var showNotice = function (message) {
 }
 
 window.notice.show = showNotice;
+
+var setToStorage = function (event) {
+  localStorage.setItem(event.id, JSON.stringify(event));
+}
+
+var getFromStorage = function (id) {
+  return JSON.parse(localStorage.getItem(id));
+}
+
+var removeFromStorage = function (id) {
+  localStorage.removeItem(id);
+}
+
+var clearStorage = function () {
+  for (key in localStorage) {
+    if (key !== 'fontFamily') {
+      removeFromStorage(key);
+    }
+  }
+}
+
+
+window.storage = {
+  set: setToStorage,
+  get: getFromStorage,
+  remove: removeFromStorage,
+  clear: clearStorage
+}
 
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
@@ -778,7 +809,6 @@ window.myTodo = {};
 
 var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
-// var createOk = true;
 
 
 var createPopup = new Modal({
@@ -823,19 +853,21 @@ var sendEvent = function (formData) {
   });
 
   request.execute(function (event) {
-    if (!event.id) {
-      // createOk = false;
-      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
-    } else {
-      // createOk = true;
+    if (event.id) {
+      storage.set(event);
       createPopup.close();
       form.reset();
       console.log('Event ID: ' + event.id);
       console.log('Event link: ' + event.htmlLink);
       notice.show('Успешно сохранено');
+    } else {
+      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
     }
   });
 }
+
+
+// Сохранить объект Event d localStorage и вызвать функцию отрисовки
 
 
 
@@ -847,47 +879,7 @@ window.create = {
   // ok: createOk,
 }
 
-var template = document.querySelector('#template');
-var itemTemplate = template.content.querySelector('.my-todo__item');
-var itemsList = document.querySelector('.my-todo__list');
-
-var createItem = function (event) {
-  var newItem = itemTemplate.cloneNode('true');
-  // var doneButton = newItem.querySelector('.my-todo__done');
-  var deleteButton = newItem.querySelector('.my-todo__delete');
-  var summary = newItem.querySelector('.my-todo__summary');
-
-
-  summary.textContent = event.summary;
-
-  deleteButton.addEventListener('click', function (evt) {
-    evt.preventDefault();
-
-    itemsList.removeChild(newItem);
-  });
-
-  return newItem;
-};
-
-
-var renderItems = function (events) {
-  var fragment = document.createDocumentFragment();
-
-  for (i = 0; i < events.length; i++) {
-    var event = events[i];
-
-    fragment.appendChild(createItem(event));
-  }
-
-  itemsList.appendChild(fragment);
-}
-
-
-
-window.items = {
-  render: renderItems
-}
-
+//=require js/items.js
 var authPopup = new Modal({
   modal: '.auth',
 });
@@ -958,7 +950,8 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
-    myTodo.list();
+    // myTodo.list();
+    list.update();
     authPopup.close();
   } else {
     // authorizeButton.style.display = 'block';
@@ -1018,12 +1011,9 @@ allDay.addEventListener('change', function () {
   form.classList.toggle('form--all-day');
 });
 
-var formatDate = function (dateObj) {
-  var day = dateObj.getDate();
-  var month = dateObj.getMonth() + 1;
-  var year = dateObj.getFullYear();
 
-  return year + '-' + month + '-' + day;
+var formatDate = function (dateObj) {
+  return dateObj.toISOString().substr(0, 10);
 }
 
 
@@ -1102,11 +1092,56 @@ form.addEventListener('submit', onFormSubmit);
 
 // window.form;
 
+var template = document.querySelector('#template');
+var itemTemplate = template.content.querySelector('.my-todo__item');
+var itemsList = document.querySelector('.my-todo__list');
+var currentDate = document.querySelector('.current-date');;
+
+var createEventItem = function (event) {
+  var newEventItem = itemTemplate.cloneNode('true');
+  // var doneButton = newEventItem.querySelector('.my-todo__done');
+  var deleteButton = newEventItem.querySelector('.my-todo__delete');
+  var summary = newEventItem.querySelector('.my-todo__summary');
+
+
+  summary.textContent = event.summary;
+
+  deleteButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    itemsList.removeChild(newEventItem);
+    storage.remove(event.id);
+    // Удаление с сервера
+  });
+
+  return newEventItem;
+};
+
+
+var renderEventItems = function (events) {
+  var fragment = document.createDocumentFragment();
+
+  events.forEach(function (event) {
+    fragment.appendChild(createEventItem(event));
+    storage.set(event);
+  });
+
+  itemsList.appendChild(fragment);
+}
+
+
+currentDate.addEventListener('change', function () {
+
+});
+
+
 /**
  * Print the summary and start datetime/date of the next ten events in
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
+
+
 
 var listSettings = {
   'calendarId': 'primary',
@@ -1117,22 +1152,26 @@ var listSettings = {
   'orderBy': 'startTime'
 }
 
-var listUpcomingEvents = function () {
+var ListSettings = function (date) {
+  this.calendarId = 'primary';
+
+  // ??? какой формат возможен
+  this.timeMin = 'current Date';
+  this.timeMin = 'current Date';
+
+  this.singleEvents = true;
+  this.orderBy = 'startTime';
+}
+
+
+var listEvents = function () {
   gapi.client.calendar.events.list(listSettings)
     .then(function (response) {
       var events = response.result.items;
-
+      console.log(events);
       if (events.length > 0) {
-        // for (i = 0; i < events.length; i++) {
-        //   var event = events[i];
-        //   var when = event.start.dateTime;
-        //   if (!when) {
-        //     when = event.start.date;
-        //   }
-        //   alert.show(event.summary + ' (' + when + ')')
-        // }
-
-        items.render(events);
+        storage.clear();
+        renderEventItems(events);
       } else {
         notice.show('Запланированных на сегодня событий не найдено');
       }
@@ -1140,7 +1179,14 @@ var listUpcomingEvents = function () {
 }
 
 
-window.myTodo.list = listUpcomingEvents;
+
+window.list = {
+  update: listEvents,
+}
+
+
+
+// window.myTodo.list = listUpcomingEvents;
 
 /**
  * Append a pre element to the body containing the given message
