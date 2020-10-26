@@ -1,7 +1,7 @@
 var template = document.querySelector('#template');
 var itemTemplate = template.content.querySelector('.my-todo__item');
 var itemsList = document.querySelector('.my-todo__list');
-var currentDate = document.querySelector('.current-date');;
+var currentDate = document.querySelector('.current-date');
 
 var createEventItem = function (event) {
   var newEventItem = itemTemplate.cloneNode('true');
@@ -36,9 +36,13 @@ var renderEventItems = function (events) {
 }
 
 
-currentDate.addEventListener('change', function () {
 
-});
+
+function dni() {
+  var D = new Date(1999, 11, 31);
+  D.setDate(D.getDate() + 3);
+  alert(D);
+}
 
 
 /**
@@ -58,12 +62,12 @@ var listSettings = {
   'orderBy': 'startTime'
 }
 
-var ListSettings = function (date) {
+var ListSettings = function (inputValue) {
   this.calendarId = 'primary';
 
   // ??? какой формат возможен
   this.timeMin = 'current Date';
-  this.timeMin = 'current Date';
+  this.timeMax = 'current Date';
 
   this.singleEvents = true;
   this.orderBy = 'startTime';
@@ -84,6 +88,20 @@ var listEvents = function () {
     });
 }
 
+
+
+var onListDateChange = function () {
+  // var inputValue = this.value;
+  var date = new Date(this.value);
+  var dateRange = {
+    min: date.setHours(date.getHours() - 3),
+    max: date.setHours(date.getHours() + 21),
+  }
+}
+
+
+
+currentDate.addEventListener('change', onListDateChange);
 
 
 window.list = {
