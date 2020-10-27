@@ -32,7 +32,7 @@ var signoutButton = document.getElementById('signout-button');
 /**
  *  On load, called to load the auth2 library and API client library.
  */
-function handleClientLoad() {
+function onClientLoad() {
   gapi.load('client:auth2', initClient);
 }
 
@@ -53,8 +53,8 @@ function initClient() {
 
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    authorizeButton.onclick = handleAuthClick;
-    signoutButton.onclick = handleSignoutClick;
+    authorizeButton.onclick = onAuthClick;
+    signoutButton.onclick = onSignoutClick;
   }, function (error) {
     console.log(JSON.stringify(error, null, 2));
   });
@@ -69,7 +69,7 @@ function updateSigninStatus(isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
     // myTodo.list();
-    list.update();
+    list.update(new Date());
     authPopup.close();
   } else {
     // authorizeButton.style.display = 'block';
@@ -80,28 +80,21 @@ function updateSigninStatus(isSignedIn) {
 /**
  *  Sign in the user upon button click.
  */
-function handleAuthClick(event) {
+function onAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
 }
 
 /**
  *  Sign out the user upon button click.
  */
-function handleSignoutClick(event) {
+function onSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
+  items.clear();
+  storage.clear();
   authPopup.open();
 }
 
 
-
-
-window.auth = {
-  // open: authOpen,
-  // close: authClose,
-  handleClientLoad: handleClientLoad,
-}
-
-
 document.addEventListener("DOMContentLoaded", function () {
-  handleClientLoad();
+  onClientLoad();
 });

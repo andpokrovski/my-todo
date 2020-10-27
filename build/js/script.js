@@ -21,6 +21,28 @@
     return check;
   }
 
+  var formatDate = function (dateObj) {
+    var year = dateObj.getFullYear();
+    var month = dateObj.getMonth() + 1;
+    var date = dateObj.getDate();
+
+    if (date < 10) {
+      date = '0' + date;
+    }
+
+    if (month < 10) {
+      month = '0' + date;
+    }
+
+    return year + '-' + month + '-' + date;
+  }
+
+
+  window.utils = {
+    checkElements: checkElements,
+    formatDate: formatDate,
+  }
+
 
 })();
 
@@ -58,35 +80,69 @@ var showNotice = function (message) {
 
   setTimeout(function () {
     notice.classList.toggle('notice--active', false);
-  }, 3000);
+  }, 1500);
 
 }
+
+notice.addEventListener('click', function () {
+  notice.classList.toggle('notice--active', false);
+});
 
 window.notice.show = showNotice;
 
-var setToStorage = function (event) {
+var CLEAR_EXCEPTIONS = ['fontFamily'];
+
+var setEventToStorage = function (event) {
   localStorage.setItem(event.id, JSON.stringify(event));
 }
 
-var getFromStorage = function (id) {
-  return JSON.parse(localStorage.getItem(id));
+var getFromStorage = function (key) {
+  return JSON.parse(localStorage.getItem(key));
 }
 
-var removeFromStorage = function (id) {
-  localStorage.removeItem(id);
+var removeFromStorage = function (key) {
+  localStorage.removeItem(key);
 }
+
+
+// var clearStorage = function () {
+//   if (CLEAR_EXCEPTIONS.length > 0) {
+//     var exceptionsValues = CLEAR_EXCEPTIONS.map(function (item) {
+//       return localStorage.getItem(item);
+//     });
+//   }
+
+//   localStorage.clear();
+
+//   if (exceptionsValues) {
+//     CLEAR_EXCEPTIONS.forEach(function (item, i) {
+//       localStorage.setItem(item, exceptionsValues[i]);
+//     });
+//   }
+// }
+
 
 var clearStorage = function () {
-  for (key in localStorage) {
-    if (key !== 'fontFamily') {
-      removeFromStorage(key);
-    }
+  if (arguments) {
+    var args = Array.prototype.slice.call(arguments);
+
+    var exceptionsValues = args.map(function (item) {
+      return localStorage.getItem(item);
+    });
+  }
+
+  localStorage.clear();
+
+  if (exceptionsValues) {
+    args.forEach(function (key, i) {
+      localStorage.setItem(key, exceptionsValues[i]);
+    });
   }
 }
 
 
 window.storage = {
-  set: setToStorage,
+  setEvent: setEventToStorage,
   get: getFromStorage,
   remove: removeFromStorage,
   clear: clearStorage
@@ -732,6 +788,7 @@ gapi.load("", {
 
 window.myTodo = {};
 
+
 (function () {
   var onModalEscPress = function (evt) {
     if (evt.key === 'Escape') {
@@ -807,18 +864,23 @@ window.myTodo = {};
   window.Modal = Modal;
 })();
 
+var editor = new Modal({
+  modal: '.editor',
+  openButtons: '.add-button',
+});
 var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
 
 
-var createPopup = new Modal({
-  modal: '.create',
-  openButtons: '.add-button',
-});
-
+// var formatDateTime = function (date, time) {
+//   return date + 'T' + time + ':00' + UTC;
+// }
 
 var formatDateTime = function (date, time) {
-  return date + 'T' + time + ':00' + UTC;
+  var dateTime = date + 'T' + time;
+  // var dateObj = new Date(Date.parse(dateTime))l
+
+  return (new Date(Date.parse(dateTime))).toISOString();
 }
 
 
@@ -828,12 +890,20 @@ var CalendarEvent = function (formData) {
   this.start = {};
   this.end = {};
 
-  if (!(formData.get('start-time') && formData.get('start-time'))) {
-    this.start.date = formData.get('start-date');
-    this.end.date = formData.get('end-date');
-  } else {
+  // if (!(formData.get('start-time') && formData.get('start-time'))) {
+  //   this.start.date = formData.get('start-date');
+  //   this.end.date = formData.get('end-date');
+  // } else {
+  //   this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
+  //   this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+  // }
+
+  if (formData.get('start-time') && formData.get('end-time')) {
     this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
     this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+  } else {
+    // this.start.date = formData.get('start-date');
+    // this.end.date = formData.get('end-date');
   }
 
   this.start.timeZone = TIMEZONE;
@@ -854,8 +924,9 @@ var sendEvent = function (formData) {
 
   request.execute(function (event) {
     if (event.id) {
-      storage.set(event);
-      createPopup.close();
+      items.add(event);
+      storage.setEvent(event);
+      editor.close();
       form.reset();
       console.log('Event ID: ' + event.id);
       console.log('Event link: ' + event.htmlLink);
@@ -873,13 +944,73 @@ var sendEvent = function (formData) {
 
 
 window.create = {
-  open: createPopup.open,
-  close: createPopup.close,
   send: sendEvent,
-  // ok: createOk,
 }
 
-//=require js/items.js
+var template = document.querySelector('#template');
+var itemTemplate = template.content.querySelector('.my-todo__item');
+var itemsList = document.querySelector('.my-todo__list');
+
+
+var createItem = function (event) {
+  var newItem = itemTemplate.cloneNode('true');
+  var deleteButton = newItem.querySelector('.my-todo__delete');
+  var summary = newItem.querySelector('.my-todo__summary');
+
+
+  summary.textContent = event.summary;
+
+  deleteButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    removeItem(newItem);
+    // itemsList.removeChild(newItem);
+    storage.remove(event.id);
+    // Удаление с сервера
+    remove.send(event.id);
+  });
+
+  return newItem;
+};
+
+var addItem = function (event) {
+  var newItem = createItem(event);
+  itemsList.prepend(newItem);
+}
+
+
+var renderItems = function (events) {
+  var fragment = document.createDocumentFragment();
+
+  events.forEach(function (event) {
+    fragment.appendChild(createItem(event));
+    storage.setEvent(event);
+  });
+
+  itemsList.appendChild(fragment);
+}
+
+var removeItem = function (item) {
+  itemsList.removeChild(item);
+}
+
+var clearItems = function () {
+  while (itemsList.firstChild) {
+    itemsList.removeChild(itemsList.firstChild);
+  }
+}
+
+
+window.items = {
+  add: addItem,
+  render: renderItems,
+  // remove: removeItem,
+  clear: clearItems,
+}
+
+
+// 
+
 var authPopup = new Modal({
   modal: '.auth',
 });
@@ -914,7 +1045,7 @@ var signoutButton = document.getElementById('signout-button');
 /**
  *  On load, called to load the auth2 library and API client library.
  */
-function handleClientLoad() {
+function onClientLoad() {
   gapi.load('client:auth2', initClient);
 }
 
@@ -935,8 +1066,8 @@ function initClient() {
 
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    authorizeButton.onclick = handleAuthClick;
-    signoutButton.onclick = handleSignoutClick;
+    authorizeButton.onclick = onAuthClick;
+    signoutButton.onclick = onSignoutClick;
   }, function (error) {
     console.log(JSON.stringify(error, null, 2));
   });
@@ -951,7 +1082,7 @@ function updateSigninStatus(isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
     // myTodo.list();
-    list.update();
+    list.update(new Date());
     authPopup.close();
   } else {
     // authorizeButton.style.display = 'block';
@@ -962,30 +1093,23 @@ function updateSigninStatus(isSignedIn) {
 /**
  *  Sign in the user upon button click.
  */
-function handleAuthClick(event) {
+function onAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
 }
 
 /**
  *  Sign out the user upon button click.
  */
-function handleSignoutClick(event) {
+function onSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
+  items.clear();
+  storage.clear();
   authPopup.open();
 }
 
 
-
-
-window.auth = {
-  // open: authOpen,
-  // close: authClose,
-  handleClientLoad: handleClientLoad,
-}
-
-
 document.addEventListener("DOMContentLoaded", function () {
-  handleClientLoad();
+  onClientLoad();
 });
 
 var form = document.querySelector('.form');
@@ -1012,13 +1136,8 @@ allDay.addEventListener('change', function () {
 });
 
 
-var formatDate = function (dateObj) {
-  return dateObj.toISOString().substr(0, 10);
-}
-
-
 var setDefaultDate = function () {
-  var currentDate = formatDate(new Date);
+  var currentDate = utils.formatDate(new Date);
 
   dates.forEach(function (input) {
     input.value = currentDate;
@@ -1027,7 +1146,7 @@ var setDefaultDate = function () {
 
 
 // document.addEventListener("DOMContentLoaded", setDefaultDate);
-createPopup.openButtons.forEach(function (button) {
+editor.openButtons.forEach(function (button) {
   button.addEventListener('click', function () {
     setDefaultDate();
   });
@@ -1081,6 +1200,12 @@ var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(form);
 
+  // console.log(formData.get('start-time'));
+  // console.log(formData.get('end-time'));
+
+
+  // console.log(formData);
+
   create.send(formData);
 }
 
@@ -1092,119 +1217,69 @@ form.addEventListener('submit', onFormSubmit);
 
 // window.form;
 
-var template = document.querySelector('#template');
-var itemTemplate = template.content.querySelector('.my-todo__item');
-var itemsList = document.querySelector('.my-todo__list');
 var currentDate = document.querySelector('.current-date');
 
-var createEventItem = function (event) {
-  var newEventItem = itemTemplate.cloneNode('true');
-  // var doneButton = newEventItem.querySelector('.my-todo__done');
-  var deleteButton = newEventItem.querySelector('.my-todo__delete');
-  var summary = newEventItem.querySelector('.my-todo__summary');
+document.addEventListener("DOMContentLoaded", function () {
+  var date = utils.formatDate(new Date());
+  currentDate.value = date;
+});
 
 
-  summary.textContent = event.summary;
-
-  deleteButton.addEventListener('click', function (evt) {
-    evt.preventDefault();
-
-    itemsList.removeChild(newEventItem);
-    storage.remove(event.id);
-    // Удаление с сервера
-  });
-
-  return newEventItem;
-};
-
-
-var renderEventItems = function (events) {
-  var fragment = document.createDocumentFragment();
-
-  events.forEach(function (event) {
-    fragment.appendChild(createEventItem(event));
-    storage.set(event);
-  });
-
-  itemsList.appendChild(fragment);
+var getTimeRange = {
+  min: function (dateObj) {
+    dateObj.setHours(0, 0);
+    return dateObj;
+  },
+  max: function (dateObj) {
+    dateObj.setHours(23, 59);
+    return dateObj;
+  },
 }
 
 
-
-
-function dni() {
-  var D = new Date(1999, 11, 31);
-  D.setDate(D.getDate() + 3);
-  alert(D);
-}
-
-
-/**
- * Print the summary and start datetime/date of the next ten events in
- * the authorized user's calendar. If no events are found an
- * appropriate message is printed.
- */
-
-
-
-var listSettings = {
-  'calendarId': 'primary',
-  'timeMin': (new Date()).toISOString(),
-  'showDeleted': false,
-  'singleEvents': true,
-  'maxResults': 10,
-  'orderBy': 'startTime'
-}
-
-var ListSettings = function (inputValue) {
+var ListSettings = function (dateObj) {
   this.calendarId = 'primary';
-
-  // ??? какой формат возможен
-  this.timeMin = 'current Date';
-  this.timeMax = 'current Date';
-
+  this.timeMin = getTimeRange.min(dateObj).toISOString();
+  this.timeMax = getTimeRange.max(dateObj).toISOString();
   this.singleEvents = true;
   this.orderBy = 'startTime';
 }
 
 
-var listEvents = function () {
-  gapi.client.calendar.events.list(listSettings)
+var listEvents = function (dateObj) {
+  gapi.client.calendar.events.list(new ListSettings(dateObj))
     .then(function (response) {
       var events = response.result.items;
-      console.log(events);
+      items.clear();
+      storage.clear('fontFamily');
       if (events.length > 0) {
-        storage.clear();
-        renderEventItems(events);
+        items.render(events);
       } else {
-        notice.show('Запланированных на сегодня событий не найдено');
+        notice.show('События не найдены');
       }
     });
 }
 
 
-
 var onListDateChange = function () {
-  // var inputValue = this.value;
   var date = new Date(this.value);
-  var dateRange = {
-    min: date.setHours(date.getHours() - 3),
-    max: date.setHours(date.getHours() + 21),
-  }
+  listEvents(date);
 }
 
 
+// currentDate.addEventListener('change', onListDateChange);
 
 currentDate.addEventListener('change', onListDateChange);
+
+
+
+
+
 
 
 window.list = {
   update: listEvents,
 }
-
-
-
-// window.myTodo.list = listUpcomingEvents;
 
 /**
  * Append a pre element to the body containing the given message
@@ -1222,20 +1297,24 @@ window.alert = {
   show: appendPre,
 }
 
-var deleteSettings = {
-  'calendarId': 'primary',
-  'eventId': 'k731e93gqrhn7183dsd7mm0jtc',
+var RemoveSettings = function (id) {
+  this.calendarId = 'primary';
+  this.eventId = id;
 }
 
 
-var deleteEvent = function () {
-  return gapi.client.calendar.events.delete(deleteSettings)
-    .then(function (response) {
-        // Handle the results here (response.result has the parsed body).
-        console.log("Response", response);
+var removeEvent = function (id) {
+  return gapi.client.calendar.events.delete(new RemoveSettings(id))
+    .then(function () {
+        notice.show('Успешно удалено');
       },
-      function (err) {
-        console.error("Execute error", err);
+      function () {
+        notice.show('Не удалось удалить');
       });
+}
+
+
+window.remove = {
+  send: removeEvent,
 }
 

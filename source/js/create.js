@@ -2,14 +2,15 @@ var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
 
 
-var createPopup = new Modal({
-  modal: '.create',
-  openButtons: '.add-button',
-});
-
+// var formatDateTime = function (date, time) {
+//   return date + 'T' + time + ':00' + UTC;
+// }
 
 var formatDateTime = function (date, time) {
-  return date + 'T' + time + ':00' + UTC;
+  var dateTime = date + 'T' + time;
+  // var dateObj = new Date(Date.parse(dateTime))l
+
+  return (new Date(Date.parse(dateTime))).toISOString();
 }
 
 
@@ -19,12 +20,20 @@ var CalendarEvent = function (formData) {
   this.start = {};
   this.end = {};
 
-  if (!(formData.get('start-time') && formData.get('start-time'))) {
-    this.start.date = formData.get('start-date');
-    this.end.date = formData.get('end-date');
-  } else {
+  // if (!(formData.get('start-time') && formData.get('start-time'))) {
+  //   this.start.date = formData.get('start-date');
+  //   this.end.date = formData.get('end-date');
+  // } else {
+  //   this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
+  //   this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+  // }
+
+  if (formData.get('start-time') && formData.get('end-time')) {
     this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
     this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+  } else {
+    // this.start.date = formData.get('start-date');
+    // this.end.date = formData.get('end-date');
   }
 
   this.start.timeZone = TIMEZONE;
@@ -45,8 +54,9 @@ var sendEvent = function (formData) {
 
   request.execute(function (event) {
     if (event.id) {
-      storage.set(event);
-      createPopup.close();
+      items.add(event);
+      storage.setEvent(event);
+      editor.close();
       form.reset();
       console.log('Event ID: ' + event.id);
       console.log('Event link: ' + event.htmlLink);
@@ -64,8 +74,5 @@ var sendEvent = function (formData) {
 
 
 window.create = {
-  open: createPopup.open,
-  close: createPopup.close,
   send: sendEvent,
-  // ok: createOk,
 }

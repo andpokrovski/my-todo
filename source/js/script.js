@@ -5,10 +5,11 @@
 //=require libs/gapi.js
 //=require js/common.js
 //=require js/modal.js
+// =require js/editor.js
 //=require js/create.js
 //=require js/items.js
 //=require js/auth.js
 //=require js/form.js
 //=require js/list.js
 //=require js/alert.js
-//=require js/delete.js
+//=require js/remove.js

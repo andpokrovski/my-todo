@@ -163,6 +163,14 @@ img {
   padding: 20px;
 }
 
+.current-date {
+  font: inherit;
+}
+
+.fonts {
+  font: inherit;
+}
+
 .fonts__option--roboto {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
 }

@@ -22,13 +22,8 @@ allDay.addEventListener('change', function () {
 });
 
 
-var formatDate = function (dateObj) {
-  return dateObj.toISOString().substr(0, 10);
-}
-
-
 var setDefaultDate = function () {
-  var currentDate = formatDate(new Date);
+  var currentDate = utils.formatDate(new Date);
 
   dates.forEach(function (input) {
     input.value = currentDate;
@@ -37,7 +32,7 @@ var setDefaultDate = function () {
 
 
 // document.addEventListener("DOMContentLoaded", setDefaultDate);
-createPopup.openButtons.forEach(function (button) {
+editor.openButtons.forEach(function (button) {
   button.addEventListener('click', function () {
     setDefaultDate();
   });
@@ -90,6 +85,12 @@ var TIME_ROUNDING_STEP = 30;
 var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(form);
+
+  // console.log(formData.get('start-time'));
+  // console.log(formData.get('end-time'));
+
+
+  // console.log(formData);
 
   create.send(formData);
 }

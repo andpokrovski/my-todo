@@ -6,8 +6,12 @@ var showNotice = function (message) {
 
   setTimeout(function () {
     notice.classList.toggle('notice--active', false);
-  }, 3000);
+  }, 1500);
 
 }
+
+notice.addEventListener('click', function () {
+  notice.classList.toggle('notice--active', false);
+});
 
 window.notice.show = showNotice;
