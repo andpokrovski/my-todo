@@ -1,24 +1,25 @@
-var form = document.querySelector('.form');
-var saveButton = form.querySelector('.form__save');
-var typeButtons = form.elements.type;
+var formElement = document.querySelector('.form');
+var saveButton = formElement.querySelector('.form__save');
+var typeButtons = formElement.elements.type;
+var allDayInput = formElement.querySelector('.form__all-day-input');
+var dates = formElement.querySelectorAll('.form__date');
+var times = formElement.querySelectorAll('.form__time');
 var currentType = '';
-var allDay = form.querySelector('.form__all-day');
-var dates = form.querySelectorAll('.form__date');
-var times = form.querySelectorAll('.form__time');
 var formValid = true;
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
     if (button.checked) {
-      form.classList.remove('form--' + currentType);
+      formElement.classList.remove('form--' + currentType);
       currentType = button.value;
-      form.classList.add('form--' + currentType);
+      formElement.classList.add('form--' + currentType);
     }
   });
 });
 
-allDay.addEventListener('change', function () {
-  form.classList.toggle('form--all-day');
+allDayInput.addEventListener('change', function () {
+  formElement.classList.toggle('form--all-day');
+  form.allDay = allDayInput.checked;
 });
 
 
@@ -31,12 +32,6 @@ var setDefaultDate = function () {
 }
 
 
-// document.addEventListener("DOMContentLoaded", setDefaultDate);
-editor.openButtons.forEach(function (button) {
-  button.addEventListener('click', function () {
-    setDefaultDate();
-  });
-});
 
 
 var TIME_ROUNDING_STEP = 30;
@@ -82,23 +77,75 @@ var TIME_ROUNDING_STEP = 30;
 //   }
 // }
 
-var onFormSubmit = function (evt) {
-  evt.preventDefault();
-  var formData = new FormData(form);
+// var onFormSubmit = function (evt) {
+//   evt.preventDefault();
+//   var formData = new FormData(formElement);
 
-  // console.log(formData.get('start-time'));
-  // console.log(formData.get('end-time'));
+//   // console.log(formData.get('start-time'));
+//   // console.log(formData.get('end-time'));
 
 
-  // console.log(formData);
+//   // console.log(formData);
 
-  create.send(formData);
-}
+//   create.send(formData);
+// }
 
 
 // saveButton.addEventListener('click', onSaveButtonClick);
 
-form.addEventListener('submit', onFormSubmit);
+// formElement.addEventListener('submit', onFormSubmit);
+
+var fillForm = function (eventId) {
+  var event = storage.get(eventId);
+
+  formElement.elements['summary'].value = event['summary'];
+
+  formElement.elements['start-date'].value = event['start']['date'];
+  formElement.elements['end-date'].value = event['end']['date'];
+
+  if (event['start']['dateTime'] && event['end']['dateTime']) {
+    formElement.elements['start-time'] = event['start']['dateTime'].substr(12, 5);
+    formElement.elements['end-time'] = event['end']['dateTime'].substr(12, 5);
+  } else {
+    allDayInput.checked = true;
+  }
+
+  if (event['location']) {
+    formElement.elements['location'].value = event['location'];
+  }
+
+  if (event['description']) {
+    formElement.elements['description'].value = event['description'];
+  }
+}
 
 
-// window.form;
+var addCreateHandler = function () {
+  formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(formElement);
+
+    create.send(formData);
+    // console.log('update');
+  });
+}
+
+
+var addUpdateHandler = function (id) {
+  formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(formElement);
+
+    update.send(id, formData);
+    // console.log('create');
+  });
+}
+
+
+window.form = {
+  element: formElement,
+  allDay: false,
+  addCreateHandler: addCreateHandler,
+  addUpdateHandler: addUpdateHandler,
+  fill: fillForm,
+};

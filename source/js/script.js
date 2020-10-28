@@ -2,12 +2,14 @@
 //=require js/fonts.js
 //=require js/notice.js
 //=require js/storage.js
+//=require js/event.js
 //=require libs/gapi.js
 //=require js/common.js
 //=require js/modal.js
 // =require js/editor.js
-//=require js/create.js
 //=require js/items.js
+//=require js/create.js
+//=require js/update.js
 //=require js/auth.js
 //=require js/form.js
 //=require js/list.js

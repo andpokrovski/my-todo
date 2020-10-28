@@ -1,9 +1,12 @@
 (function () {
   var onModalEscPress = function (evt) {
     if (evt.key === 'Escape') {
-      closeModal();
+      closeModal.bind(this)();
     }
   }
+
+  var modalEscPressHandler;
+
 
 
   var openModal = function () {
@@ -15,7 +18,8 @@
     });
 
     this.element.dispatchEvent(openEvent);
-    document.addEventListener('keydown', onModalEscPress);
+    modalEscPressHandler = onModalEscPress.bind(this);
+    document.addEventListener('keydown', modalEscPressHandler);
   }
 
 
@@ -28,15 +32,26 @@
     });
 
     this.element.dispatchEvent(closeEvent);
-    document.removeEventListener('keydown', onModalEscPress);
+    document.removeEventListener('keydown', modalEscPressHandler);
   }
 
 
-  var Modal = function (modalClassName) {
-    // console.log(modalClassName);
+
+  var Modal = function (settings) {
     var modal = this;
-    this.element = document.querySelector(modalClassName);
+    this.element = document.querySelector(settings.modal);
+    var openButtons = document.querySelectorAll(settings.openButtons);
     var closeButtons = this.element.querySelectorAll('.modal__close');
+    this.openButtons = openButtons;
+
+    if (openButtons.length > 0) {
+      openButtons.forEach(function (openButton) {
+        openButton.addEventListener('click', function (evt) {
+          evt.preventDefault();
+          openModal.bind(modal)();
+        });
+      });
+    }
 
     if (closeButtons.length > 0) {
       closeButtons.forEach(function (closeButton) {

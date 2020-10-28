@@ -5,8 +5,9 @@ var itemsList = document.querySelector('.my-todo__list');
 
 var createItem = function (event) {
   var newItem = itemTemplate.cloneNode('true');
-  var deleteButton = newItem.querySelector('.my-todo__delete');
   var summary = newItem.querySelector('.my-todo__summary');
+  var editButton = newItem.querySelector('.my-todo__edit');
+  var deleteButton = newItem.querySelector('.my-todo__delete');
 
 
   summary.textContent = event.summary;
@@ -21,8 +22,21 @@ var createItem = function (event) {
     remove.send(event.id);
   });
 
+  editButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    setDefaultDate();
+    // form.addCreateHandler();
+
+    form.fill(event.id);
+    form.addUpdateHandler(event.id);
+    editor.open();
+
+  });
+
   return newItem;
 };
+
 
 var addItem = function (event) {
   var newItem = createItem(event);

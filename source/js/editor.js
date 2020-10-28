@@ -1,4 +1,3 @@
-var editor = new Modal({
-  modal: '.editor',
-  openButtons: '.add-button',
-});
+var editor = new Modal('.editor');
+
+window.editor;

@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 var getTimeRange = {
   min: function (dateObj) {
-    dateObj.setHours(0, 0);
+    dateObj.setHours(0, 0, 0);
     return dateObj;
   },
   max: function (dateObj) {
-    dateObj.setHours(23, 59);
+    dateObj.setHours(23, 59, 59);
     return dateObj;
   },
 }
@@ -51,10 +51,6 @@ var onListDateChange = function () {
 // currentDate.addEventListener('change', onListDateChange);
 
 currentDate.addEventListener('change', onListDateChange);
-
-
-
-
 
 
 

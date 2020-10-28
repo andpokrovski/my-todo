@@ -1,6 +1,8 @@
-var authPopup = new Modal({
-  modal: '.auth',
-});
+// var authPopup = new Modal({
+//   modal: '.auth',
+// });
+
+var authPopup = new Modal('.auth');
 
 // var popup = document.querySelector('.my-todo__authorization');
 
@@ -69,7 +71,7 @@ function updateSigninStatus(isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
     // myTodo.list();
-    list.update(new Date());
+    list.update(new Date);
     authPopup.close();
   } else {
     // authorizeButton.style.display = 'block';

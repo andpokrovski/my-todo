@@ -148,6 +148,38 @@ window.storage = {
   clear: clearStorage
 }
 
+var UTC = '+03:00';
+var TIMEZONE = 'Europe/Moscow';
+
+
+var formatDateTime = function (date, time) {
+  var dateTime = date + 'T' + time;
+  return (new Date(Date.parse(dateTime))).toISOString();
+}
+
+
+var CalendarEvent = function (formData) {
+  this.summary = formData.get('summary');
+
+  this.start = {};
+  this.end = {};
+
+  if (!form.allDay) {
+    this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
+    this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+  } else {
+    this.start.date = formData.get('start-date');
+    this.end.date = formData.get('end-date');
+  }
+
+  this.start.timeZone = TIMEZONE;
+  this.end.timeZone = TIMEZONE;
+
+  this.location = formData.get('location') || '';
+  this.description = formData.get('description') || '';
+}
+
+window.CalendarEvent;
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
 (function () {
@@ -792,12 +824,9 @@ window.myTodo = {};
 (function () {
   var onModalEscPress = function (evt) {
     if (evt.key === 'Escape') {
-      closeModal.bind(this)();
+      closeModal();
     }
   }
-
-  var modalEscPressHandler;
-
 
 
   var openModal = function () {
@@ -809,8 +838,7 @@ window.myTodo = {};
     });
 
     this.element.dispatchEvent(openEvent);
-    modalEscPressHandler = onModalEscPress.bind(this);
-    document.addEventListener('keydown', modalEscPressHandler);
+    document.addEventListener('keydown', onModalEscPress);
   }
 
 
@@ -823,26 +851,15 @@ window.myTodo = {};
     });
 
     this.element.dispatchEvent(closeEvent);
-    document.removeEventListener('keydown', modalEscPressHandler);
+    document.removeEventListener('keydown', onModalEscPress);
   }
 
 
-
-  var Modal = function (settings) {
+  var Modal = function (modalClassName) {
+    // console.log(modalClassName);
     var modal = this;
-    this.element = document.querySelector(settings.modal);
-    var openButtons = document.querySelectorAll(settings.openButtons);
+    this.element = document.querySelector(modalClassName);
     var closeButtons = this.element.querySelectorAll('.modal__close');
-    this.openButtons = openButtons;
-
-    if (openButtons.length > 0) {
-      openButtons.forEach(function (openButton) {
-        openButton.addEventListener('click', function (evt) {
-          evt.preventDefault();
-          openModal.bind(modal)();
-        });
-      });
-    }
 
     if (closeButtons.length > 0) {
       closeButtons.forEach(function (closeButton) {
@@ -864,88 +881,9 @@ window.myTodo = {};
   window.Modal = Modal;
 })();
 
-var editor = new Modal({
-  modal: '.editor',
-  openButtons: '.add-button',
-});
-var UTC = '+03:00';
-var TIMEZONE = 'Europe/Moscow';
+var editor = new Modal('.editor');
 
-
-// var formatDateTime = function (date, time) {
-//   return date + 'T' + time + ':00' + UTC;
-// }
-
-var formatDateTime = function (date, time) {
-  var dateTime = date + 'T' + time;
-  // var dateObj = new Date(Date.parse(dateTime))l
-
-  return (new Date(Date.parse(dateTime))).toISOString();
-}
-
-
-var CalendarEvent = function (formData) {
-  this.summary = formData.get('summary');
-
-  this.start = {};
-  this.end = {};
-
-  // if (!(formData.get('start-time') && formData.get('start-time'))) {
-  //   this.start.date = formData.get('start-date');
-  //   this.end.date = formData.get('end-date');
-  // } else {
-  //   this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
-  //   this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
-  // }
-
-  if (formData.get('start-time') && formData.get('end-time')) {
-    this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
-    this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
-  } else {
-    // this.start.date = formData.get('start-date');
-    // this.end.date = formData.get('end-date');
-  }
-
-  this.start.timeZone = TIMEZONE;
-  this.end.timeZone = TIMEZONE;
-
-  this.location = formData.get('location') || '';
-  this.description = formData.get('description') || '';
-}
-
-
-var sendEvent = function (formData) {
-  var event = new CalendarEvent(formData);
-
-  var request = gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': event
-  });
-
-  request.execute(function (event) {
-    if (event.id) {
-      items.add(event);
-      storage.setEvent(event);
-      editor.close();
-      form.reset();
-      console.log('Event ID: ' + event.id);
-      console.log('Event link: ' + event.htmlLink);
-      notice.show('Успешно сохранено');
-    } else {
-      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
-    }
-  });
-}
-
-
-// Сохранить объект Event d localStorage и вызвать функцию отрисовки
-
-
-
-
-window.create = {
-  send: sendEvent,
-}
+window.editor;
 
 var template = document.querySelector('#template');
 var itemTemplate = template.content.querySelector('.my-todo__item');
@@ -954,8 +892,9 @@ var itemsList = document.querySelector('.my-todo__list');
 
 var createItem = function (event) {
   var newItem = itemTemplate.cloneNode('true');
-  var deleteButton = newItem.querySelector('.my-todo__delete');
   var summary = newItem.querySelector('.my-todo__summary');
+  var editButton = newItem.querySelector('.my-todo__edit');
+  var deleteButton = newItem.querySelector('.my-todo__delete');
 
 
   summary.textContent = event.summary;
@@ -970,8 +909,21 @@ var createItem = function (event) {
     remove.send(event.id);
   });
 
+  editButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    setDefaultDate();
+    // form.addCreateHandler();
+
+    form.fill(event.id);
+    form.addUpdateHandler(event.id);
+    editor.open();
+
+  });
+
   return newItem;
 };
+
 
 var addItem = function (event) {
   var newItem = createItem(event);
@@ -1011,9 +963,79 @@ window.items = {
 
 // 
 
-var authPopup = new Modal({
-  modal: '.auth',
+var addButton = document.querySelector('.add-button');
+
+addButton.addEventListener('click', function () {
+  setDefaultDate();
+  form.addCreateHandler();
+  editor.open();
+  // form.addUpdateHandler();
 });
+
+
+var createEvent = function (formData) {
+  var event = new CalendarEvent(formData);
+
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
+
+  request.execute(function (event) {
+    if (event.id) {
+      items.add(event);
+      storage.setEvent(event);
+      editor.close();
+      form.element.reset();
+      // console.log('Event ID: ' + event.id);
+      // console.log('Event link: ' + event.htmlLink);
+      notice.show('Успешно сохранено');
+    } else {
+      notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
+    }
+  });
+}
+
+
+window.create = {
+  send: createEvent,
+}
+
+var updateEvent = function (id, formData) {
+  var event = new CalendarEvent(formData);
+
+  return gapi.client.calendar.events.update({
+      'calendarId': 'primary',
+      'eventId': id,
+      'resource': event,
+    })
+    .then(function (response) {
+        storage.setEvent(event);
+        editor.close();
+        form.element.reset();
+        // Handle the results here (response.result has the parsed body).
+        // console.log("Response", response);
+        notice.show('Успешно обновлено');
+        console.log('updated');
+
+      },
+      function (err) {
+        // console.error("Execute error", err);
+        notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
+      });
+}
+
+
+window.update = {
+  // fillForm: fillForm,
+  send: updateEvent,
+}
+
+// var authPopup = new Modal({
+//   modal: '.auth',
+// });
+
+var authPopup = new Modal('.auth');
 
 // var popup = document.querySelector('.my-todo__authorization');
 
@@ -1082,7 +1104,7 @@ function updateSigninStatus(isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
     // myTodo.list();
-    list.update(new Date());
+    list.update(new Date);
     authPopup.close();
   } else {
     // authorizeButton.style.display = 'block';
@@ -1112,27 +1134,28 @@ document.addEventListener("DOMContentLoaded", function () {
   onClientLoad();
 });
 
-var form = document.querySelector('.form');
-var saveButton = form.querySelector('.form__save');
-var typeButtons = form.elements.type;
+var formElement = document.querySelector('.form');
+var saveButton = formElement.querySelector('.form__save');
+var typeButtons = formElement.elements.type;
+var allDayInput = formElement.querySelector('.form__all-day-input');
+var dates = formElement.querySelectorAll('.form__date');
+var times = formElement.querySelectorAll('.form__time');
 var currentType = '';
-var allDay = form.querySelector('.form__all-day');
-var dates = form.querySelectorAll('.form__date');
-var times = form.querySelectorAll('.form__time');
 var formValid = true;
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
     if (button.checked) {
-      form.classList.remove('form--' + currentType);
+      formElement.classList.remove('form--' + currentType);
       currentType = button.value;
-      form.classList.add('form--' + currentType);
+      formElement.classList.add('form--' + currentType);
     }
   });
 });
 
-allDay.addEventListener('change', function () {
-  form.classList.toggle('form--all-day');
+allDayInput.addEventListener('change', function () {
+  formElement.classList.toggle('form--all-day');
+  form.allDay = allDayInput.checked;
 });
 
 
@@ -1145,12 +1168,6 @@ var setDefaultDate = function () {
 }
 
 
-// document.addEventListener("DOMContentLoaded", setDefaultDate);
-editor.openButtons.forEach(function (button) {
-  button.addEventListener('click', function () {
-    setDefaultDate();
-  });
-});
 
 
 var TIME_ROUNDING_STEP = 30;
@@ -1196,26 +1213,78 @@ var TIME_ROUNDING_STEP = 30;
 //   }
 // }
 
-var onFormSubmit = function (evt) {
-  evt.preventDefault();
-  var formData = new FormData(form);
+// var onFormSubmit = function (evt) {
+//   evt.preventDefault();
+//   var formData = new FormData(formElement);
 
-  // console.log(formData.get('start-time'));
-  // console.log(formData.get('end-time'));
+//   // console.log(formData.get('start-time'));
+//   // console.log(formData.get('end-time'));
 
 
-  // console.log(formData);
+//   // console.log(formData);
 
-  create.send(formData);
-}
+//   create.send(formData);
+// }
 
 
 // saveButton.addEventListener('click', onSaveButtonClick);
 
-form.addEventListener('submit', onFormSubmit);
+// formElement.addEventListener('submit', onFormSubmit);
+
+var fillForm = function (eventId) {
+  var event = storage.get(eventId);
+
+  formElement.elements['summary'].value = event['summary'];
+
+  formElement.elements['start-date'].value = event['start']['date'];
+  formElement.elements['end-date'].value = event['end']['date'];
+
+  if (event['start']['dateTime'] && event['end']['dateTime']) {
+    formElement.elements['start-time'] = event['start']['dateTime'].substr(12, 5);
+    formElement.elements['end-time'] = event['end']['dateTime'].substr(12, 5);
+  } else {
+    allDayInput.checked = true;
+  }
+
+  if (event['location']) {
+    formElement.elements['location'].value = event['location'];
+  }
+
+  if (event['description']) {
+    formElement.elements['description'].value = event['description'];
+  }
+}
 
 
-// window.form;
+var addCreateHandler = function () {
+  formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(formElement);
+
+    create.send(formData);
+    // console.log('update');
+  });
+}
+
+
+var addUpdateHandler = function (id) {
+  formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(formElement);
+
+    update.send(id, formData);
+    // console.log('create');
+  });
+}
+
+
+window.form = {
+  element: formElement,
+  allDay: false,
+  addCreateHandler: addCreateHandler,
+  addUpdateHandler: addUpdateHandler,
+  fill: fillForm,
+};
 
 var currentDate = document.querySelector('.current-date');
 
@@ -1227,11 +1296,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 var getTimeRange = {
   min: function (dateObj) {
-    dateObj.setHours(0, 0);
+    dateObj.setHours(0, 0, 0);
     return dateObj;
   },
   max: function (dateObj) {
-    dateObj.setHours(23, 59);
+    dateObj.setHours(23, 59, 59);
     return dateObj;
   },
 }
@@ -1270,10 +1339,6 @@ var onListDateChange = function () {
 // currentDate.addEventListener('change', onListDateChange);
 
 currentDate.addEventListener('change', onListDateChange);
-
-
-
-
 
 
 

@@ -1,50 +1,14 @@
-var UTC = '+03:00';
-var TIMEZONE = 'Europe/Moscow';
+var addButton = document.querySelector('.add-button');
+
+addButton.addEventListener('click', function () {
+  setDefaultDate();
+  form.addCreateHandler();
+  editor.open();
+  // form.addUpdateHandler();
+});
 
 
-// var formatDateTime = function (date, time) {
-//   return date + 'T' + time + ':00' + UTC;
-// }
-
-var formatDateTime = function (date, time) {
-  var dateTime = date + 'T' + time;
-  // var dateObj = new Date(Date.parse(dateTime))l
-
-  return (new Date(Date.parse(dateTime))).toISOString();
-}
-
-
-var CalendarEvent = function (formData) {
-  this.summary = formData.get('summary');
-
-  this.start = {};
-  this.end = {};
-
-  // if (!(formData.get('start-time') && formData.get('start-time'))) {
-  //   this.start.date = formData.get('start-date');
-  //   this.end.date = formData.get('end-date');
-  // } else {
-  //   this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
-  //   this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
-  // }
-
-  if (formData.get('start-time') && formData.get('end-time')) {
-    this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
-    this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
-  } else {
-    // this.start.date = formData.get('start-date');
-    // this.end.date = formData.get('end-date');
-  }
-
-  this.start.timeZone = TIMEZONE;
-  this.end.timeZone = TIMEZONE;
-
-  this.location = formData.get('location') || '';
-  this.description = formData.get('description') || '';
-}
-
-
-var sendEvent = function (formData) {
+var createEvent = function (formData) {
   var event = new CalendarEvent(formData);
 
   var request = gapi.client.calendar.events.insert({
@@ -57,9 +21,9 @@ var sendEvent = function (formData) {
       items.add(event);
       storage.setEvent(event);
       editor.close();
-      form.reset();
-      console.log('Event ID: ' + event.id);
-      console.log('Event link: ' + event.htmlLink);
+      form.element.reset();
+      // console.log('Event ID: ' + event.id);
+      // console.log('Event link: ' + event.htmlLink);
       notice.show('Успешно сохранено');
     } else {
       notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
@@ -68,11 +32,6 @@ var sendEvent = function (formData) {
 }
 
 
-// Сохранить объект Event d localStorage и вызвать функцию отрисовки
-
-
-
-
 window.create = {
-  send: sendEvent,
+  send: createEvent,
 }
