@@ -1,7 +1,7 @@
 var CLEAR_EXCEPTIONS = ['fontFamily'];
 
-var setEventToStorage = function (event) {
-  localStorage.setItem(event.id, JSON.stringify(event));
+var setToStorage = function (key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
 var getFromStorage = function (key) {
@@ -50,7 +50,7 @@ var clearStorage = function () {
 
 
 window.storage = {
-  setEvent: setEventToStorage,
+  set: setToStorage,
   get: getFromStorage,
   remove: removeFromStorage,
   clear: clearStorage

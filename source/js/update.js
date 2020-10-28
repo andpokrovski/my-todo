@@ -1,5 +1,7 @@
 var updateEvent = function (id, formData) {
+  console.log('updated');
   var event = new CalendarEvent(formData);
+  storage.set(event.id, event);
 
   return gapi.client.calendar.events.update({
       'calendarId': 'primary',
@@ -7,13 +9,15 @@ var updateEvent = function (id, formData) {
       'resource': event,
     })
     .then(function (response) {
-        storage.setEvent(event);
+        // storage.setEvent(event);
+
         editor.close();
-        form.element.reset();
+        // form.element.reset();
+        form.reset();
         // Handle the results here (response.result has the parsed body).
         // console.log("Response", response);
         notice.show('Успешно обновлено');
-        console.log('updated');
+        // console.log('updated');
 
       },
       function (err) {

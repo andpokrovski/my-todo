@@ -4,14 +4,17 @@ var typeButtons = formElement.elements.type;
 var allDayInput = formElement.querySelector('.form__all-day-input');
 var dates = formElement.querySelectorAll('.form__date');
 var times = formElement.querySelectorAll('.form__time');
-var currentType = '';
+var typeEvent = formElement.querySelector('.form__type-input--event');
+var typeTask = formElement.querySelector('.form__type-input--task');
+var currentType = 'event';
 var formValid = true;
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
-    if (button.checked) {
+    if (this.checked) {
+      // formElement.className = 'form';
       formElement.classList.remove('form--' + currentType);
-      currentType = button.value;
+      currentType = this.value;
       formElement.classList.add('form--' + currentType);
     }
   });
@@ -30,7 +33,6 @@ var setDefaultDate = function () {
     input.value = currentDate;
   });
 }
-
 
 
 
@@ -100,14 +102,40 @@ var fillForm = function (eventId) {
 
   formElement.elements['summary'].value = event['summary'];
 
-  formElement.elements['start-date'].value = event['start']['date'];
-  formElement.elements['end-date'].value = event['end']['date'];
+
 
   if (event['start']['dateTime'] && event['end']['dateTime']) {
-    formElement.elements['start-time'] = event['start']['dateTime'].substr(12, 5);
-    formElement.elements['end-time'] = event['end']['dateTime'].substr(12, 5);
+
+    console.log(event['start']['dateTime']);
+    console.log(event['end']['dateTime']);
+
+    formElement.elements['start-date'].value = event['start']['dateTime'].substr(0, 10);
+    formElement.elements['end-date'].value = event['end']['dateTime'].substr(0, 10);
+    formElement.elements['start-time'].value = event['start']['dateTime'].substr(11, 5);
+    formElement.elements['end-time'].value = event['end']['dateTime'].substr(11, 5);
   } else {
+    formElement.classList.toggle('form--all-day', true);
     allDayInput.checked = true;
+
+    formElement.elements['start-date'].value = event['start']['date'];
+    formElement.elements['end-date'].value = event['end']['date'];
+  }
+
+  // formElement.className = 'form';
+
+  // console.log(event['start']['dateTime']);
+  // console.log(event['end']['dateTime']);
+
+  if (event['start']['dateTime'] && event['end']['dateTime'] && (event['start']['dateTime'] === event['end']['dateTime'])) {
+    typeEvent.checked = false;
+    typeTask.checked = true;
+    formElement.classList.toggle('form--event', false);
+    formElement.classList.toggle('form--task', true);
+  } else {
+    typeEvent.checked = true;
+    typeTask.checked = false;
+    formElement.classList.toggle('form--event', true);
+    formElement.classList.toggle('form--task', false);
   }
 
   if (event['location']) {
@@ -141,6 +169,12 @@ var addUpdateHandler = function (id) {
   });
 }
 
+var resetForm = function () {
+  formElement.reset();
+  formElement.className = '';
+}
+
+
 
 window.form = {
   element: formElement,
@@ -148,4 +182,5 @@ window.form = {
   addCreateHandler: addCreateHandler,
   addUpdateHandler: addUpdateHandler,
   fill: fillForm,
+  reset: resetForm,
 };

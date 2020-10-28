@@ -19,9 +19,9 @@ var createEvent = function (formData) {
   request.execute(function (event) {
     if (event.id) {
       items.add(event);
-      storage.setEvent(event);
+      storage.set(event.id, event);
       editor.close();
-      form.element.reset();
+      form.reset();
       // console.log('Event ID: ' + event.id);
       // console.log('Event link: ' + event.htmlLink);
       notice.show('Успешно сохранено');

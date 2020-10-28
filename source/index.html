@@ -58,8 +58,8 @@
               Закрыть окно
             </span>
           </button>
-          <form class="form" method="post" enctype="multipart/form-data" action="https://echo.htmlacademy.ru"
-            autocomplete="off">
+          <form class="form form--event" method="post" enctype="multipart/form-data"
+            action="https://echo.htmlacademy.ru" autocomplete="off">
 
             <input class="form__title" type="text" placeholder="Название" name="summary" required>
 
@@ -67,12 +67,14 @@
               <legend class=" visually-hidden">Время и дата</legend>
               <ul class="form__type-list">
                 <li class="form__type-item">
-                  <input class="form__type-input visually-hidden" type="radio" id="form-event" name="type" value="event"
+                  <input class="form__type-input form__type-input--event visually-hidden" type="radio" id="form-event"
+                    name="type" value="event"
                     checked>
                   <label class="form__type-label" for="form-event">Мероприятие</label>
                 </li>
                 <li class="form__type-item">
-                  <input class="form__type-input visually-hidden" type="radio" id="form-task" name="type" value="task">
+                  <input class="form__type-input form__type-input--task visually-hidden" type="radio" id="form-task"
+                    name="type" value="task">
                   <label class="form__type-label" for="form-task">Задача</label>
                 </li>
               </ul>

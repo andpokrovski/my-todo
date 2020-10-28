@@ -49,7 +49,7 @@ var renderItems = function (events) {
 
   events.forEach(function (event) {
     fragment.appendChild(createItem(event));
-    storage.setEvent(event);
+    storage.set(event.id, event);
   });
 
   itemsList.appendChild(fragment);
