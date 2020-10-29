@@ -1,9 +1,19 @@
 var currentDate = document.querySelector('.current-date');
 
-document.addEventListener("DOMContentLoaded", function () {
+// document.addEventListener("DOMContentLoaded", function () {
+//   var date = utils.formatDate(new Date());
+//   currentDate.value = date;
+// });
+
+var setDefaultDate = function () {
   var date = utils.formatDate(new Date());
   currentDate.value = date;
-});
+}
+
+var resetDefaultDate = function () {
+  // currentDate.value = '';
+  currentDate.value = null;
+}
 
 
 var getTimeRange = {
@@ -55,5 +65,7 @@ currentDate.addEventListener('change', onListDateChange);
 
 
 window.list = {
+  setDefaultDate: setDefaultDate,
+  resetDefaultDate: setDefaultDate,
   update: listEvents,
 }

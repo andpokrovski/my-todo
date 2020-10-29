@@ -71,6 +71,7 @@ function updateSigninStatus(isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
     // myTodo.list();
+    list.setDefaultDate();
     list.update(new Date);
     authPopup.close();
   } else {
@@ -91,9 +92,11 @@ function onAuthClick(event) {
  */
 function onSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
+  list.resetDefaultDate();
   items.clear();
   storage.clear();
   authPopup.open();
+  font.reset();
 }
 
 

@@ -53,7 +53,7 @@
 
       <div class="editor modal d-none">
         <div class="modal__window">
-          <button class="modal__close-button modal__close" type="reset">
+          <button class="modal__close-button modal__close">
             <span class="visually-hidden">
               Закрыть окно
             </span>
@@ -100,12 +100,12 @@
 
               <ul class="form__date-time-list">
                 <li class="form__date-time-item form__date-time-item--start">
-                  <input class="form__date" type="date" name="start-date">
-                  <input class="form__time" type="time" name="start-time">
+                  <input class="form__date" type="date" name="start-date" required="">
+                  <input class="form__time" type="time" name="start-time" required="">
                 </li>
                 <li class="form__date-time-item form__date-time-item--end">
-                  <input class="form__date" type="date" name="end-date">
-                  <input class="form__time" type="time" name="end-time">
+                  <input class="form__date" type="date" name="end-date" required="">
+                  <input class="form__time" type="time" name="end-time" required="">
                 </li>
               </ul>
 
@@ -151,6 +151,9 @@
       <!-- <pre class="my-todo__list" id="content" style="white-space: pre-wrap;"></pre> -->
 
       <ul class="my-todo__list"></ul>
+      <ul class="done">
+        <h2>Выполнено</h2>
+      </ul>
       <pre class="my-todo__list" id="content" style="white-space: pre-wrap;"></pre>
 
       <div class="rabbit">
@@ -181,10 +184,11 @@
       <p class="my-todo__text my-todo__summary" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0" spellcheck="true">
         Таска для Маска
       </p>
+      <input class="item__id" type="text" style="display: none;" readonly="">
       <button class="my-todo__done" type="button">
         Выполнено
       </button>
-      <button class="my-todo__edit" type="button">
+      <button class="my-todo__update" type="button">
         Редактировать
       </button>
       <button class="my-todo__delete" type="button">

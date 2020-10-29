@@ -1,5 +1,5 @@
 //=require js/utils.js
-//=require js/fonts.js
+//=require js/font.js
 //=require js/notice.js
 //=require js/storage.js
 //=require js/event.js

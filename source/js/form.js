@@ -1,4 +1,5 @@
 var formElement = document.querySelector('.form');
+var title = document.querySelector('.form');
 var saveButton = formElement.querySelector('.form__save');
 var typeButtons = formElement.elements.type;
 var allDayInput = formElement.querySelector('.form__all-day-input');
@@ -8,6 +9,7 @@ var typeEvent = formElement.querySelector('.form__type-input--event');
 var typeTask = formElement.querySelector('.form__type-input--task');
 var currentType = 'event';
 var formValid = true;
+var closeButton = document.querySelector('.modal__close');
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
@@ -17,12 +19,34 @@ typeButtons.forEach(function (button) {
       currentType = this.value;
       formElement.classList.add('form--' + currentType);
     }
+
+    if (currentType === 'event') {
+      dates[1].required = true;
+    }
+
+    if (currentType === 'task') {
+      dates[1].required = false;
+    }
+
   });
 });
 
 allDayInput.addEventListener('change', function () {
   formElement.classList.toggle('form--all-day');
   form.allDay = allDayInput.checked;
+
+  times.forEach(function (item) {
+    if (allDayInput.checked) {
+      item.required = false;
+    } else {
+      item.required = true;
+    }
+  });
+
+});
+
+editor.element.addEventListener('modalOpened', function () {
+  formElement.elements.summary.focus();
 });
 
 
@@ -34,9 +58,23 @@ var setDefaultDate = function () {
   });
 }
 
+// var TIME_ROUNDING_STEP = 30;
+
+// var setDefaultTime = function () {
+//   var date = new Date();
+//   var hours = date.getHours();
+//   var minutes = date.getMinutes();
+
+//   if (minutes < TIME_ROUNDING_STEP) {
+//     hours += 1;
+//     minutes
+//   }
+
+// }
 
 
-var TIME_ROUNDING_STEP = 30;
+
+
 
 
 // stringify
@@ -116,6 +154,7 @@ var fillForm = function (eventId) {
   } else {
     formElement.classList.toggle('form--all-day', true);
     allDayInput.checked = true;
+    form.allDay = true;
 
     formElement.elements['start-date'].value = event['start']['date'];
     formElement.elements['end-date'].value = event['end']['date'];
@@ -148,39 +187,76 @@ var fillForm = function (eventId) {
 }
 
 
-var addCreateHandler = function () {
-  formElement.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    var formData = new FormData(formElement);
+// var onSubmitButtonClick;
 
+
+// var onCreateButtonClick = function (evt) {
+//   evt.preventDefault();
+//   var formData = new FormData(formElement);
+
+//   create.send(formData);
+//   // formElement.removeEventListener('submit', onCreateButtonClick);
+// }
+
+
+// var onUpdateButtonClick = function (evt) {
+//   evt.preventDefault();
+//   var formData = new FormData(formElement);
+//   // var id = items.getId(this);
+//   var id = items.currentId;
+
+//   update.send(id, formData);
+//   // formElement.removeEventListener('submit', onUpdateButtonClick);
+// }
+
+
+// var addCreateHandler = function () {
+//   formElement.addEventListener('submit', onCreateButtonClick);
+//   // closeButton.removeEventListener('click', onCreateButtonClick);
+// }
+
+
+// var addUpdateHandler = function (id) {
+//   formElement.addEventListener('submit', onUpdateButtonClick);
+//   // closeButton.removeEventListener('click', onUpdateButtonClick);
+// }
+
+
+
+
+var onFormSubmit = function (evt) {
+  evt.preventDefault();
+  var formData = new FormData(formElement);
+
+  if (form.currentId) {
+    update.send(form.currentId, formData);
+    form.currentId = null;
+  } else {
     create.send(formData);
-    // console.log('update');
-  });
+  }
 }
 
 
-var addUpdateHandler = function (id) {
-  formElement.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    var formData = new FormData(formElement);
-
-    update.send(id, formData);
-    // console.log('create');
-  });
-}
+formElement.addEventListener('submit', onFormSubmit);
 
 var resetForm = function () {
   formElement.reset();
-  formElement.className = '';
+  formElement.className = 'form form--event';
 }
+
+
+closeButton.addEventListener('click', function () {
+  resetForm();
+});
 
 
 
 window.form = {
   element: formElement,
   allDay: false,
-  addCreateHandler: addCreateHandler,
-  addUpdateHandler: addUpdateHandler,
+  // addCreateHandler: addCreateHandler,
+  // addUpdateHandler: addUpdateHandler,
   fill: fillForm,
   reset: resetForm,
+  currentId: null,
 };

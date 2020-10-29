@@ -46,13 +46,15 @@
 
 })();
 
-;(function () {
+;
+(function () {
   var body = document.querySelector('.body');
   var select = document.querySelector('.fonts');
 
 
   var onPageLoad = function () {
-    var storageValue = localStorage.getItem('fontFamily')
+    var storageValue = storage.get('fontFamily');
+
 
     if (storageValue) {
       body.style.fontFamily = storageValue;
@@ -63,13 +65,24 @@
 
   var onSelectChange = function () {
     body.style.fontFamily = select.value;
-    localStorage.setItem('fontFamily', select.value)
+    storage.set('fontFamily', select.value);
   };
+
+  var resetFont = function () {
+    body.style.fontFamily = '';
+    select.options[0].selected = true;
+  }
 
 
   document.addEventListener("DOMContentLoaded", onPageLoad);
 
   select.addEventListener('change', onSelectChange);
+
+
+  window.font = {
+    reset: resetFont,
+  }
+
 })();
 
 var notice = document.querySelector('.notice');
@@ -893,11 +906,13 @@ var itemsList = document.querySelector('.my-todo__list');
 var createItem = function (event) {
   var newItem = itemTemplate.cloneNode('true');
   var summary = newItem.querySelector('.my-todo__summary');
-  var editButton = newItem.querySelector('.my-todo__edit');
+  var updateButton = newItem.querySelector('.my-todo__update');
   var deleteButton = newItem.querySelector('.my-todo__delete');
+  var id = newItem.querySelector('.item__id');
 
 
   summary.textContent = event.summary;
+  id.value = event.id;
 
   deleteButton.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -907,22 +922,37 @@ var createItem = function (event) {
     storage.remove(event.id);
     // Удаление с сервера
     remove.send(event.id);
+
   });
 
-  editButton.addEventListener('click', function (evt) {
+  updateButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
     setDefaultDate();
     // form.addCreateHandler();
 
     form.fill(event.id);
-    form.addUpdateHandler(event.id);
+    form.currentId = event.id
+    // form.addUpdateHandler();
     editor.open();
+    // items.currentId = event.id;
 
   });
 
   return newItem;
 };
+
+
+// var getItemId = function (updateButton) {
+//   var parentNode = updateButton.parentNode;
+//   // console.log(this);
+//   // console.log(updateButton.parentNode);
+//   var idInput = parentNode.querySelector('.item__id');
+//   console.log();
+//   // console.log(idInput);
+
+//   // return parentNode.querySelector('.item__id').value;
+// }
 
 
 var addItem = function (event) {
@@ -956,8 +986,10 @@ var clearItems = function () {
 window.items = {
   add: addItem,
   render: renderItems,
+  // getId: getItemId,
   // remove: removeItem,
   clear: clearItems,
+  // currentId: undefined,
 }
 
 
@@ -967,13 +999,15 @@ var addButton = document.querySelector('.add-button');
 
 addButton.addEventListener('click', function () {
   setDefaultDate();
-  form.addCreateHandler();
   editor.open();
   // form.addUpdateHandler();
 });
 
 
 var createEvent = function (formData) {
+  console.log('created');
+
+
   var event = new CalendarEvent(formData);
 
   var request = gapi.client.calendar.events.insert({
@@ -987,6 +1021,7 @@ var createEvent = function (formData) {
       storage.set(event.id, event);
       editor.close();
       form.reset();
+      // form.element.removeEventListener('submit', onCreateButtonClick);
       // console.log('Event ID: ' + event.id);
       // console.log('Event link: ' + event.htmlLink);
       notice.show('Успешно сохранено');
@@ -1012,26 +1047,17 @@ var updateEvent = function (id, formData) {
       'resource': event,
     })
     .then(function (response) {
-        // storage.setEvent(event);
-
         editor.close();
-        // form.element.reset();
         form.reset();
-        // Handle the results here (response.result has the parsed body).
-        // console.log("Response", response);
         notice.show('Успешно обновлено');
-        // console.log('updated');
-
       },
       function (err) {
-        // console.error("Execute error", err);
         notice.show('Произошла ошибка. Проверьте, правильно ли вы ввели данные.');
       });
 }
 
 
 window.update = {
-  // fillForm: fillForm,
   send: updateEvent,
 }
 
@@ -1108,6 +1134,7 @@ function updateSigninStatus(isSignedIn) {
     // authorizeButton.style.display = 'none';
     // signoutButton.style.display = 'block';
     // myTodo.list();
+    list.setDefaultDate();
     list.update(new Date);
     authPopup.close();
   } else {
@@ -1128,9 +1155,11 @@ function onAuthClick(event) {
  */
 function onSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
+  list.resetDefaultDate();
   items.clear();
   storage.clear();
   authPopup.open();
+  font.reset();
 }
 
 
@@ -1139,6 +1168,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 var formElement = document.querySelector('.form');
+var title = document.querySelector('.form');
 var saveButton = formElement.querySelector('.form__save');
 var typeButtons = formElement.elements.type;
 var allDayInput = formElement.querySelector('.form__all-day-input');
@@ -1148,6 +1178,7 @@ var typeEvent = formElement.querySelector('.form__type-input--event');
 var typeTask = formElement.querySelector('.form__type-input--task');
 var currentType = 'event';
 var formValid = true;
+var closeButton = document.querySelector('.modal__close');
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
@@ -1157,12 +1188,34 @@ typeButtons.forEach(function (button) {
       currentType = this.value;
       formElement.classList.add('form--' + currentType);
     }
+
+    if (currentType === 'event') {
+      dates[1].required = true;
+    }
+
+    if (currentType === 'task') {
+      dates[1].required = false;
+    }
+
   });
 });
 
 allDayInput.addEventListener('change', function () {
   formElement.classList.toggle('form--all-day');
   form.allDay = allDayInput.checked;
+
+  times.forEach(function (item) {
+    if (allDayInput.checked) {
+      item.required = false;
+    } else {
+      item.required = true;
+    }
+  });
+
+});
+
+editor.element.addEventListener('modalOpened', function () {
+  formElement.elements.summary.focus();
 });
 
 
@@ -1174,9 +1227,23 @@ var setDefaultDate = function () {
   });
 }
 
+// var TIME_ROUNDING_STEP = 30;
+
+// var setDefaultTime = function () {
+//   var date = new Date();
+//   var hours = date.getHours();
+//   var minutes = date.getMinutes();
+
+//   if (minutes < TIME_ROUNDING_STEP) {
+//     hours += 1;
+//     minutes
+//   }
+
+// }
 
 
-var TIME_ROUNDING_STEP = 30;
+
+
 
 
 // stringify
@@ -1256,6 +1323,7 @@ var fillForm = function (eventId) {
   } else {
     formElement.classList.toggle('form--all-day', true);
     allDayInput.checked = true;
+    form.allDay = true;
 
     formElement.elements['start-date'].value = event['start']['date'];
     formElement.elements['end-date'].value = event['end']['date'];
@@ -1288,49 +1356,96 @@ var fillForm = function (eventId) {
 }
 
 
-var addCreateHandler = function () {
-  formElement.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    var formData = new FormData(formElement);
+// var onSubmitButtonClick;
 
+
+// var onCreateButtonClick = function (evt) {
+//   evt.preventDefault();
+//   var formData = new FormData(formElement);
+
+//   create.send(formData);
+//   // formElement.removeEventListener('submit', onCreateButtonClick);
+// }
+
+
+// var onUpdateButtonClick = function (evt) {
+//   evt.preventDefault();
+//   var formData = new FormData(formElement);
+//   // var id = items.getId(this);
+//   var id = items.currentId;
+
+//   update.send(id, formData);
+//   // formElement.removeEventListener('submit', onUpdateButtonClick);
+// }
+
+
+// var addCreateHandler = function () {
+//   formElement.addEventListener('submit', onCreateButtonClick);
+//   // closeButton.removeEventListener('click', onCreateButtonClick);
+// }
+
+
+// var addUpdateHandler = function (id) {
+//   formElement.addEventListener('submit', onUpdateButtonClick);
+//   // closeButton.removeEventListener('click', onUpdateButtonClick);
+// }
+
+
+
+
+var onFormSubmit = function (evt) {
+  evt.preventDefault();
+  var formData = new FormData(formElement);
+
+  if (form.currentId) {
+    update.send(form.currentId, formData);
+    form.currentId = null;
+  } else {
     create.send(formData);
-    // console.log('update');
-  });
+  }
 }
 
 
-var addUpdateHandler = function (id) {
-  formElement.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    var formData = new FormData(formElement);
-
-    update.send(id, formData);
-    // console.log('create');
-  });
-}
+formElement.addEventListener('submit', onFormSubmit);
 
 var resetForm = function () {
   formElement.reset();
-  formElement.className = '';
+  formElement.className = 'form form--event';
 }
+
+
+closeButton.addEventListener('click', function () {
+  resetForm();
+});
 
 
 
 window.form = {
   element: formElement,
   allDay: false,
-  addCreateHandler: addCreateHandler,
-  addUpdateHandler: addUpdateHandler,
+  // addCreateHandler: addCreateHandler,
+  // addUpdateHandler: addUpdateHandler,
   fill: fillForm,
   reset: resetForm,
+  currentId: null,
 };
 
 var currentDate = document.querySelector('.current-date');
 
-document.addEventListener("DOMContentLoaded", function () {
+// document.addEventListener("DOMContentLoaded", function () {
+//   var date = utils.formatDate(new Date());
+//   currentDate.value = date;
+// });
+
+var setDefaultDate = function () {
   var date = utils.formatDate(new Date());
   currentDate.value = date;
-});
+}
+
+var resetDefaultDate = function () {
+  // currentDate.value = '';
+  currentDate.value = null;
+}
 
 
 var getTimeRange = {
@@ -1382,6 +1497,8 @@ currentDate.addEventListener('change', onListDateChange);
 
 
 window.list = {
+  setDefaultDate: setDefaultDate,
+  resetDefaultDate: setDefaultDate,
   update: listEvents,
 }
 
