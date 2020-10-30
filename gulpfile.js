@@ -226,10 +226,11 @@ gulp.task("build",
       "html",
       // "outline",
       "css",
-      "copy",
       "scripts",
-      "images"
+      "images",
+      "copy",
     ),
+    "createDocs"
   )
 );
 

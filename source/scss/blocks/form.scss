@@ -93,15 +93,11 @@
 
 
 .form__date {
-  // width: 100%;
   display: block;
-  // max-width: 180px;
   width: 160px;
   margin: 0;
-  // margin-bottom: 20px;
   margin-bottom: 10px;
   padding: 0;
-  // max-width: 100%;
 
   font: inherit;
 
@@ -138,7 +134,6 @@
   background-repeat: no-repeat;
   background-position: left center;
   background-size: 24px auto;
-  // display: block;
   cursor: pointer;
 
   &:hover {
@@ -154,163 +149,22 @@
   background-image: url("../img/check-square-solid.svg");
 }
 
-// .form__all-day-input:focus+.form__all-day-label {
-//   background-image: url("../img/check-square-regular.svg");
-// }
-
-
-// .form__all-day-input:checked+.form__all-day-label:hover,
-// .form__all-day-input:focus+.form__all-day-label {
-//   background-image: url("../img/check-square-regular.svg");
-// }
-
-// .form__all-day-input:checked:focus+.form__all-day-label {
-//   background-image: url("../img/check-square-solid.svg");
-// }
-
-
-.item__button {
-  // box-shadow: 0 0 0 1px black;
-  // width: 50px;
-  // height: 50px;
-  // width: 20px;
-
-  // background-color: #000000;
-
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  &:active {
-    opacity: 0.6;
-  }
-
-
-  &--update {
-    background-image: url("../img/pencil-alt-solid.svg");
-    background-size: 22px auto;
-  }
-
-  &--delete {
-    background-image: url("../img/trash-alt-solid.svg");
-    background-size: 20px auto;
-  }
-}
-
-
-// .form__date-time {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   margin: 0;
-//   margin-bottom: 20px;
-//   padding: 0;
-
-//   border: none;
-// }
-
-// .form__date-time-wrapper {
-//   display: flex;
-//   flex-direction: column;
-// }
-
-// .form__date-list {
-//   display: flex;
-//   margin: 0;
-//   margin-bottom: 10px;
-//   padding: 0;
-
-//   list-style: none;
-// }
-
-
-// .form__date-item {
-//   &--start {
-//     flex-grow: 1;
-//   }
-
-//   &--end {
-//     display: none;
-//   }
-// }
-
-// .form__date {
-//   display: block;
-//   width: 100%;
-// }
-
-// .form__time-list {
-//   display: flex;
-//   margin: 0;
-//   margin-bottom: 20px;
-//   padding: 0;
-
-//   list-style: none;
-// }
-
-// .form__time-item {
-//   &--end {
-//     margin-left: 10px;
-//   }
-// }
-
-// .form__time {
-//   display: block;
-// }
-
-
-// .form--all-day {
-//   .form__date-item--end {
-//     display: block;
-//     margin-left: 10px;
-//   }
-
-//   .form__time-item {
-//     width: 50%;
-
-//     &--end {
-//       display: block;
-//       margin-left: 10px;
-//     }
-//   }
-// }
-
-
 .form--task {
   .form__info {
     display: none;
   }
-
-  // .form__date-time-wrapper {
-  //   flex-direction: row;
-  // }
-
-  // .form__date-list {
-  //   margin-right: 10px;
-  // }
-
-  // .form__time-item {
-  //   &--end {
-  //     display: none;
-  //   }
-  // }
 }
-
 
 .form__info {
   display: flex;
   flex-direction: column;
-  // margin-right: 100px;
   max-width: 243px;
-  // align-items: flex-start;
   margin: 0;
   margin-bottom: 20px;
   padding: 0;
 
   border: none;
 }
-
 
 .form__title {
   margin-bottom: 20px;

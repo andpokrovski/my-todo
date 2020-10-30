@@ -13,5 +13,4 @@
 //=require js/auth.js
 //=require js/form.js
 //=require js/list.js
-//=require js/alert.js
 //=require js/remove.js

@@ -1,3 +1,6 @@
+;
+(function () {})();
+
 var updateEvent = function (element, id, formData) {
   console.log('updated');
   var event = new CalendarEvent(formData);

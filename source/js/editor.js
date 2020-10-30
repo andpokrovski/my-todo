@@ -1,3 +1,7 @@
-var editor = new Modal('.editor');
+;
+(function () {
+  var editor = new Modal('.editor');
 
-window.editor;
+  window.editor = editor;
+
+})();

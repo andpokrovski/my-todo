@@ -1,6 +1,5 @@
 .item {
   box-sizing: border-box;
-  // padding: 10px 20px;
   padding: 20px 20px 0;
 
   background-color: #ffffff;
@@ -23,17 +22,11 @@
 
 
 .item__button {
-  // box-shadow: 0 0 0 1px black;
-  // width: 50px;
-  // height: 50px;
-  // width: 20px;
   width: 24px;
   height: 30px;
   height: 26px;
-  // background-color: #000000;
 
   background-repeat: no-repeat;
-  // background-position: 0 0;
   background-position: center;
 
   &:hover {
@@ -55,7 +48,6 @@
   }
 
 
-
   &--update {
     background-image: url("../img/pencil-alt-solid.svg");
     background-size: 22px auto;
@@ -71,12 +63,10 @@
   width: 24px;
   height: 30px;
   height: 26px;
-  // background-color: #000000;
 
-  background-repeat: no-repeat;
-  // background-position: 0 0;
-  background-position: center;
   background-image: url("../img/square-regular.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: 24px auto;
 
   &--checked {
@@ -85,39 +75,27 @@
 }
 
 
-// .item__done-input:checked .item__done {
-//   background-image: url("../img/check-square-solid.svg");
-// }
-
-
 .item__update {
   width: 24px;
   height: 30px;
   height: 26px;
-  // background-color: #000000;
 
-  background-repeat: no-repeat;
-  // background-position: 0 0;
-  background-position: center;
   background-image: url("../img/pencil-alt-solid.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: 22px auto;
-
-
 }
 
 .item__delete {
   width: 24px;
   height: 30px;
   height: 26px;
-  // background-color: #000000;
 
-  background-repeat: no-repeat;
-  // background-position: 0 0;
-  background-position: center;
   background-image: url("../img/trash-alt-solid.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: 20px auto;
 }
-
 
 
 .item__options {

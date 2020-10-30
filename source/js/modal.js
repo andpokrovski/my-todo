@@ -1,5 +1,5 @@
+;
 (function () {
-
   var closeModalOnEscPress = function (evt) {
     if (evt.key === 'Escape') {
       closeModal.call(this);
@@ -11,16 +11,9 @@
 
   var openModal = function () {
     var modal = this;
-    // this.element.classList.toggle('d-none', false);
-
     modal.element.classList.toggle('d-none', false);
-    // this.element.classList.toggle('modal--active', true);
-    // this.element.classList.add('modal--active');
-
 
     setTimeout(function () {
-      // this.element.classList.toggle('modal--active', true);
-      // this.element.classList.add('modal--active');
       modal.element.classList.toggle('modal--active', true);
     }, 10)
 
@@ -38,10 +31,8 @@
 
   var closeModal = function () {
     var modal = this;
-    // this.element.classList.toggle('d-none', true);
     modal.element.classList.toggle('modal--active', false);
 
-    // this.element.classList.toggle('modal--active', false);
     setTimeout(function () {
       modal.element.classList.toggle('d-none', true);
     }, 250)

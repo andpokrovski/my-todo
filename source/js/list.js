@@ -1,10 +1,7 @@
+;
 (function () {
   var currentDate = document.querySelector('.header__current-date');
 
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   var date = utils.formatDate(new Date());
-  //   currentDate.value = date;
-  // });
 
   var setDefaultDate = function () {
     var date = time.getStringDate(new Date());
@@ -12,7 +9,6 @@
   }
 
   var resetDefaultDate = function () {
-    // currentDate.value = '';
     currentDate.value = null;
   }
 
@@ -59,10 +55,7 @@
   }
 
 
-  // currentDate.addEventListener('change', onListDateChange);
-
   currentDate.addEventListener('change', onListDateChange);
-
 
 
   window.list = {

@@ -1,17 +1,22 @@
-var notice = document.querySelector('.notice');
+;
+(function () {
+  var notice = document.querySelector('.notice');
 
-var showNotice = function (message) {
-  notice.textContent = message;
-  notice.classList.toggle('notice--active', true);
+  var showNotice = function (message) {
+    notice.textContent = message;
+    notice.classList.toggle('notice--active', true);
 
-  setTimeout(function () {
+    setTimeout(function () {
+      notice.classList.toggle('notice--active', false);
+    }, 1500);
+
+  }
+
+  notice.addEventListener('click', function () {
     notice.classList.toggle('notice--active', false);
-  }, 1500);
+  });
 
-}
-
-notice.addEventListener('click', function () {
-  notice.classList.toggle('notice--active', false);
-});
-
-window.notice.show = showNotice;
+  window.notice = {
+    show: showNotice,
+  };
+})();
