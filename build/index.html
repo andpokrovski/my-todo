@@ -16,18 +16,23 @@
   <div class="container">
 
     <header class="header">
-      <h1 class="my-todo__title">my todo</h1>
-
-      <div class="options">
-        <select class="fonts" name="" id="">
-          <option value="" disabled="" selected="">Выберите шрифт</option>
+      <div class="header__top">
+        <h1 class="header__title">my todo</h1>
+        <select class="header__fonts fonts" name="" id="">
+          <option value="" disabled="" selected="">Шрифт</option>
           <option class="fonts__option fonts__option--roboto" value="Roboto">Roboto</option>
           <option class="fonts__option fonts__option--ptserif" value="PT Serif">PT Serif</option>
           <option class="fonts__option fonts__option--badscript" value="Bad Script">Bad Script</option>
         </select>
-        <button class="button" id="signout-button" type="button">Выйти</button>
-        <input class="current-date" type="date">
       </div>
+      <div class="header__bottom">
+        <input class="header__current-date" type="date">
+        <!-- <button class="header__signout-button button" type="button"></button> -->
+        <a class="header__signout" id="signout-button">Выйти</a>
+      </div>
+
+
+
 
       <p class="notice">
         Это уведомление... Скоро я спрячусь.
@@ -42,9 +47,9 @@
     <main class="main">
 
       <div class="auth modal">
-        <div class="modal__window">
-          <h2>Авторизация</h2>
-          <button class="auth__button button" id="auth-button">Войти c аккаунтом Google</button>
+        <div class="auth__window modal__window">
+          <h2 class="auth__title">Авторизация</h2>
+          <button class="auth__button button button--fill" id="auth-button">Войти c аккаунтом Google</button>
         </div>
       </div>
 
@@ -60,7 +65,7 @@
           </button>
           <form class="form form--event" method="post" enctype="multipart/form-data" action="https://echo.htmlacademy.ru" autocomplete="off">
 
-            <input class="form__title" type="text" placeholder="Название" name="summary" required="">
+            <input class="form__title" type="text" placeholder="Название" name="summary" spellcheck="true" required="">
 
             <fieldset class="form__type">
               <legend class=" visually-hidden">Время и дата</legend>
@@ -79,35 +84,30 @@
 
             <fieldset class="form__date-time">
               <legend class="visually-hidden">Время и дата</legend>
-              <!-- <table class="form__date-time-table">
-                <tr class="form__dates">
-                  <td class="form__table-data">
-                    <input class="form__date" type="date" name="start-date">
-                  </td>
-                  <td class="form__table-data">
-                    <input class="form__date" type="date" name="end-date">
-                  </td>
-                </tr>
-                <tr class="form__times">
-                  <td class="form__table-data">
-                    <input class="form__time" type="time" name="start-time">
-                  </td>
-                  <td class="form__table-data">
-                    <input class="form__time" type="time" name="end-time">
-                  </td>
-                </tr>
-              </table> -->
 
               <ul class="form__date-time-list">
                 <li class="form__date-time-item form__date-time-item--start">
-                  <input class="form__date" type="date" name="start-date" required="">
-                  <input class="form__time" type="time" name="start-time" required="">
+                  <input class="form__date form__date--start" type="date" name="start-date" required="">
+                  <input class="form__time form__time--start" type="time" name="start-time" required="">
                 </li>
                 <li class="form__date-time-item form__date-time-item--end">
-                  <input class="form__date" type="date" name="end-date" required="">
-                  <input class="form__time" type="time" name="end-time" required="">
+                  <input class="form__date form__date--end" type="date" name="end-date" required="">
+                  <input class="form__time form__time--end" type="time" name="end-time" required="">
                 </li>
               </ul>
+
+              <!-- 
+              <ul class="date-time">
+                <li class="date-time__item date-time__item--start">
+                  <input class="form__date form__date--start" type="date" name="start-date" required>
+                  <input class="form__time form__time--start" type="time" name="start-time" required>
+                </li>
+                <li class="date-time__item date-time__item--end">
+                  <input class="form__date form__date--end" type="date" name="end-date" required>
+                  <input class="form__time form__time--end" type="time" name="end-time" required>
+                </li>
+              </ul> -->
+
 
               <!-- <div class="form__date-time-wrapper">
                 <ul class="form__date-list">
@@ -129,38 +129,34 @@
                 </ul>
               </div> -->
 
-              <label class="form__all-day">
-                <input class="form__all-day-input" type="checkbox" name="all-day">
-                Весь день
-              </label>
+
+              <div class="form__all-day">
+                <input class="form__all-day-input visually-hidden" type="checkbox" name="all-day" id="all-day">
+                <label class="form__all-day-label" for="all-day">Весь день</label>
+              </div>
 
             </fieldset>
 
             <fieldset class="form__info">
               <title class="visually-hidden">Дополнительная информация</title>
 
-              <input class="form__place" type="text" placeholder="Место" name="location">
-              <textarea class="form__description" placeholder="Описание" name="description"></textarea>
+              <input class="form__place" type="text" placeholder="Место" name="location" spellcheck="true">
+              <textarea class="form__description" placeholder="Описание" name="description" spellcheck="true"></textarea>
             </fieldset>
 
-            <button class="form__save" type="submit">Сохранить</button>
+            <button class="form__save button button--fill" type="submit">Сохранить</button>
           </form>
         </div>
       </div>
 
-      <!-- <pre class="my-todo__list" id="content" style="white-space: pre-wrap;"></pre> -->
+      <!-- <pre class="list" id="content" style="white-space: pre-wrap;"></pre> -->
 
-      <ul class="my-todo__list"></ul>
+      <ul class="list"></ul>
+
+
       <ul class="done">
         <h2>Выполнено</h2>
       </ul>
-      <pre class="my-todo__list" id="content" style="white-space: pre-wrap;"></pre>
-
-      <div class="rabbit">
-        Я кролик
-        <button class="rabbit-button" type="button">Удали меня</button>
-      </div>
-
 
     </main>
 
@@ -180,20 +176,31 @@
 
   <template id="template">
 
-    <li class="my-todo__item task">
-      <p class="my-todo__text my-todo__summary" contenteditable="true" aria-multiline="true" role="textbox" tabindex="0" spellcheck="true">
-        Таска для Маска
-      </p>
-      <input class="item__id" type="text" style="display: none;" readonly="">
-      <button class="my-todo__done" type="button">
-        Выполнено
-      </button>
-      <button class="my-todo__update" type="button">
-        Редактировать
-      </button>
-      <button class="my-todo__delete" type="button">
-        Удалить
-      </button>
+    <li class="item list__item">
+      <div class="item__top">
+        <h3 class="item__summary"></h3>
+        <ul class="item__options">
+          <li class="item__option">
+            <a class="item__button item__button--done button">
+              <span class="visually-hidden">Выполнено</span>
+            </a>
+          </li>
+          <li class="item__option">
+            <a class="item__button item__button--update button">
+              <span class="visually-hidden">Редактировать</span>
+            </a>
+          </li>
+          <li class="item__option">
+            <a class="item__button item__button--delete button">
+              <span class="visually-hidden"> Удалить</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="item__bottom">
+        <p class="item__location"></p>
+        <p class="item__description"></p>
+      </div>
     </li>
   </template>
 

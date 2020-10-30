@@ -18,18 +18,24 @@
   border: none;
   // box-shadow: 0 0 0 1px white;
   border-radius: 50%;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+  // box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 
   transition: 0.2s ease;
 
   &:hover {
-    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
   }
 
   @media (min-width: 480px) {
     right: 50%;
 
     transform: translateX(314%);
+
+    &:hover {
+      transform: translateX(314%) scale(1.05);
+    }
   }
 }

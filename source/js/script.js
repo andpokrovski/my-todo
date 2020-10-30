@@ -1,10 +1,10 @@
 //=require js/utils.js
+//=require js/time.js
 //=require js/font.js
 //=require js/notice.js
 //=require js/storage.js
 //=require js/event.js
 //=require libs/gapi.js
-//=require js/common.js
 //=require js/modal.js
 // =require js/editor.js
 //=require js/items.js

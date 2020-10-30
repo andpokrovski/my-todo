@@ -2,10 +2,10 @@ var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
 
 
-var formatDateTime = function (date, time) {
-  var dateTime = date + 'T' + time;
-  return (new Date(Date.parse(dateTime))).toISOString();
-}
+// var getDateFromString = function (date, time) {
+//   var dateTime = date + 'T' + time;
+//   return (new Date(Date.parse(dateTime))).toISOString();
+// }
 
 
 var CalendarEvent = function (formData) {
@@ -15,8 +15,8 @@ var CalendarEvent = function (formData) {
   this.end = {};
 
   if (!form.allDay) {
-    this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
-    this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+    this.start.dateTime = time.getDateFromString(formData.get('start-date'), formData.get('start-time')).toISOString();
+    this.end.dateTime = time.getDateFromString(formData.get('end-date'), formData.get('end-time')).toISOString();
   } else {
     this.start.date = formData.get('start-date');
     this.end.date = formData.get('end-date');

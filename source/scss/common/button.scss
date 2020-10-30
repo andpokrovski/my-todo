@@ -1,0 +1,22 @@
+.button {
+  display: block;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  &--fill {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    transition: 0.2s ease;
+
+    &:hover {
+      color: #ffffff;
+
+      background-color: #000000;
+    }
+  }
+}

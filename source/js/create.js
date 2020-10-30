@@ -1,9 +1,10 @@
 var addButton = document.querySelector('.add-button');
 
 addButton.addEventListener('click', function () {
-  setDefaultDate();
+  // setDefaultDate();
   editor.open();
   // form.addUpdateHandler();
+  form.setDefaultDateTime();
 });
 
 

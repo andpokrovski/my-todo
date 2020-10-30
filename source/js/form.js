@@ -1,15 +1,41 @@
 var formElement = document.querySelector('.form');
+var closeButton = document.querySelector('.modal__close');
 var title = document.querySelector('.form');
-var saveButton = formElement.querySelector('.form__save');
 var typeButtons = formElement.elements.type;
-var allDayInput = formElement.querySelector('.form__all-day-input');
-var dates = formElement.querySelectorAll('.form__date');
-var times = formElement.querySelectorAll('.form__time');
 var typeEvent = formElement.querySelector('.form__type-input--event');
 var typeTask = formElement.querySelector('.form__type-input--task');
 var currentType = 'event';
+var allDayInput = formElement.querySelector('.form__all-day-input');
+var dates = formElement.querySelectorAll('.form__date');
+var startDateInput = formElement.querySelector('.form__date--start');
+var endDateInput = formElement.querySelector('.form__date--end');
+var times = formElement.querySelectorAll('.form__time');
+var startTimeInput = formElement.querySelector('.form__time--start');
+var endTimeInput = formElement.querySelector('.form__time--end');
+var saveButton = formElement.querySelector('.form__save');
 var formValid = true;
-var closeButton = document.querySelector('.modal__close');
+
+
+
+var setDefaultDate = function () {
+  var currentDate = time.getStringDate(new Date);
+
+  dates.forEach(function (input) {
+    input.value = currentDate;
+  });
+}
+
+var setDefaultDateTime = function () {
+  setDefaultDate();
+  setDefaultTime();
+}
+
+
+editor.element.addEventListener('modalOpened', function () {
+  formElement.elements.summary.focus();
+  // console.log('modalOpened');
+});
+
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
@@ -21,15 +47,22 @@ typeButtons.forEach(function (button) {
     }
 
     if (currentType === 'event') {
-      dates[1].required = true;
+      startDateInput.required = true;
     }
 
     if (currentType === 'task') {
-      dates[1].required = false;
+      startDateInput.required = false;
     }
 
   });
 });
+
+
+
+startDateInput.addEventListener('change', function () {
+  endDateInput.value = this.value;
+});
+
 
 allDayInput.addEventListener('change', function () {
   formElement.classList.toggle('form--all-day');
@@ -45,95 +78,64 @@ allDayInput.addEventListener('change', function () {
 
 });
 
-editor.element.addEventListener('modalOpened', function () {
-  formElement.elements.summary.focus();
+
+
+var TIME_STEP = 30;
+
+var setDefaultTime = function () {
+  var date = new Date();
+  var minutes = date.getMinutes();
+
+  if (minutes < TIME_STEP) {
+    date.setMinutes(TIME_STEP);
+  } else {
+    date.setHours(date.getHours() + 1);
+    date.setMinutes(0);
+  }
+
+  startTimeInput.value = time.getStringTime(date);
+
+  date.setMinutes(date.getMinutes() + TIME_STEP);
+
+
+  endTimeInput.value = time.getStringTime(date);
+}
+
+
+
+var calculateEndTime = function () {
+  var date = new Date;
+  var hours = time.getNumberTime(this.value).hours;
+  var minutes = time.getNumberTime(this.value).minutes;
+  date.setHours(hours);
+  date.setMinutes(minutes + TIME_STEP);
+
+  endTimeInput.value = time.getStringTime(date);
+}
+
+startTimeInput.addEventListener('change', function () {
+  calculateEndTime.call(this);
 });
 
 
-var setDefaultDate = function () {
-  var currentDate = utils.formatDate(new Date);
+var increaseEndDate = function () {
+  var startHours = time.getNumberTime(startTimeInput.value).hours;
+  var startMinutes = time.getNumberTime(startTimeInput.value).minutes;
+  var endHours = time.getNumberTime(endTimeInput.value).hours;
+  var endMinutes = time.getNumberTime(endTimeInput.value).minutes;
 
-  dates.forEach(function (input) {
-    input.value = currentDate;
-  });
+  if ((startHours > endHours) || (startHours === endHours && startMinutes > endMinutes)) {
+    var date = getDateFromString(endDateInput.value);
+    date.setDate(date.getDate() + 1);
+    endDateInput.value = time.getStringDate(date);
+  }
 }
 
-// var TIME_ROUNDING_STEP = 30;
 
-// var setDefaultTime = function () {
-//   var date = new Date();
-//   var hours = date.getHours();
-//   var minutes = date.getMinutes();
+endTimeInput.addEventListener('change', function () {
+  increaseEndDate();
+});
 
-//   if (minutes < TIME_ROUNDING_STEP) {
-//     hours += 1;
-//     minutes
-//   }
-
-// }
-
-
-
-
-
-
-// stringify
-// 1. Произвести все необходимые значения.
-// 2. Привести к строке
-
-// var formatTime = function (dateObj) {
-//   var hours = dateObj.getDate();
-//   var minutes = dateObj.getMinutes();
-
-//   if (minutes <= TIME_ROUNDING_STEP) {
-//     minutes = TIME_ROUNDING_STEP;
-//   } else {
-//     minutes = '00';
-//     hours += 1;
-//   }
-
-//   return {
-//     start: hours + ':' + minutes,
-//     end: hours + ':' + (minutes + TIME_ROUNDING_STEP),
-//   }
-// }
-
-// var setDefaultTime = function () {
-//   var time = formatTime(new Date);
-
-//   times[0].value = time.start;
-//   console.log(time.start);
-//   times[1].value = time.end;
-// }
-
-
-// document.addEventListener("DOMContentLoaded", setDefaultTime);
-
-
-
-// var onSaveButtonClick = function () {
-//   if (formValid) {
-//     createPopup.close();
-//   }
-// }
-
-// var onFormSubmit = function (evt) {
-//   evt.preventDefault();
-//   var formData = new FormData(formElement);
-
-//   // console.log(formData.get('start-time'));
-//   // console.log(formData.get('end-time'));
-
-
-//   // console.log(formData);
-
-//   create.send(formData);
-// }
-
-
-// saveButton.addEventListener('click', onSaveButtonClick);
-
-// formElement.addEventListener('submit', onFormSubmit);
 
 var fillForm = function (eventId) {
   var event = storage.get(eventId);
@@ -160,11 +162,6 @@ var fillForm = function (eventId) {
     formElement.elements['end-date'].value = event['end']['date'];
   }
 
-  // formElement.className = 'form';
-
-  // console.log(event['start']['dateTime']);
-  // console.log(event['end']['dateTime']);
-
   if (event['start']['dateTime'] && event['end']['dateTime'] && (event['start']['dateTime'] === event['end']['dateTime'])) {
     typeEvent.checked = false;
     typeTask.checked = true;
@@ -187,43 +184,6 @@ var fillForm = function (eventId) {
 }
 
 
-// var onSubmitButtonClick;
-
-
-// var onCreateButtonClick = function (evt) {
-//   evt.preventDefault();
-//   var formData = new FormData(formElement);
-
-//   create.send(formData);
-//   // formElement.removeEventListener('submit', onCreateButtonClick);
-// }
-
-
-// var onUpdateButtonClick = function (evt) {
-//   evt.preventDefault();
-//   var formData = new FormData(formElement);
-//   // var id = items.getId(this);
-//   var id = items.currentId;
-
-//   update.send(id, formData);
-//   // formElement.removeEventListener('submit', onUpdateButtonClick);
-// }
-
-
-// var addCreateHandler = function () {
-//   formElement.addEventListener('submit', onCreateButtonClick);
-//   // closeButton.removeEventListener('click', onCreateButtonClick);
-// }
-
-
-// var addUpdateHandler = function (id) {
-//   formElement.addEventListener('submit', onUpdateButtonClick);
-//   // closeButton.removeEventListener('click', onUpdateButtonClick);
-// }
-
-
-
-
 var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(formElement);
@@ -239,6 +199,7 @@ var onFormSubmit = function (evt) {
 
 formElement.addEventListener('submit', onFormSubmit);
 
+
 var resetForm = function () {
   formElement.reset();
   formElement.className = 'form form--event';
@@ -250,12 +211,10 @@ closeButton.addEventListener('click', function () {
 });
 
 
-
 window.form = {
   element: formElement,
+  setDefaultDateTime: setDefaultDateTime,
   allDay: false,
-  // addCreateHandler: addCreateHandler,
-  // addUpdateHandler: addUpdateHandler,
   fill: fillForm,
   reset: resetForm,
   currentId: null,

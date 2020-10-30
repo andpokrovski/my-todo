@@ -41,6 +41,7 @@ gulp.task("html", function () {
 gulp.task("css", function () {
   return gulp.src([
       "./source/scss/*.scss",
+      "./source/scss/common/*.scss",
       "./source/scss/blocks/*.scss",
     ])
     .pipe(plumber())

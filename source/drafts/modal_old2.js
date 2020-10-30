@@ -2,14 +2,17 @@
 
   var closeModalOnEscPress = function (evt) {
     if (evt.key === 'Escape') {
-      closeModal.call(this);
+      // console.log(this)
+      closeModal();
     }
   }
 
   var onModalEscPress;
 
-
   var openModal = function () {
+
+
+
     this.element.classList.toggle('d-none', false);
 
     var openEvent = new CustomEvent("modalOpened", {
@@ -18,6 +21,7 @@
     });
 
     this.element.dispatchEvent(openEvent);
+    // console.log(this)
 
     onModalEscPress = closeModalOnEscPress.bind(this);
     document.addEventListener('keydown', onModalEscPress);
@@ -25,6 +29,10 @@
 
 
   var closeModal = function () {
+    console.log(this.element)
+    // console.log(this.element.classList)
+
+
     this.element.classList.toggle('d-none', true);
 
     var closeEvent = new CustomEvent("modalClosed", {
@@ -38,6 +46,7 @@
 
 
   var Modal = function (modalClassName) {
+    // console.log(modalClassName);
     var modal = this;
     this.element = document.querySelector(modalClassName);
     var closeButtons = this.element.querySelectorAll('.modal__close');
@@ -46,7 +55,7 @@
       closeButtons.forEach(function (closeButton) {
         closeButton.addEventListener('click', function (evt) {
           evt.preventDefault();
-          closeModal.call(modal);
+          closeModal.bind(modal)();
         });
       });
     }
@@ -60,5 +69,4 @@
 
 
   window.Modal = Modal;
-  
 })();

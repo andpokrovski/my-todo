@@ -1,3 +1,56 @@
 .header {
   margin-bottom: 20px;
 }
+
+.header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__title {
+  flex-shrink: 0;
+}
+
+.header__bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__current-date {
+  width: 160px;
+  padding: 0;
+
+  font: inherit;
+
+  border: none;
+  cursor: pointer;
+}
+
+// .header__signout-button {
+
+
+
+//   border: none;
+// }
+
+.header__signout {
+  display: flex;
+  align-items: center;
+  // display: block;
+  padding-right: 40px;
+  text-decoration: none;
+  background-image: url("../img/sign-out-alt-solid.svg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 26px auto;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}

@@ -1,18 +1,32 @@
 var template = document.querySelector('#template');
-var itemTemplate = template.content.querySelector('.my-todo__item');
-var itemsList = document.querySelector('.my-todo__list');
+var itemTemplate = template.content.querySelector('.item');
+var itemsList = document.querySelector('.list');
 
 
 var createItem = function (event) {
   var newItem = itemTemplate.cloneNode('true');
-  var summary = newItem.querySelector('.my-todo__summary');
-  var updateButton = newItem.querySelector('.my-todo__update');
-  var deleteButton = newItem.querySelector('.my-todo__delete');
-  var id = newItem.querySelector('.item__id');
+  var summary = newItem.querySelector('.item__summary');
+  var updateButton = newItem.querySelector('.item__button--update');
+  var deleteButton = newItem.querySelector('.item__button--delete');
+  var location = newItem.querySelector('.item__location');
+  var description = newItem.querySelector('.item__description');
+  // var id = newItem.querySelector('.item__id');
+  console.log(newItem)
 
 
   summary.textContent = event.summary;
-  id.value = event.id;
+
+  if (event.location) {
+    location.classList.add('item__location--show');
+    location.textContent = event.location;
+  }
+
+  if (event.description) {
+    description.classList.add('item__description--show');
+    description.textContent = event.description;
+  }
+
+  // id.value = event.id;
 
   deleteButton.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -28,7 +42,7 @@ var createItem = function (event) {
   updateButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    setDefaultDate();
+    // setDefaultDate();
     // form.addCreateHandler();
 
     form.fill(event.id);
@@ -87,7 +101,7 @@ window.items = {
   add: addItem,
   render: renderItems,
   // getId: getItemId,
-  // remove: removeItem,
+  remove: removeItem,
   clear: clearItems,
   // currentId: undefined,
 }

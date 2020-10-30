@@ -21,27 +21,9 @@
     return check;
   }
 
-  var formatDate = function (dateObj) {
-    var year = dateObj.getFullYear();
-    var month = dateObj.getMonth() + 1;
-    var date = dateObj.getDate();
-
-    if (date < 10) {
-      date = '0' + date;
-    }
-
-    if (month < 10) {
-      month = '0' + date;
-    }
-
-    return year + '-' + month + '-' + date;
-  }
-
 
   window.utils = {
     checkElements: checkElements,
-    formatDate: formatDate,
   }
-
 
 })();

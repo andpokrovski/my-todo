@@ -21,30 +21,82 @@
     return check;
   }
 
-  var formatDate = function (dateObj) {
-    var year = dateObj.getFullYear();
-    var month = dateObj.getMonth() + 1;
-    var date = dateObj.getDate();
-
-    if (date < 10) {
-      date = '0' + date;
-    }
-
-    if (month < 10) {
-      month = '0' + date;
-    }
-
-    return year + '-' + month + '-' + date;
-  }
-
 
   window.utils = {
     checkElements: checkElements,
-    formatDate: formatDate,
+  }
+
+})();
+
+var getStringDate = function (dateObj) {
+  var year = dateObj.getFullYear();
+  var month = dateObj.getMonth() + 1;
+  var date = dateObj.getDate();
+
+  if (month < 10) {
+    month = '0' + month;
+  }
+
+  if (date < 10) {
+    date = '0' + date;
   }
 
 
-})();
+  return year + '-' + month + '-' + date;
+}
+
+
+var getStringTime = function (dateObj) {
+  var hours = dateObj.getHours();
+  var minutes = dateObj.getMinutes();
+
+  if (hours < 10) {
+    hours = '0' + hours;
+  }
+
+  if (minutes < 10) {
+    minutes = '0' + minutes;
+  }
+
+  return hours + ':' + minutes;
+}
+
+
+var calculateEndTime = function () {
+  var date = new Date;
+  var hours = parseInt(this.value.substr(0, 2), 10);
+  var minutes = parseInt(this.value.substr(3, 2), 10);
+  date.setHours(hours);
+  date.setMinutes(minutes + TIME_STEP);
+
+  endTimeInput.value = time.getStringTime(date);
+}
+
+
+var getNumberTime = function (value) {
+  return {
+    hours: parseInt(value.substr(0, 2), 10),
+    minutes: parseInt(value.substr(3, 2), 10),
+  }
+}
+
+
+var getDateFromString = function (date, time) {
+
+  if (time) {
+    var dateTime = date + 'T' + time;
+  }
+
+  return (new Date(Date.parse(dateTime || date)));
+}
+
+
+window.time = {
+  getStringDate: getStringDate,
+  getStringTime: getStringTime,
+  getNumberTime: getNumberTime,
+  getDateFromString: getDateFromString,
+}
 
 ;
 (function () {
@@ -165,10 +217,10 @@ var UTC = '+03:00';
 var TIMEZONE = 'Europe/Moscow';
 
 
-var formatDateTime = function (date, time) {
-  var dateTime = date + 'T' + time;
-  return (new Date(Date.parse(dateTime))).toISOString();
-}
+// var getDateFromString = function (date, time) {
+//   var dateTime = date + 'T' + time;
+//   return (new Date(Date.parse(dateTime))).toISOString();
+// }
 
 
 var CalendarEvent = function (formData) {
@@ -178,8 +230,8 @@ var CalendarEvent = function (formData) {
   this.end = {};
 
   if (!form.allDay) {
-    this.start.dateTime = formatDateTime(formData.get('start-date'), formData.get('start-time'));
-    this.end.dateTime = formatDateTime(formData.get('end-date'), formData.get('end-time'));
+    this.start.dateTime = time.getDateFromString(formData.get('start-date'), formData.get('start-time')).toISOString();
+    this.end.dateTime = time.getDateFromString(formData.get('end-date'), formData.get('end-time')).toISOString();
   } else {
     this.start.date = formData.get('start-date');
     this.end.date = formData.get('end-date');
@@ -193,6 +245,7 @@ var CalendarEvent = function (formData) {
 }
 
 window.CalendarEvent;
+
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
 (function () {
@@ -831,15 +884,15 @@ gapi.load("", {
   }
 });
 
-window.myTodo = {};
-
-
 (function () {
-  var onModalEscPress = function (evt) {
+
+  var closeModalOnEscPress = function (evt) {
     if (evt.key === 'Escape') {
-      closeModal();
+      closeModal.call(this);
     }
   }
+
+  var onModalEscPress;
 
 
   var openModal = function () {
@@ -851,6 +904,8 @@ window.myTodo = {};
     });
 
     this.element.dispatchEvent(openEvent);
+
+    onModalEscPress = closeModalOnEscPress.bind(this);
     document.addEventListener('keydown', onModalEscPress);
   }
 
@@ -869,7 +924,6 @@ window.myTodo = {};
 
 
   var Modal = function (modalClassName) {
-    // console.log(modalClassName);
     var modal = this;
     this.element = document.querySelector(modalClassName);
     var closeButtons = this.element.querySelectorAll('.modal__close');
@@ -878,7 +932,7 @@ window.myTodo = {};
       closeButtons.forEach(function (closeButton) {
         closeButton.addEventListener('click', function (evt) {
           evt.preventDefault();
-          closeModal.bind(modal)();
+          closeModal.call(modal);
         });
       });
     }
@@ -892,6 +946,7 @@ window.myTodo = {};
 
 
   window.Modal = Modal;
+  
 })();
 
 var editor = new Modal('.editor');
@@ -899,20 +954,34 @@ var editor = new Modal('.editor');
 window.editor;
 
 var template = document.querySelector('#template');
-var itemTemplate = template.content.querySelector('.my-todo__item');
-var itemsList = document.querySelector('.my-todo__list');
+var itemTemplate = template.content.querySelector('.item');
+var itemsList = document.querySelector('.list');
 
 
 var createItem = function (event) {
   var newItem = itemTemplate.cloneNode('true');
-  var summary = newItem.querySelector('.my-todo__summary');
-  var updateButton = newItem.querySelector('.my-todo__update');
-  var deleteButton = newItem.querySelector('.my-todo__delete');
-  var id = newItem.querySelector('.item__id');
+  var summary = newItem.querySelector('.item__summary');
+  var updateButton = newItem.querySelector('.item__button--update');
+  var deleteButton = newItem.querySelector('.item__button--delete');
+  var location = newItem.querySelector('.item__location');
+  var description = newItem.querySelector('.item__description');
+  // var id = newItem.querySelector('.item__id');
+  console.log(newItem)
 
 
   summary.textContent = event.summary;
-  id.value = event.id;
+
+  if (event.location) {
+    location.classList.add('item__location--show');
+    location.textContent = event.location;
+  }
+
+  if (event.description) {
+    description.classList.add('item__description--show');
+    description.textContent = event.description;
+  }
+
+  // id.value = event.id;
 
   deleteButton.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -928,7 +997,7 @@ var createItem = function (event) {
   updateButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    setDefaultDate();
+    // setDefaultDate();
     // form.addCreateHandler();
 
     form.fill(event.id);
@@ -987,7 +1056,7 @@ window.items = {
   add: addItem,
   render: renderItems,
   // getId: getItemId,
-  // remove: removeItem,
+  remove: removeItem,
   clear: clearItems,
   // currentId: undefined,
 }
@@ -998,9 +1067,10 @@ window.items = {
 var addButton = document.querySelector('.add-button');
 
 addButton.addEventListener('click', function () {
-  setDefaultDate();
+  // setDefaultDate();
   editor.open();
   // form.addUpdateHandler();
+  form.setDefaultDateTime();
 });
 
 
@@ -1168,17 +1238,43 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 var formElement = document.querySelector('.form');
+var closeButton = document.querySelector('.modal__close');
 var title = document.querySelector('.form');
-var saveButton = formElement.querySelector('.form__save');
 var typeButtons = formElement.elements.type;
-var allDayInput = formElement.querySelector('.form__all-day-input');
-var dates = formElement.querySelectorAll('.form__date');
-var times = formElement.querySelectorAll('.form__time');
 var typeEvent = formElement.querySelector('.form__type-input--event');
 var typeTask = formElement.querySelector('.form__type-input--task');
 var currentType = 'event';
+var allDayInput = formElement.querySelector('.form__all-day-input');
+var dates = formElement.querySelectorAll('.form__date');
+var startDateInput = formElement.querySelector('.form__date--start');
+var endDateInput = formElement.querySelector('.form__date--end');
+var times = formElement.querySelectorAll('.form__time');
+var startTimeInput = formElement.querySelector('.form__time--start');
+var endTimeInput = formElement.querySelector('.form__time--end');
+var saveButton = formElement.querySelector('.form__save');
 var formValid = true;
-var closeButton = document.querySelector('.modal__close');
+
+
+
+var setDefaultDate = function () {
+  var currentDate = time.getStringDate(new Date);
+
+  dates.forEach(function (input) {
+    input.value = currentDate;
+  });
+}
+
+var setDefaultDateTime = function () {
+  setDefaultDate();
+  setDefaultTime();
+}
+
+
+editor.element.addEventListener('modalOpened', function () {
+  formElement.elements.summary.focus();
+  // console.log('modalOpened');
+});
+
 
 typeButtons.forEach(function (button) {
   button.addEventListener('change', function () {
@@ -1190,15 +1286,22 @@ typeButtons.forEach(function (button) {
     }
 
     if (currentType === 'event') {
-      dates[1].required = true;
+      startDateInput.required = true;
     }
 
     if (currentType === 'task') {
-      dates[1].required = false;
+      startDateInput.required = false;
     }
 
   });
 });
+
+
+
+startDateInput.addEventListener('change', function () {
+  endDateInput.value = this.value;
+});
+
 
 allDayInput.addEventListener('change', function () {
   formElement.classList.toggle('form--all-day');
@@ -1214,95 +1317,64 @@ allDayInput.addEventListener('change', function () {
 
 });
 
-editor.element.addEventListener('modalOpened', function () {
-  formElement.elements.summary.focus();
+
+
+var TIME_STEP = 30;
+
+var setDefaultTime = function () {
+  var date = new Date();
+  var minutes = date.getMinutes();
+
+  if (minutes < TIME_STEP) {
+    date.setMinutes(TIME_STEP);
+  } else {
+    date.setHours(date.getHours() + 1);
+    date.setMinutes(0);
+  }
+
+  startTimeInput.value = time.getStringTime(date);
+
+  date.setMinutes(date.getMinutes() + TIME_STEP);
+
+
+  endTimeInput.value = time.getStringTime(date);
+}
+
+
+
+var calculateEndTime = function () {
+  var date = new Date;
+  var hours = time.getNumberTime(this.value).hours;
+  var minutes = time.getNumberTime(this.value).minutes;
+  date.setHours(hours);
+  date.setMinutes(minutes + TIME_STEP);
+
+  endTimeInput.value = time.getStringTime(date);
+}
+
+startTimeInput.addEventListener('change', function () {
+  calculateEndTime.call(this);
 });
 
 
-var setDefaultDate = function () {
-  var currentDate = utils.formatDate(new Date);
+var increaseEndDate = function () {
+  var startHours = time.getNumberTime(startTimeInput.value).hours;
+  var startMinutes = time.getNumberTime(startTimeInput.value).minutes;
+  var endHours = time.getNumberTime(endTimeInput.value).hours;
+  var endMinutes = time.getNumberTime(endTimeInput.value).minutes;
 
-  dates.forEach(function (input) {
-    input.value = currentDate;
-  });
+  if ((startHours > endHours) || (startHours === endHours && startMinutes > endMinutes)) {
+    var date = getDateFromString(endDateInput.value);
+    date.setDate(date.getDate() + 1);
+    endDateInput.value = time.getStringDate(date);
+  }
 }
 
-// var TIME_ROUNDING_STEP = 30;
 
-// var setDefaultTime = function () {
-//   var date = new Date();
-//   var hours = date.getHours();
-//   var minutes = date.getMinutes();
+endTimeInput.addEventListener('change', function () {
+  increaseEndDate();
+});
 
-//   if (minutes < TIME_ROUNDING_STEP) {
-//     hours += 1;
-//     minutes
-//   }
-
-// }
-
-
-
-
-
-
-// stringify
-// 1. Произвести все необходимые значения.
-// 2. Привести к строке
-
-// var formatTime = function (dateObj) {
-//   var hours = dateObj.getDate();
-//   var minutes = dateObj.getMinutes();
-
-//   if (minutes <= TIME_ROUNDING_STEP) {
-//     minutes = TIME_ROUNDING_STEP;
-//   } else {
-//     minutes = '00';
-//     hours += 1;
-//   }
-
-//   return {
-//     start: hours + ':' + minutes,
-//     end: hours + ':' + (minutes + TIME_ROUNDING_STEP),
-//   }
-// }
-
-// var setDefaultTime = function () {
-//   var time = formatTime(new Date);
-
-//   times[0].value = time.start;
-//   console.log(time.start);
-//   times[1].value = time.end;
-// }
-
-
-// document.addEventListener("DOMContentLoaded", setDefaultTime);
-
-
-
-// var onSaveButtonClick = function () {
-//   if (formValid) {
-//     createPopup.close();
-//   }
-// }
-
-// var onFormSubmit = function (evt) {
-//   evt.preventDefault();
-//   var formData = new FormData(formElement);
-
-//   // console.log(formData.get('start-time'));
-//   // console.log(formData.get('end-time'));
-
-
-//   // console.log(formData);
-
-//   create.send(formData);
-// }
-
-
-// saveButton.addEventListener('click', onSaveButtonClick);
-
-// formElement.addEventListener('submit', onFormSubmit);
 
 var fillForm = function (eventId) {
   var event = storage.get(eventId);
@@ -1329,11 +1401,6 @@ var fillForm = function (eventId) {
     formElement.elements['end-date'].value = event['end']['date'];
   }
 
-  // formElement.className = 'form';
-
-  // console.log(event['start']['dateTime']);
-  // console.log(event['end']['dateTime']);
-
   if (event['start']['dateTime'] && event['end']['dateTime'] && (event['start']['dateTime'] === event['end']['dateTime'])) {
     typeEvent.checked = false;
     typeTask.checked = true;
@@ -1356,43 +1423,6 @@ var fillForm = function (eventId) {
 }
 
 
-// var onSubmitButtonClick;
-
-
-// var onCreateButtonClick = function (evt) {
-//   evt.preventDefault();
-//   var formData = new FormData(formElement);
-
-//   create.send(formData);
-//   // formElement.removeEventListener('submit', onCreateButtonClick);
-// }
-
-
-// var onUpdateButtonClick = function (evt) {
-//   evt.preventDefault();
-//   var formData = new FormData(formElement);
-//   // var id = items.getId(this);
-//   var id = items.currentId;
-
-//   update.send(id, formData);
-//   // formElement.removeEventListener('submit', onUpdateButtonClick);
-// }
-
-
-// var addCreateHandler = function () {
-//   formElement.addEventListener('submit', onCreateButtonClick);
-//   // closeButton.removeEventListener('click', onCreateButtonClick);
-// }
-
-
-// var addUpdateHandler = function (id) {
-//   formElement.addEventListener('submit', onUpdateButtonClick);
-//   // closeButton.removeEventListener('click', onUpdateButtonClick);
-// }
-
-
-
-
 var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(formElement);
@@ -1408,6 +1438,7 @@ var onFormSubmit = function (evt) {
 
 formElement.addEventListener('submit', onFormSubmit);
 
+
 var resetForm = function () {
   formElement.reset();
   formElement.className = 'form form--event';
@@ -1419,88 +1450,89 @@ closeButton.addEventListener('click', function () {
 });
 
 
-
 window.form = {
   element: formElement,
+  setDefaultDateTime: setDefaultDateTime,
   allDay: false,
-  // addCreateHandler: addCreateHandler,
-  // addUpdateHandler: addUpdateHandler,
   fill: fillForm,
   reset: resetForm,
   currentId: null,
 };
 
-var currentDate = document.querySelector('.current-date');
+(function () {
+  var currentDate = document.querySelector('.header__current-date');
 
-// document.addEventListener("DOMContentLoaded", function () {
-//   var date = utils.formatDate(new Date());
-//   currentDate.value = date;
-// });
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   var date = utils.formatDate(new Date());
+  //   currentDate.value = date;
+  // });
 
-var setDefaultDate = function () {
-  var date = utils.formatDate(new Date());
-  currentDate.value = date;
-}
+  var setDefaultDate = function () {
+    var date = time.getStringDate(new Date());
+    currentDate.value = date;
+  }
 
-var resetDefaultDate = function () {
-  // currentDate.value = '';
-  currentDate.value = null;
-}
-
-
-var getTimeRange = {
-  min: function (dateObj) {
-    dateObj.setHours(0, 0, 0);
-    return dateObj;
-  },
-  max: function (dateObj) {
-    dateObj.setHours(23, 59, 59);
-    return dateObj;
-  },
-}
+  var resetDefaultDate = function () {
+    // currentDate.value = '';
+    currentDate.value = null;
+  }
 
 
-var ListSettings = function (dateObj) {
-  this.calendarId = 'primary';
-  this.timeMin = getTimeRange.min(dateObj).toISOString();
-  this.timeMax = getTimeRange.max(dateObj).toISOString();
-  this.singleEvents = true;
-  this.orderBy = 'startTime';
-}
+  var getTimeRange = {
+    min: function (dateObj) {
+      dateObj.setHours(0, 0, 0);
+      return dateObj;
+    },
+    max: function (dateObj) {
+      dateObj.setHours(23, 59, 59);
+      return dateObj;
+    },
+  }
 
 
-var listEvents = function (dateObj) {
-  gapi.client.calendar.events.list(new ListSettings(dateObj))
-    .then(function (response) {
-      var events = response.result.items;
-      items.clear();
-      storage.clear('fontFamily');
-      if (events.length > 0) {
-        items.render(events);
-      } else {
-        notice.show('События не найдены');
-      }
-    });
-}
+  var ListSettings = function (dateObj) {
+    this.calendarId = 'primary';
+    this.timeMin = getTimeRange.min(dateObj).toISOString();
+    this.timeMax = getTimeRange.max(dateObj).toISOString();
+    this.singleEvents = true;
+    this.orderBy = 'startTime';
+  }
 
 
-var onListDateChange = function () {
-  var date = new Date(this.value);
-  listEvents(date);
-}
+  var listEvents = function (dateObj) {
+    gapi.client.calendar.events.list(new ListSettings(dateObj))
+      .then(function (response) {
+        var events = response.result.items;
+        items.clear();
+        storage.clear('fontFamily');
+        if (events.length > 0) {
+          items.render(events);
+        } else {
+          notice.show('События не найдены');
+        }
+      });
+  }
 
 
-// currentDate.addEventListener('change', onListDateChange);
+  var onListDateChange = function () {
+    var date = new Date(this.value);
+    listEvents(date);
+  }
 
-currentDate.addEventListener('change', onListDateChange);
+
+  // currentDate.addEventListener('change', onListDateChange);
+
+  currentDate.addEventListener('change', onListDateChange);
 
 
 
-window.list = {
-  setDefaultDate: setDefaultDate,
-  resetDefaultDate: setDefaultDate,
-  update: listEvents,
-}
+  window.list = {
+    setDefaultDate: setDefaultDate,
+    resetDefaultDate: resetDefaultDate,
+    update: listEvents,
+  }
+
+})();
 
 /**
  * Append a pre element to the body containing the given message
