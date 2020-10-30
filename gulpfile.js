@@ -77,7 +77,7 @@ gulp.task("css", function () {
 
 gulp.task("copy", function () {
   return gulp.src([
-      // "./source/site.webmanifest",
+      "./source/site.webmanifest",
       "./source/fonts/**/*.{woff,woff2}",
       // "./source/js/**/*.js",
 
@@ -151,7 +151,9 @@ gulp.task("img", function () {
 
 gulp.task("webp", function () {
   return gulp.src([
-      "./source/img/**/*.{png,jpg}", "!./source/img/**/bg-*.{png,jpg}"
+      "./source/img/**/*.{png,jpg}",
+      "!./source/img/**/bg-*.{png,jpg}",
+      "!./source/img/favicons/**"
     ])
     .pipe(webp({
       quality: 60

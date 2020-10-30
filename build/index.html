@@ -6,10 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>my todo</title>
   <meta name="description" content="Todo List">
-
   <link rel="stylesheet" href="./css/style.min.css">
 
-
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="img/favicons/favicon.svg">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#ffffff">
 </head>
 
 <body class="body">
@@ -46,7 +50,7 @@
 
     <main class="main">
 
-      <div class="auth modal">
+      <div class="auth modal d-none">
         <div class="auth__window modal__window">
           <h2 class="auth__title">Авторизация</h2>
           <button class="auth__button button button--fill" id="auth-button">Войти c аккаунтом Google</button>
@@ -153,16 +157,16 @@
 
       <ul class="list"></ul>
 
-
+      <!-- 
       <ul class="done">
         <h2>Выполнено</h2>
-      </ul>
+      </ul> -->
 
     </main>
 
     <footer>
 
-      <a class="add-button">
+      <a class="add-button" href="">
         <span class="visually-hidden">
           Добавить событие
         </span>
@@ -181,24 +185,35 @@
         <h3 class="item__summary"></h3>
         <ul class="item__options">
           <li class="item__option">
-            <a class="item__button item__button--done button">
+            <label class="item__done button">
+              <input class="item__done-input visually-hidden" type="checkbox">
               <span class="visually-hidden">Выполнено</span>
-            </a>
+            </label>
+
+            <!-- <a class="item__done button" href="">
+              <span class="visually-hidden">Выполнено</span>
+            </a> -->
+
           </li>
           <li class="item__option">
-            <a class="item__button item__button--update button">
+            <a class="item__update button" href="">
               <span class="visually-hidden">Редактировать</span>
             </a>
           </li>
           <li class="item__option">
-            <a class="item__button item__button--delete button">
+            <a class="item__delete button" href="">
               <span class="visually-hidden"> Удалить</span>
             </a>
           </li>
         </ul>
       </div>
-      <div class="item__bottom">
+      <div class="item__middle">
+        <p class="item__time"><time class="item__start-time" datetime=""></time> - <time class="item__end-time" datetime=""></time>
+        </p>
+        <!-- <time class="item__time" datetime=""></time> -->
         <p class="item__location"></p>
+      </div>
+      <div class="item__bottom">
         <p class="item__description"></p>
       </div>
     </li>

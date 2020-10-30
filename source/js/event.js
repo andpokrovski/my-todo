@@ -27,6 +27,18 @@ var CalendarEvent = function (formData) {
 
   this.location = formData.get('location') || '';
   this.description = formData.get('description') || '';
+
+  this.extendedProperties = {
+    private: {
+      startDate: formData.get('start-date'),
+      startTime: formData.get('start-time'),
+      endDate: formData.get('end-date'),
+      endTime: formData.get('end-time'),
+    }
+  }
+
+
+
 }
 
 window.CalendarEvent;

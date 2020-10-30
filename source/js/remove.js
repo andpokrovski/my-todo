@@ -15,6 +15,4 @@ var removeEvent = function (id) {
 }
 
 
-window.remove = {
-  send: removeEvent,
-}
+window.removeEvent = removeEvent;

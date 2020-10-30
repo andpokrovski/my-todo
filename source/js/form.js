@@ -73,6 +73,7 @@ allDayInput.addEventListener('change', function () {
       item.required = false;
     } else {
       item.required = true;
+      setDefaultTime();
     }
   });
 
@@ -146,8 +147,8 @@ var fillForm = function (eventId) {
 
   if (event['start']['dateTime'] && event['end']['dateTime']) {
 
-    console.log(event['start']['dateTime']);
-    console.log(event['end']['dateTime']);
+    // console.log(event['start']['dateTime']);
+    // console.log(event['end']['dateTime']);
 
     formElement.elements['start-date'].value = event['start']['dateTime'].substr(0, 10);
     formElement.elements['end-date'].value = event['end']['dateTime'].substr(0, 10);
@@ -188,11 +189,12 @@ var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(formElement);
 
-  if (form.currentId) {
-    update.send(form.currentId, formData);
-    form.currentId = null;
+  if (form.current.element && form.current.id) {
+    updateEvent(form.current.element, form.current.id, formData);
+    form.current.element = null;
+    form.current.id = null;
   } else {
-    create.send(formData);
+    createEvent(formData);
   }
 }
 
@@ -218,4 +220,8 @@ window.form = {
   fill: fillForm,
   reset: resetForm,
   currentId: null,
+  current: {
+    element: null,
+    id: null,
+  }
 };

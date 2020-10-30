@@ -242,6 +242,18 @@ var CalendarEvent = function (formData) {
 
   this.location = formData.get('location') || '';
   this.description = formData.get('description') || '';
+
+  this.extendedProperties = {
+    private: {
+      startDate: formData.get('start-date'),
+      startTime: formData.get('start-time'),
+      endDate: formData.get('end-date'),
+      endTime: formData.get('end-time'),
+    }
+  }
+
+
+
 }
 
 window.CalendarEvent;
@@ -896,29 +908,48 @@ gapi.load("", {
 
 
   var openModal = function () {
-    this.element.classList.toggle('d-none', false);
+    var modal = this;
+    // this.element.classList.toggle('d-none', false);
+
+    modal.element.classList.toggle('d-none', false);
+    // this.element.classList.toggle('modal--active', true);
+    // this.element.classList.add('modal--active');
+
+
+    setTimeout(function () {
+      // this.element.classList.toggle('modal--active', true);
+      // this.element.classList.add('modal--active');
+      modal.element.classList.toggle('modal--active', true);
+    }, 10)
 
     var openEvent = new CustomEvent("modalOpened", {
       cancelable: true,
       bubbles: true,
     });
 
-    this.element.dispatchEvent(openEvent);
+    modal.element.dispatchEvent(openEvent);
 
-    onModalEscPress = closeModalOnEscPress.bind(this);
+    onModalEscPress = closeModalOnEscPress.bind(modal);
     document.addEventListener('keydown', onModalEscPress);
   }
 
 
   var closeModal = function () {
-    this.element.classList.toggle('d-none', true);
+    var modal = this;
+    // this.element.classList.toggle('d-none', true);
+    modal.element.classList.toggle('modal--active', false);
+
+    // this.element.classList.toggle('modal--active', false);
+    setTimeout(function () {
+      modal.element.classList.toggle('d-none', true);
+    }, 250)
 
     var closeEvent = new CustomEvent("modalClosed", {
       cancelable: true,
       bubbles: true,
     });
 
-    this.element.dispatchEvent(closeEvent);
+    modal.element.dispatchEvent(closeEvent);
     document.removeEventListener('keydown', onModalEscPress);
   }
 
@@ -946,7 +977,7 @@ gapi.load("", {
 
 
   window.Modal = Modal;
-  
+
 })();
 
 var editor = new Modal('.editor');
@@ -961,15 +992,24 @@ var itemsList = document.querySelector('.list');
 var createItem = function (event) {
   var newItem = itemTemplate.cloneNode('true');
   var summary = newItem.querySelector('.item__summary');
-  var updateButton = newItem.querySelector('.item__button--update');
-  var deleteButton = newItem.querySelector('.item__button--delete');
+  var time = newItem.querySelector('.item__time');
+  var startTime = newItem.querySelector('.item__start-time');
+  var endTime = newItem.querySelector('.item__end-time');
+  var doneButton = newItem.querySelector('.item__done');
+  var doneInput = newItem.querySelector('.item__done-input');
+  var updateButton = newItem.querySelector('.item__update');
+  var deleteButton = newItem.querySelector('.item__delete');
   var location = newItem.querySelector('.item__location');
   var description = newItem.querySelector('.item__description');
-  // var id = newItem.querySelector('.item__id');
-  console.log(newItem)
 
 
   summary.textContent = event.summary;
+
+  if (event.start.dateTime && event.end.dateTime) {
+    time.classList.add('item__time--show');
+    startTime.textContent = event.extendedProperties.private.startTime;
+    endTime.textContent = event.extendedProperties.private.endTime;
+  }
 
   if (event.location) {
     location.classList.add('item__location--show');
@@ -983,33 +1023,85 @@ var createItem = function (event) {
 
   // id.value = event.id;
 
-  deleteButton.addEventListener('click', function (evt) {
-    evt.preventDefault();
+  // var onDeleyeButtonEntry = function (evt) {
 
-    removeItem(newItem);
-    // itemsList.removeChild(newItem);
-    storage.remove(event.id);
-    // Удаление с сервера
-    remove.send(event.id);
+  // }
+
+  doneInput.addEventListener('change', function (evt) {
+    if (doneInput.checked) {
+      doneButton.classList.add('item__done--checked')
+      event.extendedProperties.private.done = true;
+      storage.set(event.id, event);
+    } else {
+      doneButton.classList.remove('item__done--checked')
+      event.extendedProperties.private.done = false;
+      storage.set(event.id, event);
+    }
+
 
   });
 
   updateButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    // setDefaultDate();
-    // form.addCreateHandler();
-
     form.fill(event.id);
-    form.currentId = event.id
-    // form.addUpdateHandler();
+    form.current.element = newItem;
+    form.current.id = event.id
     editor.open();
-    // items.currentId = event.id;
-
   });
+
+
+  deleteButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    removeItem(newItem);
+    storage.remove(event.id);
+    removeEvent(event.id);
+  });
+
 
   return newItem;
 };
+
+
+var updateItem = function (item, event) {
+  var summary = item.querySelector('.item__summary');
+  var time = item.querySelector('.item__time');
+  var startTime = item.querySelector('.item__start-time');
+  var endTime = item.querySelector('.item__end-time');
+  var location = item.querySelector('.item__location');
+  var description = item.querySelector('.item__description');
+
+  summary.textContent = event.summary;
+
+  if (event.start.dateTime && event.end.dateTime) {
+    time.classList.add('item__time--show');
+    startTime.textContent = event.extendedProperties.private.startTime;
+    endTime.textContent = event.extendedProperties.private.endTime;
+  } else {
+    time.classList.remove('item__time--show');
+    startTime.textContent = '';
+    endTime.textContent = '';
+  }
+
+  if (event.location) {
+    console.log(event.location)
+    location.classList.add('item__location--show');
+    location.textContent = event.location;
+  } else {
+    location.classList.remove('item__location--show');
+    location.textContent = '';
+  }
+
+  if (event.description) {
+    console.log(event.description)
+    description.classList.add('item__description--show');
+    description.textContent = event.description;
+  } else {
+    description.classList.remove('item__description--show');
+    description.textContent = '';
+  }
+}
 
 
 // var getItemId = function (updateButton) {
@@ -1058,6 +1150,7 @@ window.items = {
   // getId: getItemId,
   remove: removeItem,
   clear: clearItems,
+  update: updateItem,
   // currentId: undefined,
 }
 
@@ -1066,7 +1159,8 @@ window.items = {
 
 var addButton = document.querySelector('.add-button');
 
-addButton.addEventListener('click', function () {
+addButton.addEventListener('click', function (evt) {
+  evt.preventDefault();
   // setDefaultDate();
   editor.open();
   // form.addUpdateHandler();
@@ -1102,14 +1196,14 @@ var createEvent = function (formData) {
 }
 
 
-window.create = {
-  send: createEvent,
-}
+window.createEvent = createEvent;
 
-var updateEvent = function (id, formData) {
+var updateEvent = function (element, id, formData) {
   console.log('updated');
   var event = new CalendarEvent(formData);
-  storage.set(event.id, event);
+  // console.log(event.description)
+  items.update(element, event);
+  storage.set(id, event);
 
   return gapi.client.calendar.events.update({
       'calendarId': 'primary',
@@ -1117,6 +1211,7 @@ var updateEvent = function (id, formData) {
       'resource': event,
     })
     .then(function (response) {
+        // console.log(response)
         editor.close();
         form.reset();
         notice.show('Успешно обновлено');
@@ -1127,9 +1222,7 @@ var updateEvent = function (id, formData) {
 }
 
 
-window.update = {
-  send: updateEvent,
-}
+window.updateEvent = updateEvent;
 
 // var authPopup = new Modal({
 //   modal: '.auth',
@@ -1312,6 +1405,7 @@ allDayInput.addEventListener('change', function () {
       item.required = false;
     } else {
       item.required = true;
+      setDefaultTime();
     }
   });
 
@@ -1385,8 +1479,8 @@ var fillForm = function (eventId) {
 
   if (event['start']['dateTime'] && event['end']['dateTime']) {
 
-    console.log(event['start']['dateTime']);
-    console.log(event['end']['dateTime']);
+    // console.log(event['start']['dateTime']);
+    // console.log(event['end']['dateTime']);
 
     formElement.elements['start-date'].value = event['start']['dateTime'].substr(0, 10);
     formElement.elements['end-date'].value = event['end']['dateTime'].substr(0, 10);
@@ -1427,11 +1521,12 @@ var onFormSubmit = function (evt) {
   evt.preventDefault();
   var formData = new FormData(formElement);
 
-  if (form.currentId) {
-    update.send(form.currentId, formData);
-    form.currentId = null;
+  if (form.current.element && form.current.id) {
+    updateEvent(form.current.element, form.current.id, formData);
+    form.current.element = null;
+    form.current.id = null;
   } else {
-    create.send(formData);
+    createEvent(formData);
   }
 }
 
@@ -1457,6 +1552,10 @@ window.form = {
   fill: fillForm,
   reset: resetForm,
   currentId: null,
+  current: {
+    element: null,
+    id: null,
+  }
 };
 
 (function () {
@@ -1567,7 +1666,4 @@ var removeEvent = function (id) {
 }
 
 
-window.remove = {
-  send: removeEvent,
-}
-
+window.removeEvent = removeEvent;

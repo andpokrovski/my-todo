@@ -1,7 +1,9 @@
-var updateEvent = function (id, formData) {
+var updateEvent = function (element, id, formData) {
   console.log('updated');
   var event = new CalendarEvent(formData);
-  storage.set(event.id, event);
+  // console.log(event.description)
+  items.update(element, event);
+  storage.set(id, event);
 
   return gapi.client.calendar.events.update({
       'calendarId': 'primary',
@@ -9,6 +11,7 @@ var updateEvent = function (id, formData) {
       'resource': event,
     })
     .then(function (response) {
+        // console.log(response)
         editor.close();
         form.reset();
         notice.show('Успешно обновлено');
@@ -19,6 +22,4 @@ var updateEvent = function (id, formData) {
 }
 
 
-window.update = {
-  send: updateEvent,
-}
+window.updateEvent = updateEvent;

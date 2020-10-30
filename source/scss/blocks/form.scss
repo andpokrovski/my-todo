@@ -33,7 +33,7 @@
   margin-right: 10px;
 }
 
-.form__type-input:checked+.form__type-label {
+.form__type-input:checked + .form__type-label {
   background-color: rgba(0, 0, 0, 0.15);
 
   &:active {
@@ -57,10 +57,10 @@
 
 
 .form__date-time {
+  max-width: 100%;
   margin: 0;
   margin-bottom: 20px;
   padding: 0;
-  max-width: 100%;
 
   border: none;
 }
@@ -95,19 +95,22 @@
 .form__date {
   // width: 100%;
   display: block;
-  // max-width: 100%;
-  font: inherit;
-  margin: 0;
-  padding: 0;
-  border: none;
   // max-width: 180px;
   width: 160px;
+  margin: 0;
   // margin-bottom: 20px;
   margin-bottom: 10px;
+  padding: 0;
+  // max-width: 100%;
+
+  font: inherit;
+
+  border: none;
 }
 
 .form__time {
   font: inherit;
+
   border: none;
 }
 
@@ -124,30 +127,46 @@
   display: flex;
 }
 
+
 .form__all-day-label {
-  // display: block;
-  cursor: pointer;
   display: flex;
   align-items: center;
   height: 26px;
+  padding-left: 35px;
+
+  background-image: url("../img/square-regular.svg");
   background-repeat: no-repeat;
   background-position: left center;
-  padding-left: 35px;
-  background-image: url("../img/square-regular.svg");
   background-size: 24px auto;
+  // display: block;
+  cursor: pointer;
 
   &:hover {
-    background-image: url("../img/check-square-solid.svg");
+    background-image: url("../img/check-square-regular.svg");
   }
 }
 
-.form__all-day-input:checked+.form__all-day-label {
+.form__all-day-input:focus + .form__all-day-label {
+  background-image: url("../img/check-square-regular.svg");
+}
+
+.form__all-day-input:checked + .form__all-day-label {
   background-image: url("../img/check-square-solid.svg");
 }
 
-.form__all-day-input:checked+.form__all-day-label:hover {
-  background-image: url("../img/square-regular.svg");
-}
+// .form__all-day-input:focus+.form__all-day-label {
+//   background-image: url("../img/check-square-regular.svg");
+// }
+
+
+// .form__all-day-input:checked+.form__all-day-label:hover,
+// .form__all-day-input:focus+.form__all-day-label {
+//   background-image: url("../img/check-square-regular.svg");
+// }
+
+// .form__all-day-input:checked:focus+.form__all-day-label {
+//   background-image: url("../img/check-square-solid.svg");
+// }
 
 
 .item__button {
@@ -159,8 +178,6 @@
   // background-color: #000000;
 
 
-
-
   &:hover {
     opacity: 0.8;
   }
@@ -169,8 +186,6 @@
     opacity: 0.6;
   }
 
-
-  &--done {}
 
   &--update {
     background-image: url("../img/pencil-alt-solid.svg");
@@ -286,14 +301,14 @@
 .form__info {
   display: flex;
   flex-direction: column;
+  // margin-right: 100px;
+  max-width: 243px;
   // align-items: flex-start;
   margin: 0;
   margin-bottom: 20px;
   padding: 0;
 
   border: none;
-  // margin-right: 100px;
-  max-width: 243px;
 }
 
 

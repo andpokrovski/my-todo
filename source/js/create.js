@@ -1,6 +1,7 @@
 var addButton = document.querySelector('.add-button');
 
-addButton.addEventListener('click', function () {
+addButton.addEventListener('click', function (evt) {
+  evt.preventDefault();
   // setDefaultDate();
   editor.open();
   // form.addUpdateHandler();
@@ -36,6 +37,4 @@ var createEvent = function (formData) {
 }
 
 
-window.create = {
-  send: createEvent,
-}
+window.createEvent = createEvent;

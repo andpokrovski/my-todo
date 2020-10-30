@@ -1,7 +1,10 @@
 .item {
-  padding: 10px 20px;
+  box-sizing: border-box;
+  // padding: 10px 20px;
+  padding: 20px 20px 0;
 
   background-color: #ffffff;
+  border: 1px solid transparent;
   border-radius: 8px;
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
 }
@@ -10,7 +13,112 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
+
+.item__summary {
+  margin: 0;
+  margin-right: 20px;
+}
+
+
+.item__button {
+  // box-shadow: 0 0 0 1px black;
+  // width: 50px;
+  // height: 50px;
+  // width: 20px;
+  width: 24px;
+  height: 30px;
+  height: 26px;
+  // background-color: #000000;
+
+  background-repeat: no-repeat;
+  // background-position: 0 0;
+  background-position: center;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+
+
+  &--done {
+    background-image: url("../img/square-regular.svg");
+    background-size: 24px auto;
+
+    &:hover {
+      background-image: url("../img/check-square-solid.svg");
+    }
+  }
+
+
+
+  &--update {
+    background-image: url("../img/pencil-alt-solid.svg");
+    background-size: 22px auto;
+  }
+
+  &--delete {
+    background-image: url("../img/trash-alt-solid.svg");
+    background-size: 20px auto;
+  }
+}
+
+.item__done {
+  width: 24px;
+  height: 30px;
+  height: 26px;
+  // background-color: #000000;
+
+  background-repeat: no-repeat;
+  // background-position: 0 0;
+  background-position: center;
+  background-image: url("../img/square-regular.svg");
+  background-size: 24px auto;
+
+  &--checked {
+    background-image: url("../img/check-square-solid.svg");
+  }
+}
+
+
+// .item__done-input:checked .item__done {
+//   background-image: url("../img/check-square-solid.svg");
+// }
+
+
+.item__update {
+  width: 24px;
+  height: 30px;
+  height: 26px;
+  // background-color: #000000;
+
+  background-repeat: no-repeat;
+  // background-position: 0 0;
+  background-position: center;
+  background-image: url("../img/pencil-alt-solid.svg");
+  background-size: 22px auto;
+
+
+}
+
+.item__delete {
+  width: 24px;
+  height: 30px;
+  height: 26px;
+  // background-color: #000000;
+
+  background-repeat: no-repeat;
+  // background-position: 0 0;
+  background-position: center;
+  background-image: url("../img/trash-alt-solid.svg");
+  background-size: 20px auto;
+}
+
+
 
 .item__options {
   display: flex;
@@ -20,12 +128,48 @@
   list-style: none;
 }
 
+.item__middle {
+  display: flex;
+  margin-bottom: 20px;
+}
 
-.item__location {
-  display: none;
+.item__time {
   position: relative;
 
+  display: none;
+  margin: 0;
+  margin-right: 20px;
   padding-left: 30px;
+
+  font-style: italic;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 18px;
+    height: 18px;
+
+    background-image: url("../img/clock-solid.svg");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 18px auto;
+  }
+
+  &--show {
+    display: block;
+  }
+}
+
+
+.item__location {
+  position: relative;
+
+  display: none;
+  margin: 0;
+  padding-left: 25px;
 
   font-style: italic;
 
@@ -49,10 +193,15 @@
   }
 }
 
+.item__bottom {
+  margin-bottom: 20px;
+}
+
 .item__description {
   position: relative;
-  display: none;
 
+  display: none;
+  margin: 0;
   padding-left: 30px;
 
   &::before {
@@ -79,49 +228,5 @@
 .item__option {
   &:not(:last-child) {
     margin-right: 20px;
-  }
-}
-
-.item__button {
-  // box-shadow: 0 0 0 1px black;
-  // width: 50px;
-  // height: 50px;
-  // width: 20px;
-  width: 24px;
-  height: 30px;
-  height: 26px;
-  // background-color: #000000;
-
-
-  background-repeat: no-repeat;
-  // background-position: 0 0;
-  background-position: center;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  &:active {
-    opacity: 0.6;
-  }
-
-
-  &--done {
-    background-image: url("../img/square-regular.svg");
-    background-size: 24px auto;
-
-    &:hover {
-      background-image: url("../img/check-square-solid.svg");
-    }
-  }
-
-  &--update {
-    background-image: url("../img/pencil-alt-solid.svg");
-    background-size: 22px auto;
-  }
-
-  &--delete {
-    background-image: url("../img/trash-alt-solid.svg");
-    background-size: 20px auto;
   }
 }
