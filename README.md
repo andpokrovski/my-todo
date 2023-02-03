@@ -1,7 +1,8 @@
-# Проект
+# My Todo
 
-Описание проекта
+Клиент для Google Calendar API
 
-https://iampokrovsky.github.io/ссылка-на-github-pages/
-
-[Превью](https://github.com/iampokrovsky/название-проекта/tree/master/specs/previews)
+## Как запустить
+1. Установить зависимости с помощью команды `npm i`;
+2. Собрать приложения с помощью `npm run build`;
+3. Открыть файл `index.html` в браузере.
